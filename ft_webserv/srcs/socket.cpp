@@ -11,4 +11,16 @@ SAMATHE::socket::socket(int domain, int serice, int protocol)
 	sock = socket(domain, service, protocol);
 	connexion = connect_to_network();
 	// ------ Bind
+
+
+erzfzaefazef
+azefazef
+azefazefazef
+
+
+zregzearg
+zergzerg
+zergzerg
+z(eg
+
 }
