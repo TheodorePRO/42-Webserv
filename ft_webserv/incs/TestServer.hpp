@@ -7,15 +7,14 @@
 
 namespace SAMATHE
 {
-	class TestServer: public Server
+	class TestServer: public SAMATHE::Server
 	{
-	private:
 		char buffer[30000] = {0};
 		int new_socket;
 
 		void accepter();
 		void handler();
-		void responder():
+		void responder();
 
 	public:
 		TestServer();

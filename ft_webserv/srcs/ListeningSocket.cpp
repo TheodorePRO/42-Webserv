@@ -3,6 +3,7 @@
 
 SAMATHE::ListeningSocket::ListeningSocket(int domain, int service, int protocol, int port, u_long interface, int bklg) : BindSocket(domain, service, protocol, port, interface)
 {
+	std::cout << "IN LISTENONG SOCKET"<< std::endl;
 	// ------ Set Backlog variable
 	backlog = bklg;
 	// ------ Start listening

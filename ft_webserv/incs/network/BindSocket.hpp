@@ -11,7 +11,7 @@ namespace SAMATHE
 		// ------ To store 0 if success
 		int		binding;
 		// ------ Virtual fct from parent to bind
-		void	connect_to_network(int sock, struct sockaddr_in address);
+		int		connect_to_network(int sock, struct sockaddr_in address);
 
 	public:
 		// ------ Constructor

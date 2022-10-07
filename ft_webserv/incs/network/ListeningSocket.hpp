@@ -1,3 +1,6 @@
+#ifndef LISTENING_SOCKET
+# define LISTENING_SOCKET
+
 #include <stdio.h>
 #include "BindSocket.hpp"
 
@@ -17,3 +20,5 @@ namespace SAMATHE
 	};
 
 }
+
+#endif

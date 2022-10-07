@@ -22,7 +22,7 @@ namespace SAMATHE
 		// ------ Constructor
 		Socket(int domain, int service, int protocol, int port, u_long interface);
 		// ------ Virtual function to connect
-		virtual void connect_to_network(int sock, struct sockaddr_in address) = 0;
+		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion
 		void test_connection(int);
 		// ------ Getters
