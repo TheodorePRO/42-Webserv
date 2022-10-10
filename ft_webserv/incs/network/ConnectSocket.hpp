@@ -10,8 +10,8 @@ namespace SAMATHE
 	{
 	public:
 		// ------ Constructor
-		ConnectSocket(int domain, int service, int port, u_long interface);
-		void connect_to_network(int sock, struct sockaddr_in address);
+		ConnectSocket(int domain, int service, int protocol, int port, u_long interface);
+		int connect_to_network(int sock, struct sockaddr_in address);
 
 	};
 
