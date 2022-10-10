@@ -26,7 +26,7 @@ void SAMATHE::TestServer::handler()
 
 void SAMATHE::TestServer::responder()
 {
-	char *hello = "Hello from server";
+	char *hello = (char *)"Hello from server";
 	write(new_socket, hello, strlen(hello));
 	close(new_socket);
 }

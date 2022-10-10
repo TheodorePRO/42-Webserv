@@ -9,7 +9,7 @@ namespace SAMATHE
 {
 	class TestServer: public SAMATHE::Server
 	{
-		char buffer[30000] = {0};
+		char buffer[30000];
 		int new_socket;
 
 		void accepter();
