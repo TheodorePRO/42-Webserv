@@ -3,22 +3,22 @@
 
 #include <stdio.h>
 #include "BindSocket.hpp"
+#include "../Conf.hpp"
 
 namespace SAMATHE
 {
 	class ListeningSocket :public BindSocket
 	{
-		int backlog;
+		SAMATHE::ServConf *_sc;
 		int listening;
 
 	public:
 		// ------ Constructor
-		ListeningSocket(int domain, int service, int protocol, int port, u_long interface, int bklg);
+		ListeningSocket(SAMATHE::ServConf &sc);
 
 		// ------ Operations
 		void start_listening();
 		int get_listening();
-		int get_backlog();
 	};
 
 }

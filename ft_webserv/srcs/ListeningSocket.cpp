@@ -1,11 +1,10 @@
 # include "../incs/network/ListeningSocket.hpp"
 
 
-SAMATHE::ListeningSocket::ListeningSocket(int domain, int service, int protocol, int port, u_long interface, int bklg) : BindSocket(domain, service, protocol, port, interface)
+SAMATHE::ListeningSocket::ListeningSocket(SAMATHE::ServConf &sc) : BindSocket(sc.getDom(), sc.getSer(), sc.getProt(), sc.getPort(), sc.getInt())
 {
+	_sc = &sc;
 	std::cout << "IN LISTENONG SOCKET"<< std::endl;
-	// ------ Set Backlog variable
-	backlog = bklg;
 	// ------ Start listening
 	start_listening();
 	// ------ Confirm success
@@ -13,11 +12,9 @@ SAMATHE::ListeningSocket::ListeningSocket(int domain, int service, int protocol,
 }
 
 void	SAMATHE::ListeningSocket::start_listening()
-{	listening = listen(get_sock(), backlog);	}
+{	listening = listen(get_sock(), _sc->getBkl());	}
 
 // ------ Getters
 int SAMATHE::ListeningSocket::get_listening()
 {	return listening;			}
 
-int SAMATHE::ListeningSocket::get_backlog()
-{	return backlog;			}
