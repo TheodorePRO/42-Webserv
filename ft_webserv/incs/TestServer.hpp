@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "network/Server.hpp"
+#include "../incs/Conf.hpp"
 
 namespace SAMATHE
 {
@@ -17,7 +18,7 @@ namespace SAMATHE
 		void responder();
 
 	public:
-		TestServer();
+		TestServer(SAMATHE::ServConf &sc);
 		void launch();
 	};
 

@@ -1,8 +1,9 @@
 #include "../incs/TestServer.hpp"
+#include "../incs/Conf.hpp"
 #include <unistd.h>
 
 // ------ Constructor
-SAMATHE::TestServer::TestServer() : Server(AF_INET, SOCK_STREAM, 0, 80, INADDR_ANY, 10)
+SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
 {
 	std::cout << "==READY TO LAUNCH=="<< std::endl;
 	launch();
@@ -21,7 +22,9 @@ void SAMATHE::TestServer::accepter()
 
 void SAMATHE::TestServer::handler()
 {
-	std::cout << buffer << std::endl;
+	std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
+	std::cout << 	buffer << std::endl;
+	std::cout << "*** END OF BUFFER ***" << std::endl;
 }
 
 void SAMATHE::TestServer::responder()

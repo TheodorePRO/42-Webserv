@@ -4,8 +4,7 @@
 SAMATHE::BindSocket::BindSocket(int domain, int service, int protocol, int port, u_long interface) : Socket(domain, service, protocol, port, interface)
 {
 	std::cout << "in binding socket" << std::endl;
-	int i = connect_to_network(get_sock(), get_address());
-	std::cout << "in binding socket" << i << " ff " << get_connection() << std::endl;
+	connect_to_network(get_sock(), get_address());
 	test_connection(binding);
 }
 

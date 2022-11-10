@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "ListeningSocket.hpp"
+#include "../Conf.hpp"
 
 namespace SAMATHE
 {
@@ -15,7 +16,7 @@ namespace SAMATHE
 		virtual void	responder() = 0;
 
 	public:
-		Server(int domain, int service, int protocol, int port, u_long interface, int bklg);
+		Server(SAMATHE::ServConf &sc);
 		virtual void launch() = 0;
 		ListeningSocket *get_socket();
 	};

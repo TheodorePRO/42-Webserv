@@ -1,10 +1,10 @@
 #include "../incs/network/Server.hpp"
 
-SAMATHE::Server::Server(int domain, int service, int protocol, int port, u_long interface, int bklg)
+SAMATHE::Server::Server(SAMATHE::ServConf &sc)
 {
 	
 	std::cout << "IN SERVER CPP"<<std::endl;
-	socket = new ListeningSocket(domain, service, protocol, port, interface, bklg);
+	socket = new ListeningSocket(sc);
 }
 
 SAMATHE::ListeningSocket* SAMATHE::Server::get_socket()
