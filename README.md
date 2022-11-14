@@ -30,7 +30,7 @@ Launch / Accpter / handler and responder are virtual.
 
 - Socket OBJECT
 ARE GIVEN :
-#include <sys/socket.h>
+avec #include <sys/socket.h>
 int sock = socket(domain, type, protocol);
 	Domain :	AF_INET
 	Type :		SOCK_STREAM
@@ -48,4 +48,29 @@ given function "bind" links address to incoming "line"
 	- it instantiates a BindingSocket in constructor
 	- The listen system call tells a socket that it should be capable of accepting incoming connections
 		(backloag is the max nb of conexions it can queue)
+
+NGinX configuraitiion
+# pour commentaires
+lignes finissent par ";"
+user
+worker_processes
+error_log
+pid
+events {}
+http {} directives for web traffic handling contains
+	- include /etc/nginx/mime.types; <- lieu de fichier de conf du serveurdu
+
+SERVER conf file
+server {
+listen 80 default_server;
+listen [::]:80 default_server;   (for ipv6)
+server_name example.com www.example.com;	
+server_name *.example.com;	(+subdomains)
+server_name example.com.*;	(+all domain naims starting with ..)
+
+
+root /var/www/example.com;
+index index.html;
+try_files $uri /index.html;
+}
 
