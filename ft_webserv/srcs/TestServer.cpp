@@ -44,15 +44,19 @@ void SAMATHE::TestServer::responder()
 	char *hello = (char *)"Hello from server";
 	write(new_socket, hello, strlen(hello));
 	close(new_socket);
-
+/*
 	// ------ Read html
-/*	std::fstream	file;
+	std::fstream	file;
 	std::sstream	buf;
 	file.open("../pages/index.html", std::ifstream::in);
 	if (file.is_open() == false)
 		return ("<!Doctype html>\n<html><title>40404</title><body>there was an error finding your page</body></html>\n");
 	buf << file.rdbuf();
 	file.close();
+	
+
+
+
 
 	_type = "text/html";
 
