@@ -1,15 +1,18 @@
 #include "../incs/network/Socket.hpp"
+#include <stdlib.h>
+
+
 
 // ------ Default contructor
 SAMATHE::Socket::Socket(int domain, int service, int protocol, int port, u_long interface)
 {
 	// ------- Define address structure
-	address.sin_family= domain;
-	address.sin_port = htons(port);
-	address.sin_addr.s_addr = htonl(interface);
+	_address.sin_family= domain;
+	_address.sin_port = htons(port);
+	_address.sin_addr.s_addr = htonl(interface);
 
 	// ------ Establish socket
-	sock = socket(domain, service, protocol);
+	_sock = socket(domain, service, protocol);
 	
 }
 
@@ -25,14 +28,14 @@ void SAMATHE::Socket::test_connection(int item_to_test)
 
 // ------ Getters
 struct sockaddr_in	SAMATHE::Socket::get_address()
-{	return address;			}
+{	return _address;			}
 
 int	SAMATHE::Socket::get_sock()
-{	return sock;			}
+{	return _sock;			}
 
 int	SAMATHE::Socket::get_connection()
-{	return connection;		}
+{	return _connection;		}
 
 // ------ Setters
 void				SAMATHE::Socket::set_connection(int con)
-{	connection = con;		}
+{	_connection = con;		}

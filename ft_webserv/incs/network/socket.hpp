@@ -13,10 +13,10 @@ namespace SAMATHE
 	{
 	private:
 		// ------ Struct that contains info about the protocol
-		struct sockaddr_in address;
+		struct sockaddr_in _address;
 		// ------ Address of Socket obj in the network
-		int sock;
-		int connection;
+		int _sock;
+		int _connection;
 
 	public:
 		// ------ Constructor
