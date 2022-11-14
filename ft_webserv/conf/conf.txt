@@ -1,11 +1,11 @@
-Server {
+Server 
+{
 PORT			80;
 SERVER_NAME		samathe;	(ou pas)
-
-
 }
 
-Server {
+Server
+{
 PORT			81;
 SERVER_NAME		samathe;	(ou pas)
 BODY_SIZE		1000;
