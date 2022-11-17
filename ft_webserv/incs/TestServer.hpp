@@ -10,8 +10,10 @@ namespace SAMATHE
 {
 	class TestServer: public SAMATHE::Server
 	{
-		char buffer[30000];
-		int new_socket;
+		std::string			_reception;
+		std::string			_page;
+		int					_new_socket;
+
 
 		void accepter();
 		void handler();

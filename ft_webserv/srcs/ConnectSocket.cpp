@@ -1,7 +1,7 @@
 # include "../incs/network/ConnectSocket.hpp"
 
 // ------ Constructor
-SAMATHE::ConnectSocket::ConnectSocket(int domain, int service, int protocol, int port, u_long interface) : Socket(domain, service, protocol, port, interface)
+SAMATHE::ConnectSocket::ConnectSocket(SAMATHE::ServConf &sc) : Socket(sc)
 {
 	set_connection(connect_to_network(get_sock(), get_address()));
 	test_connection(get_connection());

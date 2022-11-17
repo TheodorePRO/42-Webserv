@@ -4,15 +4,15 @@
 
 
 // ------ Default contructor
-SAMATHE::Socket::Socket(int domain, int service, int protocol, int port, u_long interface)
+SAMATHE::Socket::Socket(SAMATHE::ServConf &sc)
 {
 	// ------- Define address structure
-	_address.sin_family= domain;
-	_address.sin_port = htons(port);
-	_address.sin_addr.s_addr = htonl(interface);
+	_address.sin_family			= sc.getDom();
+	_address.sin_port			= htons(sc.getPort());
+	_address.sin_addr.s_addr	= htonl(sc.getInt());
 
 	// ------ Establish socket
-	_sock = socket(domain, service, protocol);
+	_sock = socket(sc.getDom(), sc.getSer(), sc.getProt());
 	
 }
 

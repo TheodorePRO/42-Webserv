@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "Socket.hpp"
+#include "../Conf.hpp"
 
 namespace SAMATHE
 {
@@ -10,7 +11,7 @@ namespace SAMATHE
 	{
 	public:
 		// ------ Constructor
-		ConnectSocket(int domain, int service, int protocol, int port, u_long interface);
+		ConnectSocket(SAMATHE::ServConf &sc);
 		int connect_to_network(int sock, struct sockaddr_in address);
 
 	};
