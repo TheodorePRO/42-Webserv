@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
+#include "../Conf.hpp"
 
 
 
@@ -22,7 +23,7 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-		Socket(int domain, int service, int protocol, int port, u_long interface);
+		Socket(SAMATHE::ServConf &sc);
 		// ------ Virtual function to connect
 		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion

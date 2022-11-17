@@ -9,15 +9,15 @@ namespace SAMATHE
 {
 	class ListeningSocket :public BindSocket
 	{
-		SAMATHE::ServConf *_sc;
-		int listening;
+	//	SAMATHE::ServConf	*_sc;
+		int					_listening;
 
 	public:
 		// ------ Constructor
 		ListeningSocket(SAMATHE::ServConf &sc);
 
 		// ------ Operations
-		void start_listening();
+		void start_listening(int bkl);
 		int get_listening();
 	};
 

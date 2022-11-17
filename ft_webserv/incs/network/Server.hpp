@@ -4,13 +4,16 @@
 #include <stdio.h>
 #include "ListeningSocket.hpp"
 #include "../Conf.hpp"
+#include <sys/socket.h>
+
 
 namespace SAMATHE
 {
 	class Server
 	{
 	private:
-		ListeningSocket *socket;
+		ListeningSocket		*_socket;
+
 		virtual void	accepter() = 0;
 		virtual void	handler() = 0;
 		virtual void	responder() = 0;

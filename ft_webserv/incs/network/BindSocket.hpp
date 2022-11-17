@@ -3,19 +3,20 @@
 
 # include <stdio.h>
 # include "Socket.hpp"
+#include "../Conf.hpp"
 
 namespace SAMATHE
 {
 	class BindSocket : public Socket
 	{
 		// ------ To store 0 if success
-		int		binding;
+		int		_binding;
 		// ------ Virtual fct from parent to bind
 		int		connect_to_network(int sock, struct sockaddr_in address);
 
 	public:
 		// ------ Constructor
-				BindSocket(int domain, int service, int protocol, int port, u_long interface);
+				BindSocket(SAMATHE::ServConf &sc);
 
 		// ------ Getters
 		int		get_binding();
