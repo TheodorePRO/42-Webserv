@@ -27,16 +27,11 @@ SAMATHE::TestServer::~TestServer()
 {}
 
 void SAMATHE::TestServer::accepter()
-{ // ------ 1ere fonction : RECEPTION depuis le client
-  //---------     CA
+{
+	// ------ 1ere fonction : RECEPTION depuis le client
 	struct sockaddr_in address	= get_socket()->get_address();
 	int addrlen					= sizeof(address);
 	_new_socket = accept(get_socket()->get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
-	//-----------	OU CA
-	//	struct	sockaddr_in csin;
-	//	unsigned int		cslen;
-	//	_new_socket = accept(get_socket()->get_sock(), (struct sockaddr *)&csin, &cslen);
-	//____________
 
 	char				buffer[30000];
 	int					ret;
@@ -66,17 +61,13 @@ void SAMATHE::TestServer::handler()
 
 void SAMATHE::TestServer::responder()
 {
-	// ------ Read html
+	// ------ Read request ans slash it into vector
 	std::stringstream ssxx(_reception);
 	std::istream_iterator<std::string> begin(ssxx);
 	std::istream_iterator<std::string> end;
 	std::vector<std::string> cut(begin, end);
-//	_page = _reception.substr(_reception.find("GET") + 4 , (_reception.find("HTTP") - _reception.find("GET") - 5));
 
-	_response.setContent("<h1>404 Not Found</h1>");
-	_page = "pages/404.html";
-	_response.setCode("404");
-
+	// ------ Get thge requested page
 	if (cut.size() >= 3 && cut[0] == "GET")
 	{
 		_page = std::string("pages") + cut[1];
@@ -84,89 +75,29 @@ void SAMATHE::TestServer::responder()
 			_page = "pages/index.html";
 	}
 
-	std::ifstream		file(_page.c_str());
-	if (file.good())
+	// ------ GET response content
+	if (_response.setContent(_page) == 0)
 	{
-		std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-		_response.setContent(str);
-		_response.setCode("200");
+		_response.setContent(std::string("pages/404.html").c_str());
+		_response.setCode("404");
 	}
-	file.close();
-	_response.setType(_contents[_page.substr(_page.find(".") + 1)]);
 
-
+	// ------ Build response : header + content
 	std::ostringstream oss;
 	oss << "HTTP/1.1 " << _response.getCode() << _errors.find(_response.getCode())->second << "\r\n";
 	oss << "Cache-Control: no-cache, private\r\n";
-	oss << "Content-Type: "<< _response.getType() << "\r\n";
+	oss << "Content-Type: "<< _contents[_response.getType()] << "\r\n";
 	oss << "Content-Length: " << _response.getContent().size() << "\r\n";
 	oss << "\r\n";
-	oss << _response.getContent();
 
+	oss << _response.getContent();
 	std::string output = oss.str();
 	int size = output.size() + 1;
-
 	::send(_new_socket, output.c_str(), size, 0 );
-
-/*	if (_page == "/")
-		_page = "pages/index.html";
-	else
-		_page.insert(0, "pages");
-	std::ifstream		file;
-	std::stringstream	buf;
-	file.open(_page.c_str(), std::ifstream::in);
-	if (file.is_open() == false)
-	{
-		_response.setCode("404");
-		_response.setType("text/html");
-		buf << "<!Doctype html>\n<html><title>40404</title><body>there was an error finding your page</body></html>\n";
-	}
-	else
-	{
-		_response.setCode("200");
-		_response.setType(_contents[_page.substr(_page.find(".") + 1)]);
-		buf << file.rdbuf();
-	}
-	file.close();
-
-
-
-	// ----- Send back
-	//::send(_new_socket, buf.str().c_str(), buf.str().size(), 0);
-	std::stringstream ss;
-	ss << buf.str().size();
-	_response.setHeader(std::string("HTTP/1.1 ") + _response.getCode() + _errors.find(_response.getCode())->second + std::string("\r\n") + std::string("Cache-Control: no-cache, private\r\nContent-Type: ") + _response.getType() + std::string("\r\nContent-Length: ") + ss.str() + std::string("\r\n\r\n"));
-write(_new_socket, _response.getHeader().c_str(), sizeof(_response.getHeader().c_str()) +1);
-	write(_new_socket, buf.str().c_str(), buf.str().size()+1);
-
-	
-	std::ostringstream	oss;
-	oss << "HTTP/1.1 200 OK\r\n";
-	oss << "Cache-Control: no-cache, private\r\n";
-	oss << "Content-Type: text/html\r\n";
-	oss << "Content-Length: 14\r\n";
-	oss << "\r\n";
-	oss << "<h1>hello</h1>";
-
-	std::string output = oss.str();
-//	int size = output.size() + 1;
-//	write(_new_socket, output.c_str(), size);
-
-	std::cout <<"--------------------"<< std::endl;
-	std::cout << _response.getHeader() << std::endl;
-	std::cout << _page << std::endl;
-
-
-	//---------------- TEST DESTINATION
-	struct sockaddr_in address	= get_socket()->get_address();
-	std::cout << "Address :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl;
-	//------------------------------
-
-
-*/
 
 	close(_new_socket);
 }
+
 
 void SAMATHE::TestServer::launch()
 {
@@ -213,5 +144,4 @@ void	SAMATHE::TestServer::initContentMap()
 	_contents["mpeg"] = "video/mpeg";
 	_contents["m3u8"] = "application/vnd.apple.mpegurl";
 	_contents["ts"]	= "video/mp2t";
-
 }

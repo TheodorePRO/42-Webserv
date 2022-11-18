@@ -2,6 +2,8 @@
 # define RESPONSE_HPP
 
 #include <string>
+#include <fstream>
+#include <iostream>
 
 namespace SAMATHE
 {
@@ -17,8 +19,7 @@ namespace SAMATHE
 		Response(void);
 		~Response(void);
 
-		void	setContent(std::string const &h)
-		{	_content = h;	}
+		int	setContent(std::string page);
 		void	setCode(std::string const &c)
 		{	_code = c;	}
 		void	setType(std::string const &t)
