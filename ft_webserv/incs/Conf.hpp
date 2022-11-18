@@ -30,7 +30,7 @@ namespace SAMATHE
 				_proto		= proto->p_proto;
 			_domain		= PF_INET;
 			_service	= SOCK_STREAM;
-			_port		= 8080;
+			_port		= 8080;   //*************
 			_interface	= INADDR_ANY;
 			_bklg		= 42;	//*********
 			_family		= AF_INET;
