@@ -20,6 +20,8 @@ namespace SAMATHE
 		SAMATHE::Response	_response;
 		std::map<std::string, std::string>			_errors;
 		std::map<std::string, std::string>	_contents;
+//*MS*		
+		fd_set              _master_set, _working_set;
 
 		void accepter();
 		void handler();

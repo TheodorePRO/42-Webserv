@@ -5,8 +5,10 @@
 SAMATHE::BindSocket::BindSocket(SAMATHE::ServConf &sc) : Socket(sc)
 {
 	std::cout << "in binding socket" << std::endl;
+
 	connect_to_network(get_sock(), get_address());
-	test_connection(_binding);
+	test_connection(_binding, "Binding error");
+
 }
 
 // ------ Definition of connect_to_network virtual function
@@ -14,7 +16,7 @@ int			SAMATHE::BindSocket::connect_to_network(int sock, struct sockaddr_in addre
 {
 	//
 	_binding = bind(sock, (const struct sockaddr *)&address, sizeof(address));
-	return (_binding);
+	return _binding;
 }
 
 // ------ Getters

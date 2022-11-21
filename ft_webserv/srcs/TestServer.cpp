@@ -98,9 +98,18 @@ void SAMATHE::TestServer::responder()
 	close(_new_socket);
 }
 
+#include <sys/select.h>
+
 
 void SAMATHE::TestServer::launch()
 {
+	// ------Initialize the master fd_set 
+	int listen_sd = get_socket()->get_sock();
+	FD_ZERO(&_master_set);
+//	int max_sd = listen_sd;
+	FD_SET(listen_sd, &_master_set);
+
+
 	while (true)
 	{ // ------ boucle infinie qui fait Accept -> Handle -> Respond (Voir avec Mariys pour le select)
 		std::cout << "========WAITING======="<< std::endl;

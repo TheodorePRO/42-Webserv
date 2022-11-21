@@ -8,7 +8,7 @@ SAMATHE::ListeningSocket::ListeningSocket(SAMATHE::ServConf &sc) : BindSocket(sc
 	// ------ Start listening
 	start_listening(sc.getBkl());
 	// ------ Confirm success
-	test_connection (_listening);
+	test_connection (_listening, "Listening error!");
 }
 
 // ------ Tells the number of simultaneous connections

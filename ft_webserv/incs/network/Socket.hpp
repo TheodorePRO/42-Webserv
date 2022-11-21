@@ -18,16 +18,17 @@ namespace SAMATHE
 		// ------ Struct that contains info about the protocol
 		struct sockaddr_in _address;
 		// ------ Address of Socket obj in the network
-		int _sock;
+//*MS* _socket_fd  - Je propose de changer le nom en quelque chose de plus descriptif.
+		int _sock; 
+//*MS* quelle est la fonction de cette variable (_connection)
 		int _connection;
-
 	public:
 		// ------ Constructor
 		Socket(SAMATHE::ServConf &sc);
 		// ------ Virtual function to connect
 		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion
-		void test_connection(int);
+		void test_connection(int, const char *);
 		// ------ Getters
 		struct sockaddr_in	get_address();
 		int					get_sock();
