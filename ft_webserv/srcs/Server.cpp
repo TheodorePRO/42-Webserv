@@ -21,5 +21,7 @@ SAMATHE::Server::Server(SAMATHE::ServConf &sc)
 	// Le constructeur du serveur créé une "listeningSocket qui est une socket ->bindée et -> qui listen.
 }
 
+SAMATHE::Server::~ Server(){}
+
 SAMATHE::ListeningSocket& SAMATHE::Server::get_socket(int i)
 {	return _sockets[i];		}

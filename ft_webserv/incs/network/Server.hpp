@@ -25,7 +25,9 @@ namespace SAMATHE
 
 	public:
 		Server(SAMATHE::ServConf &sc);
+		virtual ~Server();
 		virtual void launch() = 0;
+		
 		ListeningSocket& get_socket(int i);
 	};
 
