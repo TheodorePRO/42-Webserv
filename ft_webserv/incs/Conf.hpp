@@ -3,43 +3,58 @@
 
 #include <netdb.h>
 #include <netinet/in.h>
+#include <vector>
 
 namespace SAMATHE
 {
+	typedef struct conf_server_t{
+		int		proto;
+		int		domain;
+		int		service;
+		int		port;
+		u_long	interface;
+		int		bklg;
+		u_long	family;
+
+	} conf_server;
+
 	class ServConf 
 	{
-		int		_proto;
-		int		_domain		;
-		int		_service	;
-		int		_port	;
-		u_long	_interface	;
-		int		_bklg	;
-		u_long	_family;
+		std::vector<conf_server> conf_servers;
 
 		public:
 		ServConf()
 		{
-			struct	protoent	*proto;
-			proto = getprotobyname("tcp");
-			if (!proto)
+			conf_server tmp;
+
+			struct	protoent	*prt;
+			prt = getprotobyname("tcp");
+			if (!prt)
 			{
 				perror("Get Proto failed... ");
-				_proto	= 0;
+				tmp.proto	= 0;
 			}
 			else
-				_proto		= proto->p_proto;
-			_domain		= PF_INET;
-			_service	= SOCK_STREAM;
-			_port		= 8080;   //*************
-			_interface	= INADDR_ANY;
-			_bklg		= 42;	//*********
-			_family		= AF_INET;
+				tmp.proto		= prt->p_proto;
+			tmp.domain		= PF_INET;
+			tmp.service	= SOCK_STREAM;
+			tmp.port		= 8080;   //*************
+			tmp.interface	= INADDR_ANY;
+			tmp.bklg		= 42;	//*********
+			tmp.family		= AF_INET;
+
+			conf_servers.push_back(tmp);
 		}
 
 		~ServConf(){};
 
-		int	getDom()
-		{	return _domain;	}
+		int	getNumConfServs()
+		{	return conf_servers.size();	}
+		conf_server&	getConfServ(int i)
+		{	return conf_servers[i];	}
+/*
+		int	getDom(int i)
+		{	return conf_servers[i]._domain;	}
 		int	getSer()
 		{	return _service;	}
 		int	getProt()
@@ -50,7 +65,7 @@ namespace SAMATHE
 		{	return _interface;	}
 		int	getBkl()
 		{	return _bklg;	}
-
+*/
 	};
 }
 #endif

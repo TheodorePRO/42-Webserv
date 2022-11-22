@@ -1,12 +1,12 @@
 # include "../incs/network/ListeningSocket.hpp"
 
 
-SAMATHE::ListeningSocket::ListeningSocket(SAMATHE::ServConf &sc) : BindSocket(sc)
+SAMATHE::ListeningSocket::ListeningSocket(SAMATHE::conf_server &sc) : BindSocket(sc)
 {
 //	_sc = &sc;
 	std::cout << "IN LISTENONG SOCKET"<< std::endl;
 	// ------ Start listening
-	start_listening(sc.getBkl());
+	start_listening(sc.bklg);
 	// ------ Confirm success
 	test_connection (_listening, "Listening error!");
 }

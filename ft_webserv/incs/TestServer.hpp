@@ -11,19 +11,17 @@
 
 namespace SAMATHE
 {
-	class TestServer: public SAMATHE::Server
+	class TestServer: SAMATHE::Server
 	{
 		std::string			_reception;
 		int					_new_socket;
 		std::string			_page;
 		std::string			_type;
 		SAMATHE::Response	_response;
-		std::map<std::string, std::string>			_errors;
+		std::map<std::string, std::string>	_errors;
 		std::map<std::string, std::string>	_contents;
-//*MS*		
-		fd_set              _master_set, _working_set;
 
-		void accepter();
+		void accepter(int);
 		void handler();
 		void responder();
 		void initErrorMap();

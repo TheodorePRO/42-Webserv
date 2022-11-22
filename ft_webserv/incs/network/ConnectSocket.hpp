@@ -11,7 +11,7 @@ namespace SAMATHE
 	{
 	public:
 		// ------ Constructor
-		ConnectSocket(SAMATHE::ServConf &sc);
+		ConnectSocket(SAMATHE::conf_server &sc);
 		int connect_to_network(int sock, struct sockaddr_in address);
 
 	};

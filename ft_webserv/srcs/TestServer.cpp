@@ -26,12 +26,12 @@ SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
 SAMATHE::TestServer::~TestServer()
 {}
 
-void SAMATHE::TestServer::accepter()
+void SAMATHE::TestServer::accepter(int i)
 {
 	// ------ 1ere fonction : RECEPTION depuis le client
-	struct sockaddr_in address	= get_socket()->get_address();
+	struct sockaddr_in address	= get_socket(i).get_address();
 	int addrlen					= sizeof(address);
-	_new_socket = accept(get_socket()->get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
+	_new_socket = accept(get_socket(i).get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
 	char				buffer[30000];
 	int					ret;
@@ -40,6 +40,11 @@ void SAMATHE::TestServer::accepter()
 		std::cout << "Client accepted at ip :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl; 
 	else
 		perror("Failed to accept...");
+
+
+
+
+//!!!!
 	ret = ::recv(_new_socket, buffer, sizeof(buffer) - 1, 0);	// ------ appel système pour recevoir depuis le client
 	if (ret < 1)
 	{
@@ -103,17 +108,14 @@ void SAMATHE::TestServer::responder()
 
 void SAMATHE::TestServer::launch()
 {
+	int i = 0;
 	// ------Initialize the master fd_set 
-	int listen_sd = get_socket()->get_sock();
-	FD_ZERO(&_master_set);
-//	int max_sd = listen_sd;
-	FD_SET(listen_sd, &_master_set);
-
+	//int listen_sd = get_socket(i).get_sock();
 
 	while (true)
 	{ // ------ boucle infinie qui fait Accept -> Handle -> Respond (Voir avec Mariys pour le select)
 		std::cout << "========WAITING======="<< std::endl;
-		accepter();
+		accepter(i);
 		handler();
 		responder();
 		std::cout << "========DONE========" << std::endl;

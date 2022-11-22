@@ -4,15 +4,15 @@
 
 
 // ------ Default contructor
-SAMATHE::Socket::Socket(SAMATHE::ServConf &sc)
+SAMATHE::Socket::Socket(SAMATHE::conf_server &sc)
 {
 	// ------- Define address structure
-	_address.sin_family			= sc.getDom();
-	_address.sin_port			= htons(sc.getPort());
-	_address.sin_addr.s_addr	= htonl(sc.getInt());
+	_address.sin_family			= sc.domain;
+	_address.sin_port			= htons(sc.port);
+	_address.sin_addr.s_addr	= htonl(sc.interface);
 
 	// ------ Establish socket
-	_sock = socket(sc.getDom(), sc.getSer(), sc.getProt());
+	_sock = socket(sc.domain, sc.service, sc.proto);
 	if (_sock == -1)
 	{
 		perror("Cann't establish socket!");
@@ -20,12 +20,12 @@ SAMATHE::Socket::Socket(SAMATHE::ServConf &sc)
 		return;
 	}
 
-/*
 	// ------ Allow socket descriptor to be reuseable   
 	int on = 1;
-	int rc = setsockopt(_sock, SOL_SOCKET,  SO_REUSEADDR,
-					(char *)&on, sizeof(on));
+	int rc = setsockopt(_sock, SOL_SOCKET,  SO_REUSEADDR, (char *)&on, sizeof(on));
 	test_connection(rc, "setsockopt() failed");
+
+/*
 	// ------ Set socket to be nonblocking. All of the sockets for
 #include <sys/ioctl.h>
 	// the incoming connections will also be nonblocking since

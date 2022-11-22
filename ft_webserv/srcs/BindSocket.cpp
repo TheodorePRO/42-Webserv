@@ -2,7 +2,7 @@
 #include "../incs/Conf.hpp"
 
 // ------ Constructor
-SAMATHE::BindSocket::BindSocket(SAMATHE::ServConf &sc) : Socket(sc)
+SAMATHE::BindSocket::BindSocket(SAMATHE::conf_server &sc) : Socket(sc)
 {
 	std::cout << "in binding socket" << std::endl;
 

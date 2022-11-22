@@ -24,7 +24,7 @@ namespace SAMATHE
 		int _connection;
 	public:
 		// ------ Constructor
-		Socket(SAMATHE::ServConf &sc);
+		Socket(conf_server &sc);
 		// ------ Virtual function to connect
 		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion
