@@ -20,6 +20,7 @@ SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
 	std::cout << "==READY TO LAUNCH=="<< std::endl;
 	initErrorMap();
 	initContentMap();
+	
 	launch();
 }
 
@@ -33,14 +34,22 @@ void SAMATHE::TestServer::accepter()
 	int addrlen					= sizeof(address);
 	_new_socket = accept(get_socket()->get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
-	char				buffer[30000];
-	int					ret;
 
 	if (_new_socket > - 1 )
 		std::cout << "Client accepted at ip :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl; 
 	else
 		perror("Failed to accept...");
-	ret = ::recv(_new_socket, buffer, sizeof(buffer) - 1, 0);	// ------ appel système pour recevoir depuis le client
+}
+
+void	SAMATHE::TestServer::receiving()
+	{
+	char				buffer[30000];
+	int					ret;
+	  std::cout << "***ggggggggggggggggggggg*" << _reception.getSize() << std::endl;
+	if (_reception.getSize() == 0)
+	{
+	// ------ appel système pour recevoir depuis le client
+	ret = ::recv(_new_socket, buffer, sizeof(buffer) - 1, 0);
 	if (ret < 1)
 	{
 		close(_new_socket);
@@ -49,68 +58,97 @@ void SAMATHE::TestServer::accepter()
 		else
 			perror("Read error...");
 	}
-	_reception = std::string(buffer);	// ------ passse le message à la variable string de la classe
+	_justRecv = std::string(buffer);	// ------ passse le message à la variable string de la classe
+	}
+
+	else if (_reception.getSize() != 0)
+	{
+		char *fileComplete;
+		size_t r = 0;
+		size_t i = _reception.getSize();
+		fileComplete = (char*) malloc (sizeof(char)* i );
+		while (i > 0)
+		{
+			ret = ::recv(_new_socket, fileComplete + r, sizeof(buffer), 0);
+			if (ret <1)
+				perror("Read error...");
+			else
+			{	
+				r +=ret;
+				i -= ret;
+			}
+		}
+	  std::cout << "*** CREATING FILE ***" << std::endl;
+	  std::ofstream("file.txt") << "file content";
+		FILE *file = fopen("RRRRRR.TXT", "wb");
+		fwrite(fileComplete, 1, r, file);
+		free(fileComplete);
+		fclose(file);
+		_reception.setSize();
+	}
 }
 
 void SAMATHE::TestServer::handler()
 {
-	std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
-	std::cout << _reception << std::endl;
-	std::cout << "*** END OF BUFFER ***" << std::endl;
+	  std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
+  std::cout <<_justRecv << std::endl;
+  std::cout << "*** END OF BUFFER ***" << std::endl;
+	// ------ Read request ans slash it into vector
+	std::stringstream ssxx(_justRecv);
+	std::istream_iterator<std::string> begin(ssxx);
+	std::istream_iterator<std::string> end;
+	std::vector<std::string> cut(begin, end);
+	_reception.setReception(cut);
+		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 }
 
 void SAMATHE::TestServer::responder()
 {
-	// ------ Read request ans slash it into vector
-	std::stringstream ssxx(_reception);
-	std::istream_iterator<std::string> begin(ssxx);
-	std::istream_iterator<std::string> end;
-	std::vector<std::string> cut(begin, end);
-
-	// ------ Get thge requested page
-	if (cut.size() >= 3 && cut[0] == "GET")
-	{
-		_page = std::string("pages") + cut[1];
-		if (cut[1] == "/")
-			_page = "pages/index.html";
-	}
-
 	// ------ GET response content
-	if (_response.setContent(_page) == 0)
+	if (_reception.getMethod() == "GET")
 	{
-		_response.setContent(std::string("pages/404.html").c_str());
-		_response.setCode("404");
+		if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
+		{
+			_response.setContent(std::string("pages/404.html").c_str());
+			_response.setCode("404");
+		}
+
+		// ------ Build response : header + content
+		std::ostringstream oss;
+		oss << _reception.getVersion() << " " << _response.getCode() << _errors.find(_response.getCode())->second << "\r\n";
+		oss << "Cache-Control: no-cache, private\r\n";
+		oss << "Content-Type: "<< _contents[_response.getType()] << "\r\n";
+		oss << "Content-Length: " << _response.getContent().size() << "\r\n";
+		oss << "\r\n";
+
+		oss << _response.getContent();
+		std::string output = oss.str();
+		int size = output.size() + 1;
+		::send(_new_socket, output.c_str(), size, 0 );
+		close(_new_socket);
+	}
+	else if (_reception.getMethod() == "POST")
+	{
+		receiving();
+	//	_reception.setBody(_justRecv);
+	//	std::cout << _reception.getBody() << std::endl;
 	}
 
-	// ------ Build response : header + content
-	std::ostringstream oss;
-	oss << "HTTP/1.1 " << _response.getCode() << _errors.find(_response.getCode())->second << "\r\n";
-	oss << "Cache-Control: no-cache, private\r\n";
-	oss << "Content-Type: "<< _contents[_response.getType()] << "\r\n";
-	oss << "Content-Length: " << _response.getContent().size() << "\r\n";
-	oss << "\r\n";
-
-	oss << _response.getContent();
-	std::string output = oss.str();
-	int size = output.size() + 1;
-	::send(_new_socket, output.c_str(), size, 0 );
-
-	close(_new_socket);
+	void clearReception();
 }
-
 
 void SAMATHE::TestServer::launch()
 {
 	while (true)
-	{ // ------ boucle infinie qui fait Accept -> Handle -> Respond (Voir avec Mariys pour le select)
+	{ // ------ boucle infinie qui fait Accept . Handle . Respond (Voir avec Mariys pour le select)
 		std::cout << "========WAITING======="<< std::endl;
 		accepter();
+		receiving();
 		handler();
 		responder();
 		std::cout << "========DONE========" << std::endl;
 	}
 }
-
 void	SAMATHE::TestServer::initErrorMap()
 {
 	_errors["100"] = " Continue";
