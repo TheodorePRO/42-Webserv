@@ -30,7 +30,7 @@ void		SAMATHE::Reception::setReception(std::vector<std::string> &cut)
 		if (std::find(cut.begin(), cut.end(), "Content-Length:") != cut.end())
 		{
 			
-			std::istringstream iss(*std::next(std::find(cut.begin(), cut.end(), "Content-Length:"), 1));
+			std::istringstream iss(*(++(std::find(cut.begin(), cut.end(), "Content-Length:"))));
 			iss >> _size;
 		}
 	}
