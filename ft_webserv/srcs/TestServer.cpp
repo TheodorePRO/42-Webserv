@@ -1,7 +1,7 @@
 #include "../incs/TestServer.hpp"
 #include "../incs/Conf.hpp"
 #include <unistd.h>
-#include <string.h>
+#include <string>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <iostream>				// for open
@@ -45,46 +45,46 @@ void	SAMATHE::TestServer::receiving()
 	{
 	char				buffer[30000];
 	int					ret;
-	  std::cout << "***ggggggggggggggggggggg*" << _reception.getSize() << std::endl;
-	if (_reception.getSize() == 0)
-	{
 	// ------ appel système pour recevoir depuis le client
-	ret = ::recv(_new_socket, buffer, sizeof(buffer) - 1, 0);
-	if (ret < 1)
+	ret = ::recv(_new_socket, buffer, sizeof(buffer), 0);
+	if (ret == 0 || ret == -1)
 	{
 		close(_new_socket);
 		if (!ret)
-			std::cout << "Connexion closed " << std::endl;
+			std::cout << "\rConnection was closed by client.\n" << std::endl;
 		else
-			perror("Read error...");
+			std::cout << "\rRead error, closing connection.\n" << std::endl;
+		return;
 	}
-	_justRecv = std::string(buffer);	// ------ passse le message à la variable string de la classe
-	}
-
-	else if (_reception.getSize() != 0)
+	_received += ret;
+	_justRecv += std::string(buffer);
+	size_t	i = _justRecv.find("\r\n\r\n");
+	if (i != std::string::npos)
 	{
-		char *fileComplete;
-		size_t r = 0;
-		size_t i = _reception.getSize();
-		fileComplete = (char*) malloc (sizeof(char)* i );
-		while (i > 0)
+		if (_justRecv.find("Content-Length: ") == std::string::npos)
 		{
-			ret = ::recv(_new_socket, fileComplete + r, sizeof(buffer), 0);
-			if (ret <1)
-				perror("Read error...");
+			if (_justRecv.find("Transfer-Encoding: chunked") != std::string::npos)
+			{
+				if (_justRecv.find("0\r\n\r\n") == _justRecv.size() - 6)
+				{
+					handler();
+					_status = 1;
+				}
+				else
+					return;
+			}
 			else
-			{	
-				r +=ret;
-				i -= ret;
+			{
+				handler();
+				_status = 1;
 			}
 		}
-	  std::cout << "*** CREATING FILE ***" << std::endl;
-	  std::ofstream("file.txt") << "file content";
-		FILE *file = fopen("RRRRRR.TXT", "wb");
-		fwrite(fileComplete, 1, r, file);
-		free(fileComplete);
-		fclose(file);
-		_reception.setSize();
+		size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
+		if (_justRecv.size() >= len + i + 4)
+		{
+			handler();
+			_status = 1;
+		}
 	}
 }
 
@@ -93,7 +93,7 @@ void SAMATHE::TestServer::handler()
 	  std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
   std::cout <<_justRecv << std::endl;
   std::cout << "*** END OF BUFFER ***" << std::endl;
-	// ------ Read request ans slash it into vector
+	// ------ Read request and slash it into vector
 	std::stringstream ssxx(_justRecv);
 	std::istream_iterator<std::string> begin(ssxx);
 	std::istream_iterator<std::string> end;
@@ -129,10 +129,15 @@ void SAMATHE::TestServer::responder()
 	}
 	else if (_reception.getMethod() == "POST")
 	{
-		receiving();
-	//	_reception.setBody(_justRecv);
-	//	std::cout << _reception.getBody() << std::endl;
-	}
+/*		std::cout << "*** CREATING FILE ***" << std::endl;
+		size_t i = _justRecv.find("\r\n\r\n");
+		std::ofstream("file.txt") << _justRecv.substr(i , _justRecv.size() - i);
+		FILE *file = fopen("RRRRRR.TXT", "wb");
+		fwrite(_justRecv,1, _received , file);
+//		free(fileComplete);
+		fclose(file);
+		_reception.setSize();
+*/	}
 
 	void clearReception();
 }
@@ -144,7 +149,7 @@ void SAMATHE::TestServer::launch()
 		std::cout << "========WAITING======="<< std::endl;
 		accepter();
 		receiving();
-		handler();
+	//	handler();  // called in receiving
 		responder();
 		std::cout << "========DONE========" << std::endl;
 	}

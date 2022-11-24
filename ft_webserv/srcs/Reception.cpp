@@ -8,7 +8,7 @@
 
 SAMATHE::Reception::Reception()
 {
-			_body = "";
+			_method = "";
 			_version = "";
 			_page = "";
 			_body = "";
