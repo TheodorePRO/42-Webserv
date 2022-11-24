@@ -25,7 +25,7 @@ namespace SAMATHE
 		public:
 		ServConf()
 		{
-			conf_server tmp; // 
+			conf_server tmp;
 			
 			struct	protoent	*proto;
 			proto = getprotobyname("tcp");
