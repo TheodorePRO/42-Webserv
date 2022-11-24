@@ -17,10 +17,14 @@ namespace SAMATHE
 	class TestServer: public SAMATHE::Server
 	{
 		int					_new_socket;
+		int					_status; // 0 = READ - 1 = Write - 2 = fini
+		size_t				_received;
+		std::string			_justRecv;
+
+
 		std::string			_page;
 		std::string			_type;
 
-		std::string			_justRecv;
 		SAMATHE::Reception	_reception;
 		SAMATHE::Response	_response;
 		std::map<std::string, std::string>			_errors;
