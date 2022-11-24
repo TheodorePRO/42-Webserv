@@ -43,7 +43,7 @@ void SAMATHE::TestServer::accepter()
 
 void	SAMATHE::TestServer::receiving()
 	{
-	char				buffer[30000];
+	char				buffer[30000] = {0}; 
 	int					ret;
 	// ------ appel système pour recevoir depuis le client
 	ret = ::recv(_new_socket, buffer, sizeof(buffer), 0);
@@ -65,10 +65,13 @@ void	SAMATHE::TestServer::receiving()
 		{
 			if (_justRecv.find("Transfer-Encoding: chunked") != std::string::npos)
 			{
+
+
 				if (_justRecv.find("0\r\n\r\n") == _justRecv.size() - 6)
 				{
 					handler();
 					_status = 1;
+					return;
 				}
 				else
 					return;
@@ -77,14 +80,17 @@ void	SAMATHE::TestServer::receiving()
 			{
 				handler();
 				_status = 1;
+				return;
 			}
 		}
 		size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
+	  std::cout << "*vvvvvvvvvvvvvvvvv***"<< len << _justRecv.size() << std::endl;
 		if (_justRecv.size() >= len + i + 4)
 		{
 			handler();
 			_status = 1;
 		}
+	//	receiving();	///  to unplug with the select
 	}
 }
 
@@ -93,6 +99,7 @@ void SAMATHE::TestServer::handler()
 	  std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
   std::cout <<_justRecv << std::endl;
   std::cout << "*** END OF BUFFER ***" << std::endl;
+
 	// ------ Read request and slash it into vector
 	std::stringstream ssxx(_justRecv);
 	std::istream_iterator<std::string> begin(ssxx);
@@ -129,17 +136,20 @@ void SAMATHE::TestServer::responder()
 	}
 	else if (_reception.getMethod() == "POST")
 	{
-/*		std::cout << "*** CREATING FILE ***" << std::endl;
-		size_t i = _justRecv.find("\r\n\r\n");
-		std::ofstream("file.txt") << _justRecv.substr(i , _justRecv.size() - i);
+		std::cout << "*** CREATING FILE ***" << std::endl;
+	//	size_t i = _justRecv.find("\r\n\r\n");
+	//	std::ofstream("file.txt") << _justRecv.substr(i , _justRecv.size() - i);
+		std::ofstream("file.txt") << _justRecv.c_str();
 		FILE *file = fopen("RRRRRR.TXT", "wb");
-		fwrite(_justRecv,1, _received , file);
-//		free(fileComplete);
+		fwrite(_justRecv.c_str(),1, _received , file);
 		fclose(file);
 		_reception.setSize();
-*/	}
+	}
 
 	void clearReception();
+	_received = 0;
+	_justRecv = "";
+	_status = 0;
 }
 
 void SAMATHE::TestServer::launch()
