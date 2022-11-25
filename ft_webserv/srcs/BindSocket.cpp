@@ -1,24 +1,27 @@
 # include "../incs/network/BindSocket.hpp"
 #include "../incs/Conf.hpp"
 
+namespace SAMATHE
+{
 // ------ Constructor
-SAMATHE::BindSocket::BindSocket(SAMATHE::conf_server &sc) : Socket(sc)
-{
-	std::cout << "in binding socket" << std::endl;
+	BindSocket::BindSocket(conf_server &sc) : Socket(sc)
+	{
+		std::cout << "in binding socket" << std::endl;
 
-	connect_to_network(get_sock(), get_address());
-	test_connection(_binding, "Binding error");
+		connect_to_network(get_sock(), get_address());
+		test_connection(_binding, "Binding error");
 
+	}
+
+	// ------ Definition of connect_to_network virtual function
+	int		BindSocket::connect_to_network(int sock, struct sockaddr_in address)
+	{
+		//
+		_binding = bind(sock, (const struct sockaddr *)&address, sizeof(address));
+		return _binding;
+	}
+
+	// ------ Getters
+	int		BindSocket::get_binding()
+	{	return _binding;}
 }
-
-// ------ Definition of connect_to_network virtual function
-int			SAMATHE::BindSocket::connect_to_network(int sock, struct sockaddr_in address)
-{
-	//
-	_binding = bind(sock, (const struct sockaddr *)&address, sizeof(address));
-	return _binding;
-}
-
-// ------ Getters
-int			SAMATHE::BindSocket::get_binding()
-{	return _binding;				}

@@ -15,6 +15,16 @@ SAMATHE::Reception::Reception()
 			_size = 0;
 }
 
+SAMATHE::Reception::Reception(int fd)
+{
+		_fd = fd;
+			_method = "";
+			_version = "";
+			_page = "";
+			_body = "";
+			_size = 0;
+}
+
 SAMATHE::Reception::~Reception(){}
 
 

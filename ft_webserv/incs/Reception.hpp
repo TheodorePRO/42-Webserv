@@ -19,6 +19,9 @@ namespace SAMATHE
 		std::string									_page;
 		std::string									_body;
 		size_t										_size;
+	
+	int 										_fd; //MS - new: pour gerer pusieurs fd
+	//int					_status; // 0 = READ - 1 = Write - 2 = fini 
 
 /*
 		std::map<std::string, std::string>			_headers;
@@ -36,6 +39,7 @@ namespace SAMATHE
 */
 		public :
 		Reception(void);
+	Reception(int sd);
 		~Reception(void);
 
 		void setReception(std::vector<std::string> &cut);
@@ -50,6 +54,7 @@ namespace SAMATHE
 			_body = "";
 			_size = 0;
 		}
+
 		void		setSize()
 		{	_size = 0;	}
 
@@ -63,6 +68,8 @@ namespace SAMATHE
 		{	return _version;	}
 		size_t		getSize()
 		{	return _size;	}
+
+	//*******get_status()
 	};
 
 }

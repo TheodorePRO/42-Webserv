@@ -10,6 +10,6 @@ int main(int ac, char **av)
 
 
 	std::cout << "IN TEST SERVER CPP"<<std::endl;
-	SAMATHE::ServConf	sc(av[1]);
+	SAMATHE::ServConf	sc(av[1]); // obtenir parametres a partir d'un fichier do cinfig
 	SAMATHE::TestServer t(sc);
 }

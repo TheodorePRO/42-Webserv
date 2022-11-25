@@ -25,7 +25,7 @@ namespace SAMATHE{
 
 	Server::~ Server(){}
 
-	ListeningSocket& SAMATHE::Server::get_socket(int i)
+	ListeningSocket& Server::get_socket(int i)
 	{	return _sockets[i];		}
 
 }

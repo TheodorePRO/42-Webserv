@@ -13,10 +13,10 @@ namespace SAMATHE
 	class Server
 	{
 	private:
-		std::vector<ListeningSocket>		_sockets; //map
+		std::vector<ListeningSocket>		_sockets; //map parsing congig
 		int									_max_sd;
-		fd_set                              _master_set;
-        fd_set                              _writeMaster_set;
+		fd_set                              _master_set; // for read
+        fd_set                              _writeMaster_set; //for write
 
 		virtual void	accepter(int) = 0;
 		virtual void	handler(int) = 0;
