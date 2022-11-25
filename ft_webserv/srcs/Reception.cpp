@@ -8,11 +8,13 @@
 
 SAMATHE::Reception::Reception()
 {
-			_method = "";
-			_version = "";
-			_page = "";
-			_body = "";
-			_size = 0;
+	_method = "";
+	_version = "";
+	_page = "";
+	_body = "";
+	_size = 0;
+	_fileName = "";
+	_fileLim = "";
 }
 
 SAMATHE::Reception::~Reception(){}
@@ -28,11 +30,30 @@ void		SAMATHE::Reception::setReception(std::vector<std::string> &cut)
 			_page += "index.html";
 		_version = cut[2];
 		if (std::find(cut.begin(), cut.end(), "Content-Length:") != cut.end())
-		{
-			
+		{	
 			std::istringstream iss(*(++(std::find(cut.begin(), cut.end(), "Content-Length:"))));
 			iss >> _size;
 		}
+		if (std::find(cut.begin(), cut.end(), "Content-Type:") != cut.end())
+		{	
+			std::istringstream iss(*(++(++(std::find(cut.begin(), cut.end(), "Content-Type:")))));
+			iss >> _fileLim;
+			_fileLim = std::string("------") + _fileLim.substr(13, _fileLim.size());
+		}
+		if (std::find(cut.begin(), cut.end(), "Content-Disposition:") != cut.end())
+		{		
+			std::istringstream iss(*((std::find(cut.begin(), cut.end(), "Content-Disposition:")+3)));
+			iss >> _fileName;
+			_fileName = _fileName.substr(10, _fileName.find("\"")-1);
+			_fileName = std::string("01 IN/") + _fileName;
+		}
 	}
 }
+void		SAMATHE::Reception::setBody(std::string &justRecv)
+{
+	size_t i = justRecv.find(_fileLim) + _fileLim.size();
+	_body = justRecv.substr(i , justRecv.find(_fileLim + "--") - i);
+	_body = _body.substr(_body.find(std::string("\r\n\r\n")) + 4);
+}
+
 

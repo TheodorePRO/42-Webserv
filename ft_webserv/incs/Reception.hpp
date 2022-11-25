@@ -18,6 +18,8 @@ namespace SAMATHE
 		std::string									_version;
 		std::string									_page;
 		std::string									_body;
+		std::string									_fileLim;
+		std::string									_fileName;
 		size_t										_size;
 
 /*
@@ -38,19 +40,20 @@ namespace SAMATHE
 		Reception(void);
 		~Reception(void);
 
-		void setReception(std::vector<std::string> &cut);
-		void setBody(std::string	justRecv)
-		{	_body = justRecv; }
+		void	setReception(std::vector<std::string> &cut);
+		void	setBody(std::string &justRecv);
 		
-		void clearReception()
+		void	clearReception()
 		{
 			_body = "";
 			_version = "";
 			_page = "";
 			_body = "";
+			_fileLim = "";
+			_fileName = "";
 			_size = 0;
 		}
-		void		setSize()
+		void	setSize()
 		{	_size = 0;	}
 
 		std::string		getMethod()
@@ -63,6 +66,8 @@ namespace SAMATHE
 		{	return _version;	}
 		size_t		getSize()
 		{	return _size;	}
+		std::string		getFName()
+		{	return _fileName;	}
 	};
 
 }

@@ -65,46 +65,51 @@ void	SAMATHE::TestServer::receiving()
 		{
 			if (_justRecv.find("Transfer-Encoding: chunked") != std::string::npos)
 			{
-
-
 				if (_justRecv.find("0\r\n\r\n") == _justRecv.size() - 6)
 				{
 					handler();
 					_status = 1;
+	  std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 					return;
 				}
 				else
-					return;
+				{
+	  std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
+					return;}
 			}
 			else
 			{
 				handler();
 				_status = 1;
+	  std::cout << "C   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				return;
 			}
 		}
 		size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
-	  std::cout << "*vvvvvvvvvvvvvvvvv***"<< len << _justRecv.size() << std::endl;
+	  std::cout << "*vvvvvvvvvvvvvvvvv*** content len = "<< len << "--- reception = " << _justRecv.size() << "--- i= "<< i << std::endl;
 		if (_justRecv.size() >= len + i + 4)
 		{
+	  std::cout << "D   *vvvvvvvvvvvvvvvvv***" << std::endl;
 			handler();
 			_status = 1;
+			return;
 		}
-	//	receiving();	///  to unplug with the select
+	std::cout << "E   *vvvvvvvvvvvvvvvvv***"<< std::endl;
+		_justRecv.substr(0, _justRecv.find(std::string("\r\n\r\n") )) << std::endl;
+		receiving(); // SELECT DOES THAT ///////////////////////////////
+	//		handler();
+	//		_status = 1;
 	}
 }
 
 void SAMATHE::TestServer::handler()
 {
-	  std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
-  std::cout <<_justRecv << std::endl;
-  std::cout << "*** END OF BUFFER ***" << std::endl;
-
 	// ------ Read request and slash it into vector
 	std::stringstream ssxx(_justRecv);
 	std::istream_iterator<std::string> begin(ssxx);
 	std::istream_iterator<std::string> end;
 	std::vector<std::string> cut(begin, end);
+		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 	_reception.setReception(cut);
 		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 }
@@ -137,19 +142,16 @@ void SAMATHE::TestServer::responder()
 	else if (_reception.getMethod() == "POST")
 	{
 		std::cout << "*** CREATING FILE ***" << std::endl;
-	//	size_t i = _justRecv.find("\r\n\r\n");
-	//	std::ofstream("file.txt") << _justRecv.substr(i , _justRecv.size() - i);
-		std::ofstream("file.txt") << _justRecv.c_str();
-		FILE *file = fopen("RRRRRR.TXT", "wb");
-		fwrite(_justRecv.c_str(),1, _received , file);
-		fclose(file);
-		_reception.setSize();
+		_reception.setBody(_justRecv);
+//		std::ofstream(_reception.getFName()) << _reception.getBody().c_str();
+		std::ofstream file(_reception.getFName());
+		file << _reception.getBody().c_str();
 	}
 
-	void clearReception();
+	_reception.clearReception();
 	_received = 0;
 	_justRecv = "";
-	_status = 0;
+	_status = 1;		// to change to 2 ???? depends on select
 }
 
 void SAMATHE::TestServer::launch()
