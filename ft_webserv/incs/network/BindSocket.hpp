@@ -16,7 +16,7 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-				BindSocket(SAMATHE::ServConf &sc);
+				BindSocket(conf_server &sc);
 
 		// ------ Getters
 		int		get_binding();

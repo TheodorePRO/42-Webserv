@@ -4,12 +4,15 @@
 #include <string>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/select.h>
+
 #include <iostream>				// for open
 #include <fstream>				// for open
 #include <sstream>				// for open
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include <vector> 
 #include <istream>
 #include <iterator> 
@@ -20,36 +23,40 @@ SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
 	std::cout << "==READY TO LAUNCH=="<< std::endl;
 	initErrorMap();
 	initContentMap();
-	
 	launch();
 }
 
 SAMATHE::TestServer::~TestServer()
 {}
 
-void SAMATHE::TestServer::accepter()
+void SAMATHE::TestServer::accepter(int i)
 {
 	// ------ 1ere fonction : RECEPTION depuis le client
-	struct sockaddr_in address	= get_socket()->get_address();
+	struct sockaddr_in address	= get_socket(i).get_address();
 	int addrlen					= sizeof(address);
-	_new_socket = accept(get_socket()->get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
+	int new_socket = accept(get_socket(i).get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
-
-	if (_new_socket > - 1 )
+	if (new_socket > - 1 ){
 		std::cout << "Client accepted at ip :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl; 
+		fcntl(new_socket, F_SETFL, O_NONBLOCK);
+		fd_set tmp = get_master_set();
+    	FD_SET(new_socket, &tmp);
+//_responder.add_to_map(new_socket, address.sin_port, address.sin_family);
+		_client_sockets.push_back(new_socket);
+	}
 	else
 		perror("Failed to accept...");
 }
 
-void	SAMATHE::TestServer::receiving()
+void	SAMATHE::TestServer::receiving(int sd)
 	{
 	char				buffer[30000];
 	int					ret;
 	// ------ appel système pour recevoir depuis le client
-	ret = ::recv(_new_socket, buffer, sizeof(buffer), 0);
+	ret = ::recv(sd, buffer, sizeof(buffer), 0);
 	if (ret == 0 || ret == -1)
 	{
-		close(_new_socket);
+		close(sd);
 		if (!ret)
 			std::cout << "\rConnection was closed by client.\n" << std::endl;
 		else
@@ -67,7 +74,7 @@ void	SAMATHE::TestServer::receiving()
 			{
 				if (_justRecv.find("0\r\n\r\n") == _justRecv.size() - 6)
 				{
-					handler();
+					handler(sd);
 					_status = 1;
 				}
 				else
@@ -75,21 +82,22 @@ void	SAMATHE::TestServer::receiving()
 			}
 			else
 			{
-				handler();
+				handler(sd);
 				_status = 1;
 			}
 		}
 		size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
 		if (_justRecv.size() >= len + i + 4)
 		{
-			handler();
+			handler(sd);
 			_status = 1;
 		}
 	}
 }
 
-void SAMATHE::TestServer::handler()
+void SAMATHE::TestServer::handler(int sd)
 {
+	(void)sd;
 	  std::cout << "*** RECEIVED FROM CLIENT ***" << std::endl;
   std::cout <<_justRecv << std::endl;
   std::cout << "*** END OF BUFFER ***" << std::endl;
@@ -102,7 +110,7 @@ void SAMATHE::TestServer::handler()
 		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 }
 
-void SAMATHE::TestServer::responder()
+void SAMATHE::TestServer::responder(int sd)
 {
 	// ------ GET response content
 	if (_reception.getMethod() == "GET")
@@ -124,8 +132,8 @@ void SAMATHE::TestServer::responder()
 		oss << _response.getContent();
 		std::string output = oss.str();
 		int size = output.size() + 1;
-		::send(_new_socket, output.c_str(), size, 0 );
-		close(_new_socket);
+		::send(sd, output.c_str(), size, 0 );
+		close(sd);
 	}
 	else if (_reception.getMethod() == "POST")
 	{
@@ -144,13 +152,52 @@ void SAMATHE::TestServer::responder()
 
 void SAMATHE::TestServer::launch()
 {
+	fd_set readFd;
+    fd_set writeFd;
+
+	// ------Initialize the master fd_set 
+	//int listen_sd = get_socket(i).get_sock();
+
 	while (true)
 	{ // ------ boucle infinie qui fait Accept . Handle . Respond (Voir avec Mariys pour le select)
 		std::cout << "========WAITING======="<< std::endl;
-		accepter();
-		receiving();
-	//	handler();  // called in receiving
-		responder();
+		readFd = get_master_set();
+        writeFd = get_writeMaster_set();
+
+		int res = select(get_max_sd() + 1, &readFd, &writeFd, 0, 0);
+        if (res <= 0) {
+            continue ;
+        }
+        
+        for (int i = 0; i < get_N_sockets(); ++i) {
+			if (FD_ISSET(get_socket(i).get_sock(), &readFd)) {
+				accepter(i);
+			}
+        }
+
+
+        for (std::vector<int>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
+			if (FD_ISSET(*it, &readFd) and _status==READ) {
+               receiving(*it);
+                if (_status==FINI) {
+//                    std::cout << "DELETED" << std::endl;
+//_responder.del_from_map(*it);
+                    _client_sockets.erase(it);
+                }
+                continue ;
+           }
+            if (FD_ISSET(*it, &writeFd) and _status==WRITE) {
+                responder(*it);
+                if (_status==FINI) {
+//                    std::cout << "DELETED" << std::endl;
+//_responder.del_from_map(*it);
+                    _client_sockets.erase(it);
+                }
+            }
+		}
+
+		// handler();
+		// responder();
 		std::cout << "========DONE========" << std::endl;
 	}
 }

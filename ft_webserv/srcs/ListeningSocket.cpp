@@ -1,14 +1,14 @@
 # include "../incs/network/ListeningSocket.hpp"
 
 
-SAMATHE::ListeningSocket::ListeningSocket(SAMATHE::ServConf &sc) : BindSocket(sc)
+SAMATHE::ListeningSocket::ListeningSocket(conf_server &sc) : BindSocket(sc)
 {
 //	_sc = &sc;
 	std::cout << "IN LISTENONG SOCKET"<< std::endl;
 	// ------ Start listening
-	start_listening(sc.getBkl());
+	start_listening(sc._bklg);
 	// ------ Confirm success
-	test_connection (_listening);
+	test_connection (_listening, "Listening error!");
 }
 
 // ------ Tells the number of simultaneous connections

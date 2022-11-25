@@ -23,8 +23,9 @@ namespace SAMATHE
 		std::vector<conf_server> conf_servers; // vecteur de configuration
 
 		public:
-		ServConf()
+		ServConf(char* conf_file)
 		{
+			(void)conf_file;
 			conf_server tmp;
 			
 			struct	protoent	*proto;

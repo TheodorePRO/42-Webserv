@@ -10,6 +10,6 @@ int main(int ac, char **av)
 
 
 	std::cout << "IN TEST SERVER CPP"<<std::endl;
-	SAMATHE::ServConf	sc;
+	SAMATHE::ServConf	sc(av[1]);
 	SAMATHE::TestServer t(sc);
 }
