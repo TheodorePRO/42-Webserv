@@ -1,7 +1,7 @@
 #ifndef GLOBALCONFIGURATION_HPP
 # define GLOBALCONFIGURATION_HPP
 
-# include "./webserv.hpp"
+# include "../webserv.hpp"
 
 class ServerInParser;
 class ServerEngine;
