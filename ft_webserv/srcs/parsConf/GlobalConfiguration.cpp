@@ -1,30 +1,15 @@
 #include "../../incs/parsConf/GlobalConfiguration.hpp"
 
-/*
-** ------------------------------- CONSTRUCTOR --------------------------------
-*/
-
+//------------------------------- CONSTRUCTOR  DESTRUCTOR--------------------------------
 GlobalConfiguration::GlobalConfiguration() {}
-
-/*
-** -------------------------------- DESTRUCTOR --------------------------------
-*/
 
 GlobalConfiguration::~GlobalConfiguration() {}
 
-
-/*
-** --------------------------------- OVERLOAD ---------------------------------
-*/
-
-
-
-/*
-** --------------------------------- METHODS ----------------------------------
-*/
+// --------------------------------- METHODS ----------------------------------
 
 void	GlobalConfiguration::addServer(ServerInParser & server)
 {
+	std::cout << "I am in addServer(). \n";
 	_serversList.push_back(server);
 }
 

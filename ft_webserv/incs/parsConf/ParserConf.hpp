@@ -65,7 +65,7 @@ class ParserConf
 
 		// used for the parsing
 		std::string				_context;
-		ServerInParser*					_currentServer;
+		ServerInParser*			_currentServer;
 		//Location*				_currentLocation;
 
 };

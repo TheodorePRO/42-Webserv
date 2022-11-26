@@ -23,9 +23,7 @@
 # include <iostream>
 # include <sstream>
 
-class ServerEngine;
-struct Connection;
-typedef	std::map<struct pollfd, ServerEngine *> 	t_fds_map;
+
 
 # include "./parsConf/GlobalConfiguration.hpp"
 # include "./parsConf/Location.hpp"

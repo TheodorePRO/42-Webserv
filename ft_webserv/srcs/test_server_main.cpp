@@ -14,7 +14,16 @@ int main(int ac, char **av)
 	//parser
 	std::string inputPath(av[1]);
 	GlobalConfiguration globalConf;
-	ParserConf parser(inputPath, globalConf);	
+	ParserConf parser(inputPath, globalConf);
+
+	std::cout << GREEN_TXT"\n\nprinte result of parsing : \n";
+	for (unsigned int i = 0; i < globalConf.getServersList().size(); i++)
+	{
+		std::cout << "for server number " << i << " : \n";
+		std::cout << "Ip = " << globalConf.getServersList().at(i).getIP() << std::endl;
+		std::cout << "Port = " << globalConf.getServersList().at(i).getPort() << std::endl<<RESET_TXT"\n" ;
+	}
+	
 	
 
 	std::cout << "IN TEST SERVER CPP"<<std::endl;
