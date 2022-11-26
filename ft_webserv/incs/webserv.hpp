@@ -23,8 +23,6 @@
 # include <iostream>
 # include <sstream>
 
-
-
 # include "./parsConf/GlobalConfiguration.hpp"
 # include "./parsConf/Location.hpp"
 # include "./parsConf/ServerInParser.hpp"

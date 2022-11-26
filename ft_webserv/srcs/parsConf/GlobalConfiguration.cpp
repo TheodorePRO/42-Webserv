@@ -9,13 +9,14 @@ GlobalConfiguration::~GlobalConfiguration() {}
 
 void	GlobalConfiguration::addServer(ServerInParser & server)
 {
-	std::cout << "I am in addServer(). \n";
 	_serversList.push_back(server);
+	//g_nb_of_server = _serversList.size();
 }
 
 void	GlobalConfiguration::addServer(void)
 {
 	_serversList.push_back(ServerInParser());
+	//g_nb_of_server = _serversList.size();
 }
 
 
