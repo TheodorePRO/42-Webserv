@@ -15,9 +15,12 @@ SAMATHE::Reception::Reception()
 			_size = 0;
 }
 
-SAMATHE::Reception::Reception(int fd)
+SAMATHE::Reception::Reception(int fd, ServerInParser& conf)
 {
-		_fd = fd;
+	//*********MS
+	(void) conf; // config de serveur
+	_fd = fd;
+	//*********MS
 			_method = "";
 			_version = "";
 			_page = "";

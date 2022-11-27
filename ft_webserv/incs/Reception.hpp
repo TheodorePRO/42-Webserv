@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include "webserv.hpp"
 
 
 //#include <iostream>
@@ -39,7 +40,7 @@ namespace SAMATHE
 */
 		public :
 		Reception(void);
-	Reception(int sd);
+	Reception(int sd, ServerInParser &);
 		~Reception(void);
 
 		void setReception(std::vector<std::string> &cut);

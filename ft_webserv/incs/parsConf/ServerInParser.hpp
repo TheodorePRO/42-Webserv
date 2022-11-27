@@ -3,6 +3,10 @@
 
 # include "../webserv.hpp"
 
+#include <netdb.h>
+#include <netinet/in.h>
+
+
 class Location;
 
 class ServerInParser
@@ -42,6 +46,26 @@ class ServerInParser
 		std::vector<std::string> & 	getNames();
 		std::string					getIP() const;
 		int							getPort() const;
+
+	// ******MS - pour compilation
+		int							getBklg(){return 42;};
+		int							getDomain(){return PF_INET;};
+		int							getInterface(){return INADDR_ANY;};
+		int							getService(){return SOCK_STREAM;};
+		int							getProto()
+		{
+			struct	protoent	*proto;
+			proto = getprotobyname("tcp");
+			if (!proto)
+			{
+				perror("Get Proto failed... ");
+				return 0;
+			}
+			else
+				return proto->p_proto;
+		};
+	//********************************************
+
 		/*std::string					getErrorPagePath(int error_code) const;
 		std::size_t					getClientBufferSize() const;
 		std::vector<Location> 	&	getRoutes();*/

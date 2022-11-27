@@ -18,6 +18,7 @@ namespace SAMATHE
 
 	class TestServer: public Server
 	{
+		GlobalConfiguration _glob_conf;
 		//int					_new_socket;
 		int 				_max_cld;
 		int					_status; // 0 = READ - 1 = Write - 2 = fini ***** 
@@ -47,7 +48,7 @@ namespace SAMATHE
 		void	initContentMap();
 		void	receiving(int sd);
 
-		TestServer(ServConf &sc);
+		TestServer(GlobalConfiguration &);
 		~TestServer();
 		void launch();
 		void	clearReception()

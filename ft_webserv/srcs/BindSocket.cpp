@@ -4,7 +4,7 @@
 namespace SAMATHE
 {
 // ------ Constructor
-	BindSocket::BindSocket(conf_server &sc) : Socket(sc)
+	BindSocket::BindSocket(ServerInParser &sc) : Socket(sc)
 	{
 		std::cout << "in binding socket" << std::endl;
 
