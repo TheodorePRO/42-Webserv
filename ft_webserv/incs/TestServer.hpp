@@ -14,10 +14,13 @@
 
 namespace SAMATHE
 {
-	class TestServer: public SAMATHE::Server
+	enum{READ, WRITE, FINI};
+
+	class TestServer: public Server
 	{
-		int					_new_socket;
-		int					_status; // 0 = READ - 1 = Write - 2 = fini
+		//int					_new_socket;
+		int 				_max_cld;
+		int					_status; // 0 = READ - 1 = Write - 2 = fini ***** 
 		size_t				_received;
 		std::string			_justRecv;
 
@@ -25,20 +28,26 @@ namespace SAMATHE
 		std::string			_page;
 		std::string			_type;
 
-		SAMATHE::Reception	_reception;
-		SAMATHE::Response	_response;
-		std::map<std::string, std::string>			_errors;
+		Reception			_reception;
+		Response			_response;
+
+		//std::vector<int>	_client_sockets;
+		std::map<int, Reception> _client_sockets;
+
+		std::map<std::string, std::string>	_errors;
 		std::map<std::string, std::string>	_contents;
+		
+
 
 	public:
-		void	accepter();
-		void	handler();
-		void	responder();
+		void	accepter(int);
+		void	handler(int);
+		void	responder(int);
 		void	initErrorMap();
 		void	initContentMap();
-		void	receiving();
+		void	receiving(int sd);
 
-		TestServer(SAMATHE::ServConf &sc);
+		TestServer(ServConf &sc);
 		~TestServer();
 		void launch();
 		void	clearReception()

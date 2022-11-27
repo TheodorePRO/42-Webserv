@@ -14,7 +14,7 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-		ListeningSocket(SAMATHE::ServConf &sc);
+		ListeningSocket(conf_server &sc);
 
 		// ------ Operations
 		void start_listening(int bkl);

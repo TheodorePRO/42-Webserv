@@ -25,6 +25,6 @@ int main(int ac, char **av)
 		std::cout << "Port = " << globalConf.getServersList().at(i).getPort() << std::endl<< std::endl;
 	}
 	std::cout << RESET_TXT"IN TEST SERVER CPP"<<std::endl;
-	SAMATHE::ServConf	sc;
+	SAMATHE::ServConf	sc(av[1]); // obtenir parametres a partir d'un fichier do cinfig
 	SAMATHE::TestServer t(sc);
 }

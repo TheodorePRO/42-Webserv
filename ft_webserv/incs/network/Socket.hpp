@@ -23,11 +23,11 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-		Socket(SAMATHE::ServConf &sc);
+		Socket(conf_server &sc);
 		// ------ Virtual function to connect
 		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion
-		void test_connection(int);
+		void test_connection(int, const char *);
 		// ------ Getters
 		struct sockaddr_in	get_address();
 		int					get_sock();
