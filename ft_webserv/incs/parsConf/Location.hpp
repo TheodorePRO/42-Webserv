@@ -27,7 +27,6 @@ class Location
 	public:
 
 		// Setters
-		
 		void			setPrefix(std::string prefix);
 		void			setRoot(std::string path);
 		void			addAllowedMethod(std::string method);
@@ -35,8 +34,7 @@ class Location
 		void			setAutoindex(std::string on_off);
 		void			setRedirection(int code, std::string url);
 
-		// Accessors
-
+		// Getters
 		std::string						getPrefix() const;
 		std::string						getIndexPage() const;
 		bool							isAutoindexed() const;

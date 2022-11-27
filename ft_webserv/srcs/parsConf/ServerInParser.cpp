@@ -85,12 +85,12 @@ void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
 	_clientBufferSize = buffer_max;
 }*/
-/*
+
 Location & ServerInParser::addLocation()
 {
 	_routes.push_back(Location());
 	return _routes.back();
-}*/
+}
 
 // Private Helpers
 

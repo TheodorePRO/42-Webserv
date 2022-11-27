@@ -27,6 +27,72 @@ ParserConf &	ParserConf::operator = ( ParserConf const & rhs )
 }
 
 // -------------------------------------- METHODS -----------------------------------------
+/* 4 */
+void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::size_t line_nb)
+{
+	if (line_items.size() == 1 && line_items[0] == "}")
+	{
+		_context = "server";
+		_currentLocation_Is_Integrate(line_nb);
+		//_solveCurrentLocationIntegrity();
+		return ;
+	}
+
+	// check if ';' closes the line
+	else if (line_items.back().at(line_items.back().size() - 1) != ';')
+	{
+		FATAL_ERR("Missing ';' at the end of line " << line_nb << '\n');
+		throw syntax_error("syntax error");
+	}
+
+	// erase ';' at the end of the line
+	while(line_items.back().size() >= 1 && line_items.back().at(line_items.back().size() - 1) == ';')
+		line_items.back().erase(line_items.back().end() - 1);
+
+	// fill root
+	if (line_items[0] == "root" && line_items.size() == 2)
+	{
+		_currentLocation->setRoot(line_items[1]);
+	}
+
+	// fill allowed methods
+	/*else if (line_items[0] == "methods" && line_items.size() >= 2)
+	{
+		for (std::size_t i = 1; i < line_items.size(); ++i)
+			_currentLocation->addAllowedMethod(line_items[i]);
+	}*/
+
+	// fill autoindex
+	else if (line_items[0] == "autoindex" && line_items.size() == 2)
+	{
+		_currentLocation->setAutoindex(line_items[1]);
+	}
+
+	// fill indexPage
+	else if (line_items[0] == "index" && line_items.size() == 2)
+	{
+		_currentLocation->setIndexPage(line_items[1]);
+	}
+
+	// HTTP redirection
+	else if (line_items[0] == "return" && line_items.size() == 3)
+	{
+		if (!is_digit(line_items[1]))
+		{
+			FATAL_ERR("Return code should be an integer at line " << line_nb << '\n');
+			throw syntax_error("invalid http redirection directive");
+		}
+		_currentLocation->setRedirection(std::atoi(line_items[1].c_str()), line_items[2]);
+	}
+
+	// else: parsing error
+	else
+	{
+		FATAL_ERR("Parsing error in line " << line_nb << '\n');
+		throw parsing_error("invalid line");
+	}
+}
+
 /* 3 */
 void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::size_t line_nb)
 {
@@ -34,7 +100,7 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 	if (line_items.size() == 1 && line_items[0] == "}")
 	{
 		_context = "main";
-		_checkCurrentServerIntegrity(line_nb);
+		_currentServer_Is_Integrate(line_nb);
 		//_currentServer->completeErrorPages();
 		return ;
 	}
@@ -78,8 +144,8 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 		FATAL_ERR("Parsing error in line " << line_nb << '\n');
 		throw parsing_error("invalid line");
 	}
-	
 }
+
 
 /* 2 */
 void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t line_nb)
@@ -87,8 +153,8 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 	if (_context == "server")
 		_parseServerLine(line_items, line_nb);
 
-	/*else if (_context == "location")
-		_parseLocationLine(line_items, line_nb);*/
+	else if (_context == "location")
+		_parseLocationLine(line_items, line_nb);
 	
 	else // main context
 	{
@@ -110,6 +176,7 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 		}
 	}
 }
+
 /* 1 */
 void	ParserConf::_parseFile()
 {
@@ -192,7 +259,7 @@ void	ParserConf::_checkServerDuplicate()
 	}
 }
 
-void	ParserConf::_checkCurrentServerIntegrity(std::size_t line_nb) const
+void	ParserConf::_currentServer_Is_Integrate(std::size_t line_nb) const
 {
 	if (_currentServer->getPort() == -1)
 	{
@@ -204,4 +271,29 @@ void	ParserConf::_checkCurrentServerIntegrity(std::size_t line_nb) const
 		FATAL_ERR("Error: server doesn't have any route: line " << line_nb << '\n');
 		throw std::logic_error("route-less server");
 	}*/
+}
+
+void	ParserConf::_currentLocation_Is_Integrate(std::size_t line_nb) const
+{
+	struct stat sb;
+	
+	if (_currentLocation->getRoot().empty())
+	{
+		FATAL_ERR("Error: location doesn't have a root: line " << line_nb << '\n');
+		throw std::logic_error("root-less location");
+	}
+	else if (!(stat(_currentLocation->getRoot().c_str(), &sb) == 0 && S_ISDIR(sb.st_mode)))
+	{
+		FATAL_ERR("Error: Root not valid: line " << line_nb << '\n');
+		throw std::logic_error("root not valid");
+	}
+	
+
+	if (_currentLocation->getIndexPage().empty() && !_currentLocation->isAutoindexed()
+		&& !_currentLocation->isRedirected()
+		&& is_folder_formatted(_currentLocation->getPrefix()))
+	{
+		FATAL_ERR("Error: location doesn't have an index page: line " << line_nb << '\n');
+		throw std::logic_error("index-less location");
+	}
 }
