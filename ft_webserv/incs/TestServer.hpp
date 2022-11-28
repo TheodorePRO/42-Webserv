@@ -6,11 +6,9 @@
 #include <map>
 
 #include "network/Server.hpp"
-#include "Response.hpp"
-#include "Reception.hpp"
 #include "Conf.hpp"
+#include "ClientS.hpp"
 
-#define RECVSIZE 10240
 
 namespace SAMATHE
 {
@@ -18,41 +16,25 @@ namespace SAMATHE
 
 	class TestServer: public Server
 	{
-		int					  _binary;
-		GlobalConfiguration _glob_conf;
+		GlobalConfiguration					_glob_conf;
 		//int					_new_socket;
-		int 				  _max_cld;
-		int					  _status; // 0 = READ - 1 = Write - 2 = fini ***** 
-		size_t				  _received;
-		std::string			_justRecv;
-	//	std::ofstream		*_file;
-		std::string			_page;
-		std::string			_type;
-		Reception			_reception;
-		Response			_response;
-
-		//std::vector<int>	_client_sockets;
-		std::map<int, Reception> _client_sockets;
-
+		int									_max_cld;
+		std::map<int, ClientS>				_client_sockets;
 		std::map<std::string, std::string>	_errors;
 		std::map<std::string, std::string>	_contents;
 
-//		int	 checkEnd(const std::string& str, const std::string& end);
-void checkPage();
-void makeHeader();
 
 	public:
 		void	accepter(int);
-		void	handler(int);
-		void	responder(int);
 		void	initErrorMap();
 		void	initContentMap();
-		void	receiving(int sd);
 
 		TestServer(GlobalConfiguration &);
 		~TestServer();
+		std::string		getError(std::string code);
+		std::string		getContents(std::string type);
+
 		void launch();
-		void	clearReception();
 	};
 
 }
