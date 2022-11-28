@@ -12,29 +12,29 @@
 
 namespace SAMATHE
 {
-	enum{READ, WRITE, FINI};
-
 	class TestServer: public Server
 	{
 		GlobalConfiguration					_glob_conf;
 		//int					_new_socket;
-		int									_max_cld;
+		int									_max_fd;
 		std::map<int, ClientS>				_client_sockets;
 		std::map<std::string, std::string>	_errors;
 		std::map<std::string, std::string>	_contents;
 
 
 	public:
+		TestServer(GlobalConfiguration &);
+		~TestServer();
+
 		void	accepter(int);
 		void	initErrorMap();
 		void	initContentMap();
+		void	launch();
 
-		TestServer(GlobalConfiguration &);
-		~TestServer();
 		std::string		getError(std::string code);
 		std::string		getContents(std::string type);
 
-		void launch();
+		
 	};
 
 }

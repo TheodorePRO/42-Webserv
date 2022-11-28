@@ -1,7 +1,9 @@
 #include "../incs/ClientS.hpp"
 
 namespace SAMATHE{
-
+//********MS
+	ClientS::ClientS(){}
+//********MS	
 	ClientS::ClientS(int fd, ServerInParser conf, TestServer *serv) : _fd(fd), _conf(conf), _serv(serv)
 	{
 		_justRecv = "";
@@ -114,6 +116,8 @@ namespace SAMATHE{
 		_justRecv.clear();
 		_binary = 0;
 	}
-
+//*******MS
+	int	ClientS::getStatus()
+	{return _status;}
 
 }

@@ -30,6 +30,9 @@ namespace SAMATHE
 		ServerInParser		_conf;
 
 	public:
+	//*********MS
+		ClientS();
+	//*********MS
 		ClientS(int fd, ServerInParser _conf, TestServer *serv);
 		~ClientS();
 		void	checkPage();
@@ -38,6 +41,9 @@ namespace SAMATHE
 		void	responder();
 		void	receiving();
 		void	clearReception();
+
+	//***********MS
+		int	getStatus();
 
 	};
 

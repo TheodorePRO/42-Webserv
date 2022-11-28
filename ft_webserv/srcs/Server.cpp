@@ -12,9 +12,12 @@ namespace SAMATHE{
 		for ( unsigned int i = 0; i < glob_conf.getServersList().size(); i++)
 		{
 			ListeningSocket ls = ListeningSocket(glob_conf.getServersList().at(i));
-			_sockets.push_back(ls);	
+
+			_sockets.push_back(ls);	// MS quell valeur ls???
+			
 			int sd = ls.get_sock();
-			FD_SET(sd, &_master_set);
+	std::cout << sd << std::endl;
+			FD_SET(sd, &_master_set); // 	FD_SET(get_sock(), &_master_set);
 
 			if (sd > _max_sd) {
 				_max_sd = sd;
