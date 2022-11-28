@@ -18,8 +18,10 @@ namespace SAMATHE
 	{
 		int					_new_socket;
 		int					_status; // 0 = READ - 1 = Write - 2 = fini
+		int					_binary;
 		size_t				_received;
 		std::string			_justRecv;
+		std::ofstream		*_file;
 
 
 		std::string			_page;
@@ -29,6 +31,9 @@ namespace SAMATHE
 		SAMATHE::Response	_response;
 		std::map<std::string, std::string>			_errors;
 		std::map<std::string, std::string>	_contents;
+		int	 checkEnd(const std::string& str, const std::string& end);
+void checkPage();
+void makeHeader();
 
 	public:
 		void	accepter();
@@ -41,9 +46,7 @@ namespace SAMATHE
 		TestServer(SAMATHE::ServConf &sc);
 		~TestServer();
 		void launch();
-		void	clearReception()
-		{
-		}
+		void	clearReception();
 	};
 
 }

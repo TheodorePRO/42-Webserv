@@ -10,9 +10,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <vector> 
+#include <vector>
+#include <stdio.h>
+
 #include <istream>
-#include <iterator> 
+#include <iterator>
+#include <stack>
 
 // ------ Constructor
 SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
@@ -20,7 +23,9 @@ SAMATHE::TestServer::TestServer(SAMATHE::ServConf &sc) : Server(sc)
 	std::cout << "==READY TO LAUNCH=="<< std::endl;
 	initErrorMap();
 	initContentMap();
-	
+	_file = 0;
+	_justRecv = "";
+	_binary = 0;
 	launch();
 }
 
@@ -42,7 +47,7 @@ void SAMATHE::TestServer::accepter()
 }
 
 void	SAMATHE::TestServer::receiving()
-	{
+{
 	char				buffer[30000] = {0}; 
 	int					ret;
 	// ------ appel système pour recevoir depuis le client
@@ -56,49 +61,29 @@ void	SAMATHE::TestServer::receiving()
 			std::cout << "\rRead error, closing connection.\n" << std::endl;
 		return;
 	}
+
+	_justRecv.append(buffer, ret);
 	_received += ret;
-	_justRecv += std::string(buffer);
 	size_t	i = _justRecv.find("\r\n\r\n");
 	if (i != std::string::npos)
 	{
 		if (_justRecv.find("Content-Length: ") == std::string::npos)
 		{
-			if (_justRecv.find("Transfer-Encoding: chunked") != std::string::npos)
-			{
-				if (_justRecv.find("0\r\n\r\n") == _justRecv.size() - 6)
-				{
-					handler();
-					_status = 1;
-	  std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
-					return;
-				}
-				else
-				{
-	  std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
-					return;}
-			}
-			else
-			{
-				handler();
-				_status = 1;
-	  std::cout << "C   *vvvvvvvvvvvvvvvvv***" << std::endl;
-				return;
-			}
+			handler();
+			_status = 1;
+			 std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
+			return;
 		}
 		size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
-	  std::cout << "*vvvvvvvvvvvvvvvvv*** content len = "<< len << "--- reception = " << _justRecv.size() << "--- i= "<< i << std::endl;
-		if (_justRecv.size() >= len + i + 4)
+		if (_received >= len + i + 4)
 		{
-	  std::cout << "D   *vvvvvvvvvvvvvvvvv***" << std::endl;
+			std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 			handler();
 			_status = 1;
 			return;
 		}
-	std::cout << "E   *vvvvvvvvvvvvvvvvv***"<< std::endl;
-		_justRecv.substr(0, _justRecv.find(std::string("\r\n\r\n") )) << std::endl;
+		std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
 		receiving(); // SELECT DOES THAT ///////////////////////////////
-	//		handler();
-	//		_status = 1;
 	}
 }
 
@@ -109,22 +94,20 @@ void SAMATHE::TestServer::handler()
 	std::istream_iterator<std::string> begin(ssxx);
 	std::istream_iterator<std::string> end;
 	std::vector<std::string> cut(begin, end);
-		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 	_reception.setReception(cut);
-		std::cout << "uuuuuuuuuuuuu  1 "<< _reception.getSize() << std::endl;
 }
 
-void SAMATHE::TestServer::responder()
+void SAMATHE::TestServer::checkPage()
 {
-	// ------ GET response content
-	if (_reception.getMethod() == "GET")
+	if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
 	{
-		if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
-		{
-			_response.setContent(std::string("pages/404.html").c_str());
-			_response.setCode("404");
-		}
+		_response.setContent(std::string("pages/404.html").c_str());
+		_response.setCode("404");
+	}
+}
 
+void SAMATHE::TestServer::makeHeader()
+{
 		// ------ Build response : header + content
 		std::ostringstream oss;
 		oss << _reception.getVersion() << " " << _response.getCode() << _errors.find(_response.getCode())->second << "\r\n";
@@ -137,21 +120,36 @@ void SAMATHE::TestServer::responder()
 		std::string output = oss.str();
 		int size = output.size() + 1;
 		::send(_new_socket, output.c_str(), size, 0 );
-		close(_new_socket);
+}
+
+void SAMATHE::TestServer::responder()
+{
+	// ------ GET response content
+	if (_reception.getMethod() == "GET")
+	{
+
+		std::cout << _justRecv << std::endl;
+		checkPage();
+		makeHeader();
 	}
 	else if (_reception.getMethod() == "POST")
 	{
 		std::cout << "*** CREATING FILE ***" << std::endl;
 		_reception.setBody(_justRecv);
-//		std::ofstream(_reception.getFName()) << _reception.getBody().c_str();
-		std::ofstream file(_reception.getFName());
-		file << _reception.getBody().c_str();
+		std::ofstream file(_reception.getFName().c_str());
+		file << _reception.getBody();
+		checkPage();
+		makeHeader();
+
 	}
+	close(_new_socket);
+	_status = 2;		// to change to 2 ???? depends on select
 
 	_reception.clearReception();
 	_received = 0;
-	_justRecv = "";
-	_status = 1;		// to change to 2 ???? depends on select
+	_justRecv.clear();
+	_file = 0;
+	_binary = 0;
 }
 
 void SAMATHE::TestServer::launch()
@@ -161,7 +159,7 @@ void SAMATHE::TestServer::launch()
 		std::cout << "========WAITING======="<< std::endl;
 		accepter();
 		receiving();
-	//	handler();  // called in receiving
+		//	handler();  // called in receiving
 		responder();
 		std::cout << "========DONE========" << std::endl;
 	}
@@ -178,7 +176,7 @@ void	SAMATHE::TestServer::initErrorMap()
 	_errors["405"] = " Method Not Allowed";
 	_errors["413"] = " Payload Too Large";
 	_errors["500"] = " Internal Server Error";
- }
+}
 
 void	SAMATHE::TestServer::initContentMap()
 {

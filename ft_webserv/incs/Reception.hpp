@@ -42,6 +42,8 @@ namespace SAMATHE
 
 		void	setReception(std::vector<std::string> &cut);
 		void	setBody(std::string &justRecv);
+void	setBody2(const std::string& str);
+std::string&	pop(std::string& str);
 		
 		void	clearReception()
 		{
