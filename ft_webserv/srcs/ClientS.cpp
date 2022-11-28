@@ -2,7 +2,7 @@
 
 namespace SAMATHE{
 
-	ClientS::ClientS(int fd, ServerInParser conf, TestServer *serv) : _fd(fd), _conf(conf), _serv(serv)
+	ClientS::ClientS(int fd,  TestServer *serv, ServerInParser conf) : _fd(fd), _serv(serv), _conf(conf)
 	{
 		_justRecv = "";
 		_binary = 0;

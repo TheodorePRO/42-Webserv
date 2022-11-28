@@ -30,7 +30,7 @@ namespace SAMATHE
 		ServerInParser		_conf;
 
 	public:
-		ClientS(int fd, ServerInParser _conf, TestServer *serv);
+		ClientS(int fd, TestServer *serv, ServerInParser conf);
 		~ClientS();
 		void	checkPage();
 		void	makeHeader();
