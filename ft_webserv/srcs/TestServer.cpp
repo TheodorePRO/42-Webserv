@@ -24,6 +24,7 @@ namespace SAMATHE{
 	{	// ------ le constructeur créé un e listeniong socket...
 		std::cout << "==READY TO LAUNCH=="<< std::endl;
 		_glob_conf = glob_conf;
+		_max_cld = get_max_sd();
 
 		initErrorMap();
 		initContentMap();
@@ -39,14 +40,14 @@ namespace SAMATHE{
 		int addrlen					= sizeof(address);
 		
 
-		_max_cld = 0;
 		int new_socket = accept(get_socket(i).get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
 		if (new_socket > - 1 )
 		{
 			std::cout << "Client accepted at ip :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl; 
 			fcntl(new_socket, F_SETFL, O_NONBLOCK);
-			FD_SET(new_socket, get_master_set());
+			fd_set tmp = get_master_set();
+			FD_SET(new_socket, &tmp);
 	//_responder.add_to_map(new_socket, address.sin_port, address.sin_family);
 	//_client_sockets.insert(pair<int, Reception>(new_socket, Reception()));
 			_client_sockets[new_socket] = Reception(new_socket, _glob_conf.getServersList().at(i)); // ajouter variables comme 'address' et 'conf'
@@ -169,8 +170,8 @@ namespace SAMATHE{
 
 	void TestServer::launch()
 	{
-		fd_set* readFd;
-		fd_set* writeFd;
+		fd_set readFd;
+		fd_set writeFd;
 
 		// ------Initialize the master fd_set 
 		//int listen_sd = get_socket(i).get_sock();
@@ -183,7 +184,7 @@ namespace SAMATHE{
 
 
 							std::cout << "========select======="<< std::endl;
-			int res = select(_max_cld + 1, readFd, writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
+			int res = select(_max_cld + 1, &readFd, &writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
 			if (res <= 0) {
 							std::cout << "========BAD======="<< std::endl;
 				continue ;
@@ -193,7 +194,7 @@ namespace SAMATHE{
 			for (int i = 0; i < get_N_sockets(); ++i) {
 							std::cout << "========"<<i<<"======="<< std::endl;
 
-				if (FD_ISSET(get_socket(i).get_sock(), readFd)) {
+				if (FD_ISSET(get_socket(i).get_sock(), &readFd)) {
 								std::cout << "========accept"<<i<<"======="<< std::endl;
 				
 					accepter(i);
@@ -201,7 +202,7 @@ namespace SAMATHE{
 			}
 
 			for (std::map<int, Reception>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
-				if (FD_ISSET(it->first, readFd) and _status==READ) { // ? (cd ..*it).get_status() ? ***** _status il faut retire  de la class Reception: it->second.get_status()
+				if (FD_ISSET(it->first, &readFd) and _status==READ) { // ? (cd ..*it).get_status() ? ***** _status il faut retire  de la class Reception: it->second.get_status()
 				receiving(it->first);
 					if (_status==FINI) { // _status from Reception
 	//                    std::cout << "DELETED" << std::endl;
@@ -210,7 +211,7 @@ namespace SAMATHE{
 					}
 					continue ;
 			}
-				if (FD_ISSET(it->first, writeFd) and _status==WRITE) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
+				if (FD_ISSET(it->first, &writeFd) and _status==WRITE) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
 					responder(it->first);
 					if (_status==FINI) {
 	//                    std::cout << "DELETED" << std::endl;
