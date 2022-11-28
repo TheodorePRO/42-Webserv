@@ -18,17 +18,16 @@ namespace SAMATHE
 
 	class TestServer: public Server
 	{
+		int					  _binary;
 		GlobalConfiguration _glob_conf;
 		//int					_new_socket;
-		int 				_max_cld;
-		int					_status; // 0 = READ - 1 = Write - 2 = fini ***** 
-		size_t				_received;
+		int 				  _max_cld;
+		int					  _status; // 0 = READ - 1 = Write - 2 = fini ***** 
+		size_t				  _received;
 		std::string			_justRecv;
-
-
+	//	std::ofstream		*_file;
 		std::string			_page;
 		std::string			_type;
-
 		Reception			_reception;
 		Response			_response;
 
@@ -37,8 +36,10 @@ namespace SAMATHE
 
 		std::map<std::string, std::string>	_errors;
 		std::map<std::string, std::string>	_contents;
-		
 
+//		int	 checkEnd(const std::string& str, const std::string& end);
+void checkPage();
+void makeHeader();
 
 	public:
 		void	accepter(int);
@@ -51,9 +52,7 @@ namespace SAMATHE
 		TestServer(GlobalConfiguration &);
 		~TestServer();
 		void launch();
-		void	clearReception()
-		{
-		}
+		void	clearReception();
 	};
 
 }
