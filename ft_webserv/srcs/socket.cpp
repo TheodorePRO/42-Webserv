@@ -5,15 +5,15 @@
 namespace SAMATHE
 {
 	// ------ Default contructor
-	Socket::Socket(conf_server &sc)
+	Socket::Socket(ServerInParser &sc)
 	{
 		// ------- Define address structure
-		_address.sin_family			= sc._domain;
-		_address.sin_port			= htons(sc._port);
-		_address.sin_addr.s_addr	= htonl(sc._interface);
+		_address.sin_family			= sc.getDomain(); 
+		_address.sin_port			= htons(sc.getPort());
+		_address.sin_addr.s_addr	= htonl(sc.getInterface());
 
 		// ------ Establish socket
-		_sock = socket(sc._domain, sc._service, sc._proto);
+		_sock = socket(sc.getDomain(), sc.getService(), sc.getProto());
 		if (_sock == -1)
 		{
 			perror("Cann't establish socket!");

@@ -2,17 +2,17 @@
 
 namespace SAMATHE{
 
-	Server::Server(ServConf &sc)
+	Server::Server(GlobalConfiguration &glob_conf)
 	{
 		std::cout << "IN SERVER CPP"<<std::endl;
 		_max_sd = 0;
 		FD_ZERO(&_master_set);
 		FD_ZERO(&_writeMaster_set);
 
-		for(int i=0; i < sc.getNumConfServs(); ++i){
-			ListeningSocket ls = ListeningSocket(sc.getConfServ(i));
-			_sockets.push_back(ls);
-			
+		for ( unsigned int i = 0; i < glob_conf.getServersList().size(); i++)
+		{
+			ListeningSocket ls = ListeningSocket(glob_conf.getServersList().at(i));
+			_sockets.push_back(ls);	
 			int sd = ls.get_sock();
 			FD_SET(sd, &_master_set);
 

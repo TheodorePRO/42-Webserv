@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
-#include "../Conf.hpp"
+#include "../webserv.hpp"
 
 
 
@@ -23,7 +23,7 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-		Socket(conf_server &sc);
+		Socket(ServerInParser &sc);
 		// ------ Virtual function to connect
 		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion

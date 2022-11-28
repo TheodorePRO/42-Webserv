@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "ListeningSocket.hpp"
-#include "../Conf.hpp"
+#include "../webserv.hpp"
 #include <sys/socket.h>
 #include <vector>
 
@@ -24,7 +24,7 @@ namespace SAMATHE
 		virtual void	receiving(int) = 0;
 
 	public:
-		Server(ServConf &sc);
+		Server(GlobalConfiguration &sc);
 		virtual ~Server();
 		virtual void launch() = 0;
 		ListeningSocket& get_socket(int i);

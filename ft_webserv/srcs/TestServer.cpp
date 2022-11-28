@@ -1,5 +1,5 @@
 #include "../incs/TestServer.hpp"
-#include "../incs/Conf.hpp"
+#include "../incs/webserv.hpp"
 #include <unistd.h>
 #include <string>
 #include <sys/socket.h>
@@ -20,9 +20,12 @@
 
 namespace SAMATHE{
 	// ------ Constructor
-	TestServer::TestServer(ServConf &sc) : Server(sc)
+	TestServer::TestServer(GlobalConfiguration &glob_conf) : Server(glob_conf)
 	{	// ------ le constructeur créé un e listeniong socket...
 		std::cout << "==READY TO LAUNCH=="<< std::endl;
+		_glob_conf = glob_conf;
+		_max_cld = get_max_sd();
+
 		initErrorMap();
 		initContentMap();
 		launch();
@@ -37,7 +40,6 @@ namespace SAMATHE{
 		int addrlen					= sizeof(address);
 		
 
-		_max_cld = 0;
 		int new_socket = accept(get_socket(i).get_sock(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
 		if (new_socket > - 1 )
@@ -48,7 +50,7 @@ namespace SAMATHE{
 			FD_SET(new_socket, &tmp);
 	//_responder.add_to_map(new_socket, address.sin_port, address.sin_family);
 	//_client_sockets.insert(pair<int, Reception>(new_socket, Reception()));
-			_client_sockets[new_socket] = Reception(new_socket); // ajouter variables comme 'address' et 'conf'
+			_client_sockets[new_socket] = Reception(new_socket, _glob_conf.getServersList().at(i)); // ajouter variables comme 'address' et 'conf'
 
 			if (new_socket > _max_cld) {
 				_max_cld = new_socket;
@@ -180,13 +182,21 @@ namespace SAMATHE{
 			readFd = get_master_set();
 			writeFd = get_writeMaster_set();
 
+
+							std::cout << "========select======="<< std::endl;
 			int res = select(_max_cld + 1, &readFd, &writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
 			if (res <= 0) {
+							std::cout << "========BAD======="<< std::endl;
 				continue ;
 			}
 			
+							std::cout << "========listen soc======="<< std::endl;
 			for (int i = 0; i < get_N_sockets(); ++i) {
+							std::cout << "========"<<i<<"======="<< std::endl;
+
 				if (FD_ISSET(get_socket(i).get_sock(), &readFd)) {
+								std::cout << "========accept"<<i<<"======="<< std::endl;
+				
 					accepter(i);
 				}
 			}
