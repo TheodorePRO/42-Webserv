@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include "webserv.hpp"
 
 
 //#include <iostream>
@@ -21,6 +22,9 @@ namespace SAMATHE
 		std::string									_fileLim;
 		std::string									_fileName;
 		size_t										_size;
+	
+	int 										_fd; //MS - new: pour gerer pusieurs fd
+	//int					_status; // 0 = READ - 1 = Write - 2 = fini 
 
 /*
 		std::map<std::string, std::string>			_headers;
@@ -38,6 +42,7 @@ namespace SAMATHE
 */
 		public :
 		Reception(void);
+	Reception(int sd, ServerInParser &);
 		~Reception(void);
 
 		void	setReception(std::vector<std::string> &cut);
@@ -55,7 +60,9 @@ std::string&	pop(std::string& str);
 			_fileName = "";
 			_size = 0;
 		}
-		void	setSize()
+
+
+		void		setSize()
 		{	_size = 0;	}
 
 		std::string		getMethod()
@@ -68,8 +75,13 @@ std::string&	pop(std::string& str);
 		{	return _version;	}
 		size_t		getSize()
 		{	return _size;	}
+
 		std::string		getFName()
 		{	return _fileName;	}
+
+
+	//*******get_status()
+
 	};
 
 }

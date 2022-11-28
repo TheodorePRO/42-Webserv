@@ -18,6 +18,19 @@ SAMATHE::Reception::Reception()
 	
 }
 
+SAMATHE::Reception::Reception(int fd, ServerInParser& conf)
+{
+	//*********MS
+	(void) conf; // config de serveur
+	_fd = fd;
+	//*********MS
+			_method = "";
+			_version = "";
+			_page = "";
+			_body = "";
+			_size = 0;
+}
+
 SAMATHE::Reception::~Reception(){}
 
 

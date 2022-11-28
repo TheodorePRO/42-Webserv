@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "BindSocket.hpp"
-#include "../Conf.hpp"
+#include "../webserv.hpp"
 
 namespace SAMATHE
 {
@@ -14,7 +14,7 @@ namespace SAMATHE
 
 	public:
 		// ------ Constructor
-		ListeningSocket(SAMATHE::ServConf &sc);
+		ListeningSocket(ServerInParser &sc);
 
 		// ------ Operations
 		void start_listening(int bkl);
