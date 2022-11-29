@@ -1,11 +1,12 @@
 #include "../incs/Response.hpp"
 
+namespace SAMATHE
+{
+Response::Response(){}
+Response::~Response(){}
 
-SAMATHE::Response::Response(){}
-SAMATHE::Response::~Response(){}
 
-
-int		SAMATHE::Response::setContent(std::string page)
+int		Response::setContent(std::string page)
 {	
 	std::ifstream		file(page.c_str());
 	if (file.is_open())
@@ -22,4 +23,11 @@ int		SAMATHE::Response::setContent(std::string page)
 		file.close();
 		return 0;
 	}
+}
+
+
+int		Response::setC(std::string s)
+{	
+	_content = s;
+}
 }

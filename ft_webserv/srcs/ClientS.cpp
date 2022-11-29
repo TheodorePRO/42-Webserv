@@ -84,12 +84,11 @@ namespace SAMATHE{
 		oss << "\r\n";
 
 		oss << _response.getContent();
-		std::string output = oss.str();
-		int size = output.size() + 1;
-		::send(_fd, output.c_str(), size, 0 );
+		_output = oss.str();
+		sending();
 	}
-	
 
+	
 	void ClientS::responder()
 	{
 		// ------ GET response content
@@ -107,13 +106,43 @@ namespace SAMATHE{
 			checkPage();
 			makeHeader();
 		}
-		close(_fd);
-		_status = 2;		// to change to 2 ???? depends on select
-		_reception.clearReception();
-		_received = 0;
-		_justRecv.clear();
-		_binary = 0;
+		else if (_reception.getMethod() == "DELETE")
+		{
+			if (_reception.getPage != "")
+			{
+				remove(_reception.getPage())
+				_reception.setCode("204");
+				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>")
+				_reception.setType("html");
+			}
+		}
+		else
+		{
+			_reception.setCode("404");
+			_reeption.setPage("pages/error/404.html");
+			checkPage();
+		}	
+		makeHeader();
 	}
 
+	void	sending()
+	{
+		int size = _output.size() + 1;
+		int ret = ::send(_fd, _output.substr(_sent, size - _sent).c_str(), size - _sent, 0 );
+		_sent += ret;
+		if (ret != -1 && ret !=0 && _sent < size)
+			return;
+		else
+		{
+			close(_fd);
+			_status = 2;	// to change to 2 ???? depends on select
+			_reception.clearReception();
+			_received = 0;
+			_justRecv.clear();
+			_binary = 0;
+			_sent = 0;
+			_output = 0;
+		}
+	}
 
 }
