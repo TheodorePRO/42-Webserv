@@ -73,3 +73,7 @@ void		SAMATHE::Reception::setBody(std::string &justRecv)
 	_body = _body.substr(_body.find(std::string("\r\n\r\n")) + 4);
 }
 
+
+void	SAMATHE::Reception::setPage(std::string p)
+{	_page = p;	}
+

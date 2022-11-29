@@ -20,6 +20,7 @@ namespace SAMATHE
 		~Response(void);
 
 		int	setContent(std::string page);
+		void	setC(std::string c);
 		void	setCode(std::string const &c)
 		{	_code = c;	}
 		void	setType(std::string const &t)
