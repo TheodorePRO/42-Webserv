@@ -66,7 +66,7 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 		else
 			perror("Failed to accept...");
 	}
-
+ 
 	void TestServer::launch()
 	{
 		fd_set* readFd = get_master_set();

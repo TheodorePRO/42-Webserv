@@ -17,9 +17,9 @@ namespace SAMATHE{
 	ClientS::~ClientS(){}
 
 
-	void	ClientS::receiving()
+	void	ClientS::receiving() 
 	{
-		char				buffer[30000] = {0}; 
+		char				buffer[30000] = {0}; // saray:  conf->getClientBufferSize()
 		int					ret;
 		// ------ appel système pour recevoir depuis le client
 std::cout << "_fd=" << _fd<< std::endl;
