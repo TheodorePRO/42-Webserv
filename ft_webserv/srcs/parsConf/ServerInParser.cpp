@@ -16,7 +16,7 @@ static bool isNumber(const std::string &str)
 */
 
 ServerInParser::ServerInParser()
-	:_port(-1), _clientBufferSize(-1) {}
+	:_port(-1), _clientBufferSize(1000) {}   // ?? -! ?? 
 
 ServerInParser::ServerInParser(const ServerInParser &src)
 {
@@ -79,12 +79,12 @@ void ServerInParser::setPort(std::string port)
 /*void ServerInParser::addErrorPage(int error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
-}
+}*/
 
 void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
 	_clientBufferSize = buffer_max;
-}*/
+}
 /*
 Location & ServerInParser::addLocation()
 {
@@ -160,11 +160,11 @@ std::vector<std::string> & ServerInParser::getNames()
 }
 
 //***MS return correct type de port pour la structure struct sockaddr_in
-
 std::string ServerInParser::getIP() const
 {
 	return _IP;
 }
+
 in_addr_t ServerInParser::getIP_() const
 {
 	struct in_addr addr;
@@ -178,6 +178,7 @@ int	ServerInParser::getPort() const
 {
 	return _port;
 }
+
 //***MS return correct type de port pour la structure struct sockaddr_in
 in_port_t ServerInParser::getPort_() const
 {
@@ -198,10 +199,10 @@ in_port_t ServerInParser::getPort_() const
 		return it->second;
 }*/
 
-/*std::size_t ServerInParser::getClientBufferSize() const
+std::size_t ServerInParser::getClientBufferSize() const
 {
 	return _clientBufferSize;
-}*/
+}
 
 /*std::vector<Location> & 	ServerInParser::getRoutes()
 {

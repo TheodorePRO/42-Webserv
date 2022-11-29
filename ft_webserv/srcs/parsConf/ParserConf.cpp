@@ -67,10 +67,20 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 	}
 
 	// fill server names
+	else if (line_items[0] == "server_name" && line_items.size() >= 2)
+	{
+		for (std::size_t i = 1; i < line_items.size(); ++i)
+			_currentServer->addName(line_items[i]);
+	}
 
 	// fill error pages
 
 	// fill maxBody size
+	else if (line_items[0] == "client_max_body_size" && line_items.size() == 2)
+	{
+		_currentServer->setClientBufferSize(
+			std::atoi(line_items[1].c_str()));
+	}
 
 	// else: parsing error
 	else
