@@ -77,11 +77,21 @@ std::cout << "buffer=" << buffer << std::endl;
 	
 	void ClientS::checkPage()
 	{
-		if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
+		std::string prefix;
+//		if (_conf->getName() != "localhost")
+
+		std::cout << "ggggggggggggggggggggggggg"  << _conf->getIP() << std::endl;
+
+		if (_conf->getPort() != 8080)
+			prefix = "pages/";
+		else
+			prefix = "pages2/";
+		if (_response.setContent(prefix.c_str() + _reception.getPage()) == 0)
 		{
-			_response.setContent(std::string("pages/404.html").c_str());
+			_response.setContent(std::string("error/404.html").c_str());
 			_response.setCode("404");
 		}
+		std::cout << "ggggggggggggggggggggggggg"  << prefix  << std::endl;
 	}
 
 

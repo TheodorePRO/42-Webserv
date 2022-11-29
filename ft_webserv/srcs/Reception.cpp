@@ -73,25 +73,3 @@ void		SAMATHE::Reception::setBody(std::string &justRecv)
 	_body = _body.substr(_body.find(std::string("\r\n\r\n")) + 4);
 }
 
-
-/*
-std::string&	SAMATHE::Reception::pop(std::string& str)
-{
-	if (str.size())
-		str.resize(str.size() - 1);
-	return str;
-}
-
-
-void	SAMATHE::Reception::setBody2(const std::string& str)
-{
-	char	strip[] = {'\n', '\r'};
-
-	this->_body.assign(str);
-	for (int i = 0; i < 4; i++)
-		if (this->_body.size() > 0 && this->_body[this->_body.size() - 1] == strip[i % 2])
-			pop(this->_body);
-		else
-			break ;
-}
-*/
