@@ -72,3 +72,5 @@ void		SAMATHE::Reception::setBody(std::string &justRecv)
 	_body = justRecv.substr(i , justRecv.find(_fileLim + "--") - i);
 	_body = _body.substr(_body.find(std::string("\r\n\r\n")) + 4);
 }
+
+

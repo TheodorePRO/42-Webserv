@@ -1,10 +1,9 @@
 #include "../incs/ClientS.hpp"
 
 namespace SAMATHE{
-
 //********MS
 	ClientS::ClientS(){}
-
+//********MS	
 	ClientS::ClientS(int fd, ServerInParser *conf, TestServer *serv)
 	{
 		_fd = fd;
@@ -78,11 +77,21 @@ std::cout << "buffer=" << buffer << std::endl;
 	
 	void ClientS::checkPage()
 	{
-		if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
+		std::string prefix;
+//		if (_conf->getName() != "localhost")
+
+		std::cout << "ggggggggggggggggggggggggg"  << _conf->getIP() << std::endl;
+
+		if (_conf->getPort() != 8080)
+			prefix = "pages/";
+		else
+			prefix = "pages2/";
+		if (_response.setContent(prefix.c_str() + _reception.getPage()) == 0)
 		{
-			_response.setContent(std::string("pages/404.html").c_str());
+			_response.setContent(std::string("error/404.html").c_str());
 			_response.setCode("404");
 		}
+		std::cout << "ggggggggggggggggggggggggg"  << prefix  << std::endl;
 	}
 
 
@@ -97,11 +106,12 @@ std::cout << "buffer=" << buffer << std::endl;
 		oss << "\r\n";
 
 		oss << _response.getContent();
-		_output = oss.str();
-		sending();
+		std::string output = oss.str();
+		int size = output.size() + 1;
+		::send(_fd, output.c_str(), size, 0 );
 	}
-
 	
+
 	void ClientS::responder()
 	{
 		// ------ GET response content
@@ -119,49 +129,16 @@ std::cout << "buffer=" << buffer << std::endl;
 			checkPage();
 			makeHeader();
 		}
-		else if (_reception.getMethod() == "DELETE")
-		{
-			if (_reception.getPage != "")
-			{
-				remove(_reception.getPage())
-				_reception.setCode("204");
-				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>")
-				_reception.setType("html");
-			}
-		}
-		else
-		{
-			_reception.setCode("404");
-			_reeption.setPage("pages/error/404.html");
-			checkPage();
-		}	
-		makeHeader();
-	}
-
-	void	sending()
-	{
-		int size = _output.size() + 1;
-		int ret = ::send(_fd, _output.substr(_sent, size - _sent).c_str(), size - _sent, 0 );
-		_sent += ret;
-		if (ret != -1 && ret !=0 && _sent < size)
-			return;
-		else
-		{
-			close(_fd);
-			_status = FINI;	// to change to 2 ???? depends on select
-				FD_CLR(_fd, _serv->get_master_set());
+		close(_fd);
+		_status = FINI;		// to change to 2 ???? depends on select
+		FD_CLR(_fd, _serv->get_master_set());
 		if (FD_ISSET(_fd, _serv->get_writeMaster_set()))
 			FD_CLR(_fd, _serv->get_writeMaster_set());
-    
-    _reception.clearReception();
-			_received = 0;
-			_justRecv.clear();
-			_binary = 0;
-			_sent = 0;
-			_output = 0;
-		}
+		_reception.clearReception();
+		_received = 0;
+		_justRecv.clear();
+		_binary = 0;
 	}
-
 //*******MS
 	int	ClientS::getStatus()
 	{return _status;}
