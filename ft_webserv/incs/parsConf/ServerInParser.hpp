@@ -44,13 +44,14 @@ class ServerInParser
 		// Accessors
 		
 		std::vector<std::string> & 	getNames();
-		std::string					getIP() const;
+		std::string 				getIP() const;
 		int							getPort() const;
+		in_addr_t					getIP_() const;
+		in_port_t					getPort_() const;
 
 	// ******MS - pour compilation
 		int							getBklg(){return 42;};
 		int							getDomain(){return PF_INET;};
-		int							getInterface(){return INADDR_ANY;};
 		int							getService(){return SOCK_STREAM;};
 		int							getProto()
 		{

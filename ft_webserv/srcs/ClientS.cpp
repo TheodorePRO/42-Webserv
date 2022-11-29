@@ -2,10 +2,18 @@
 
 namespace SAMATHE{
 
-	ClientS::ClientS(int fd,  TestServer *serv, ServerInParser conf) : _fd(fd), _serv(serv), _conf(conf)
+//********MS
+	ClientS::ClientS(){}
+
+	ClientS::ClientS(int fd, ServerInParser *conf, TestServer *serv)
 	{
+		_fd = fd;
+		_serv = serv;
+		_conf = conf;
 		_justRecv = "";
 		_binary = 0;
+//******MS
+		receiving();
 	}
 	ClientS::~ClientS(){}
 
@@ -15,17 +23,20 @@ namespace SAMATHE{
 		char				buffer[30000] = {0}; 
 		int					ret;
 		// ------ appel système pour recevoir depuis le client
+std::cout << "_fd=" << _fd<< std::endl;
 		ret = ::recv(_fd, buffer, sizeof(buffer), 0);
 		if (ret == 0 || ret == -1)
 		{
 			close(_fd);
-			_status = 2;
+			_status = FINI;
 			if (!ret)
 				std::cout << "\rConnection was closed by client.\n" << std::endl;
 			else
 				std::cout << "\rRead error, closing connection.\n" << std::endl;
 			return;
 		}
+std::cout << "buffer=" << buffer << std::endl;
+
 		_justRecv.append(buffer, ret);
 		_received += ret;
 		size_t	i = _justRecv.find("\r\n\r\n");
@@ -34,7 +45,8 @@ namespace SAMATHE{
 			if (_justRecv.find("Content-Length: ") == std::string::npos)
 			{
 				handler();
-				_status = 1;
+				_status = WRITE; //****MS - c'est read ? verifie stp
+				FD_SET(_fd, _serv->get_writeMaster_set());
 				std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				return;
 			}
@@ -43,7 +55,8 @@ namespace SAMATHE{
 			{
 				std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
-				_status = 1;
+				_status = READ;
+				FD_SET(_fd, _serv->get_master_set());
 				return;
 			}
 			std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
@@ -135,8 +148,12 @@ namespace SAMATHE{
 		else
 		{
 			close(_fd);
-			_status = 2;	// to change to 2 ???? depends on select
-			_reception.clearReception();
+			_status = FINI;	// to change to 2 ???? depends on select
+				FD_CLR(_fd, _serv->get_master_set());
+		if (FD_ISSET(_fd, _serv->get_writeMaster_set()))
+			FD_CLR(_fd, _serv->get_writeMaster_set());
+    
+    _reception.clearReception();
 			_received = 0;
 			_justRecv.clear();
 			_binary = 0;
@@ -144,5 +161,9 @@ namespace SAMATHE{
 			_output = 0;
 		}
 	}
+
+//*******MS
+	int	ClientS::getStatus()
+	{return _status;}
 
 }
