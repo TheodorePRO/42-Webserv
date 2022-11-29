@@ -1,0 +1,36 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
+
+/* Fontawesome */
+@import url('https://use.fontawesome.com/releases/v5.6.3/css/all.css');
+
+/* Utilities */
+/*@import url('components/Banner.css');*/
+/*@import url('components/Card.css');*/
+/*@import url('components/Footer.css');*/
+/*@import url('components/Button.css');*/
+
+/* Custom */
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background-color:#f6ded7;
+  color:#7b2a46;
+};
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+};
+
+a {
+  text-decoration: none;
+};
+
+.navbar-light {
+  color:#7b2a46;
+};
+
+img {
+    border-radius: 25px;
+};
+
