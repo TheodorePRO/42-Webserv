@@ -76,10 +76,10 @@ void ServerInParser::setPort(std::string port)
 		_port = std::atoi(port.c_str());
 }
 
-/*void ServerInParser::addErrorPage(int error_code, std::string filePath)
+void ServerInParser::addErrorPage(int error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
-}*/
+}
 
 void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
@@ -126,7 +126,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	return true;
 }
 
-/*void			ServerInParser::completeErrorPages()
+void			ServerInParser::completeErrorPages()
 {
 	if (_errorPages.find(BAD_REQUEST) == _errorPages.end())
 	{
@@ -148,7 +148,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	{
 		_errorPages[SERVER_ERROR] = SERVER_ERROR_DEFAULT;
 	}
-}*/
+}
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------

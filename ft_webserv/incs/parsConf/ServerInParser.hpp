@@ -25,7 +25,7 @@ class ServerInParser
 		std::vector<std::string>	_names;
 		std::string					_IP;
 		int							_port;
-		//std::map<int, std::string>	_errorPages;
+		std::map<int, std::string>	_errorPages;
 		std::size_t					_clientBufferSize; // ClientS.cpp , line22 ---char				buffer[30000] = {0}
 		//std::vector<Location>		_routes;
 
@@ -36,10 +36,10 @@ class ServerInParser
 		void			addName(std::string name);
 		void			setIP(std::string IP); // can be equal to 'localhost'
 		void			setPort(std::string port);
-		//void			addErrorPage(int error_code, std::string filePath);
+		void			addErrorPage(int error_code, std::string filePath);
 		void			setClientBufferSize(std::size_t buffer_max);
 		//Location &		addLocation();
-		//void			completeErrorPages();
+		void			completeErrorPages();
 
 		// Accessors
 		
@@ -69,9 +69,9 @@ class ServerInParser
 		};
 	//********************************************
 
-		/*std::string					getErrorPagePath(int error_code) const;
+		std::string					getErrorPagePath(int error_code) const;
 		std::size_t					getClientBufferSize() const;
-		std::vector<Location> 	&	getRoutes();*/
+		//std::vector<Location> 	&	getRoutes();
 
 		
 	private:

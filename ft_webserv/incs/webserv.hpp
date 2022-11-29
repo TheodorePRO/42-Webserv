@@ -47,6 +47,11 @@
 # define INFO(x)		std::cerr << ITALIC_TXT << x << RESET_TXT;
 # define RUNTIME_MSG(x)	std::cerr << GREEN_TXT << x << RESET_TXT;
 
+# define BAD_REQUEST_DEFAULT		"pages/400.html"
+# define FORBIDDEN_DEFAULT			"pages/403.html"
+# define NOT_FOUND_DEFAULT			"pages/405.html"
+# define SERVER_ERROR_DEFAULT		"pages/500.html"
+
 // CPP functions
 std::vector<std::string>	split(const std::string &str, char delim);
 std::vector<std::string>	split(const std::string &str, const char *set_delim);
