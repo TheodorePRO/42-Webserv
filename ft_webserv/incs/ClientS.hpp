@@ -23,13 +23,21 @@ namespace SAMATHE
 		int					_status; // 0 = READ - 1 = Write - 2 = fini ***** 
 		int					_fd;
 		size_t				_received;
+		size_t				_sent;
 		std::string			_justRecv;
-		std::string			_page;
+//		std::string			_page;  // RECEPTION _page ??? 
 		std::string			_type;
 		Reception			_reception;
 		Response			_response;
 		TestServer			*_serv;
 		int					_binary;
+
+
+		std::string			_output;
+
+	public:
+
+
 		ServerInParser		*_conf;
 
 	public:
