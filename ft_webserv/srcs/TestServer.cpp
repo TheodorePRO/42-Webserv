@@ -48,17 +48,19 @@ namespace SAMATHE{
 		if (new_socket > - 1 )
 		{
 			std::cout << "Client accepted at ip :" << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl; 
-			fcntl(new_socket, F_SETFL, O_NONBLOCK);
 			
-			FD_SET(new_socket, get_master_set());
-			//_responder.add_to_map(new_socket, address.sin_port, address.sin_family);
-			//_client_sockets.insert(pair<int, Reception>(new_socket, Reception()));
-			_client_sockets[new_socket] = ClientS(new_socket, _glob_conf.getServersList().at(i), this); // ajouter variables comme 'address' et 'conf'
-
-			if (new_socket > _max_fd) 
+			ClientS new_client = ClientS(new_socket, &_glob_conf.getServersList().at(i), this); // ajouter variables comme 'address' et 'conf'
+			int stat = new_client.getStatus();
+			if(stat == FINI)
 			{
-				_max_fd = new_socket;
+				std::cout << "conection close" << std::endl;
+				return;
 			}
+			fcntl(new_socket, F_SETFL, O_NONBLOCK);
+			_client_sockets[new_socket] = new_client;
+			if (new_socket > _max_fd) _max_fd = new_socket;
+
+std::cout << "Client accepted _max_fd = " << _max_fd << std::endl; 
 		}
 
 		else
@@ -67,50 +69,56 @@ namespace SAMATHE{
 
 	void TestServer::launch()
 	{
-		fd_set* readFd;
-		fd_set* writeFd;
+		fd_set* readFd = get_master_set();
+		fd_set* writeFd = get_writeMaster_set();
 
 		// ------Initialize the master fd_set 
 		//int listen_sd = get_socket(i).get_sock();
 
+//int j = 5;
+//while (j--)
 		while (true)
 		{ // ------ boucle infinie qui fait Accept . Handle . Respond (Voir avec Mariys pour le select)
 			std::cout << "========WAITING======="<< std::endl;
-			readFd = get_master_set();
-			writeFd = get_writeMaster_set();
 
-
-			std::cout << "========select======="<< std::endl;
-			int res = select(_max_fd + 1, readFd, writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
-			if (res <= 0) {
-				std::cout << "========BAD======="<< std::endl;
-				continue ;
-			}
-
-			std::cout << "========listen soc======="<< std::endl;
+			// re-add listening socket
 			for (int i = 0; i < get_N_sockets(); ++i) {
-				std::cout << "========"<<i<<"======="<< std::endl;
-
-				if (FD_ISSET(get_socket(i).get_sock(), readFd)) {
-					std::cout << "========accept"<<i<<"======="<< std::endl;
-
-					accepter(i);
+				if (!FD_ISSET(get_socket(i).get_sock(), readFd)) {
+					FD_SET(get_socket(i).get_sock(), readFd);
 				}
 			}
 
+			int res = select(_max_fd + 1, readFd, writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
+std::cout << "======= res="<<res<<"======="<< std::endl;
+			if (res <= 0) {
+				continue ;
+			}
+
+std::cout << "========listen soc======="<< std::endl;
+			for (int i = 0; i < get_N_sockets(); ++i) {
+std::cout << "========"<<i<<"======="<< std::endl;
+				if (FD_ISSET(get_socket(i).get_sock(), readFd)) {
+std::cout << "========accept"<<i<<"======="<< std::endl;
+					accepter(i);
+				}
+			}
+			
 			for (std::map<int, ClientS>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
-				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==0) { // ? (cd ..*it).get_status() ? ***** _status il faut retire  de la class Reception: it->second.get_status()
+std::cout << "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
+				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==READ) { // ? (cd ..*it).get_status() ? ***** _status il faut retire  de la class Reception: it->second.get_status()
+std::cout << "========_client_socket read ======="<< std::endl;
 					it->second.receiving(); //it->second.receiving(it->first)
-					if (it->second.getStatus()==2) { // _status from Reception
+					if (it->second.getStatus()==FINI) { // _status from Reception
 										 //                    std::cout << "DELETED" << std::endl;
 										 //					 _responder.del_from_map(it->first);
 						_client_sockets.erase(it);
 					}
 					//continue ; ????
 				}
-				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==1) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
+				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
+std::cout << "========_client_socket write ======="<< std::endl;
 					it->second.responder(); //it->second.responder(it->first);
-					if (it->second.getStatus()==2) {
+					if (it->second.getStatus()==FINI) {
 						//                    std::cout << "DELETED" << std::endl;
 						//					 _responder.del_from_map(*it);
 						_client_sockets.erase(it);

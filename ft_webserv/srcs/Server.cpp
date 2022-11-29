@@ -16,7 +16,7 @@ namespace SAMATHE{
 			_sockets.push_back(ls);	// MS quell valeur ls???
 			
 			int sd = ls.get_sock();
-	std::cout << sd << std::endl;
+	std::cout <<"listening sd="<< sd << std::endl;
 			FD_SET(sd, &_master_set); // 	FD_SET(get_sock(), &_master_set);
 
 			if (sd > _max_sd) {

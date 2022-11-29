@@ -12,6 +12,8 @@
 
 namespace SAMATHE
 {
+	class ClientS;
+	
 	class TestServer: public Server
 	{
 		GlobalConfiguration					_glob_conf;

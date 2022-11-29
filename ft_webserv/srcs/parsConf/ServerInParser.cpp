@@ -159,14 +159,33 @@ std::vector<std::string> & ServerInParser::getNames()
 	return _names;
 }
 
+//***MS return correct type de port pour la structure struct sockaddr_in
+
 std::string ServerInParser::getIP() const
 {
 	return _IP;
 }
+in_addr_t ServerInParser::getIP_() const
+{
+	struct in_addr addr;
+	if (inet_aton(_IP.c_str(), &addr) == 0)
+		return addr.s_addr;
+	else
+		return htonl(INADDR_ANY);
+}
 
-int ServerInParser::getPort() const
+int	ServerInParser::getPort() const 
 {
 	return _port;
+}
+//***MS return correct type de port pour la structure struct sockaddr_in
+in_port_t ServerInParser::getPort_() const
+{
+
+	if(_port==-1)
+		return htons(INADDR_ANY);
+	else
+		return htons(_port);
 }
 
 /*std::string ServerInParser::getErrorPagePath(int error_code) const
