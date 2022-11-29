@@ -9,8 +9,8 @@ namespace SAMATHE
 	{
 		// ------- Define address structure
 		_address.sin_family			= sc.getDomain(); 
-		_address.sin_port			= htons(sc.getPort());
-		_address.sin_addr.s_addr	= htonl(sc.getInterface());
+		_address.sin_port			= sc.getPort_();
+		_address.sin_addr.s_addr	= sc.getIP_();
 
 		// ------ Establish socket
 		_sock = socket(sc.getDomain(), sc.getService(), sc.getProto());

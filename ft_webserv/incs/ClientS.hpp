@@ -14,6 +14,9 @@
 
 namespace SAMATHE
 {
+	enum{READ, WRITE, FINI};
+	
+	class TestServer;
 
 	class ClientS
 	{
@@ -27,10 +30,13 @@ namespace SAMATHE
 		Response			_response;
 		TestServer			*_serv;
 		int					_binary;
-		ServerInParser		_conf;
+		ServerInParser		*_conf;
 
 	public:
-		ClientS(int fd, ServerInParser _conf, TestServer *serv);
+	//*********MS
+		ClientS();
+	//*********MS
+		ClientS(int fd, ServerInParser *conf, TestServer *serv);
 		~ClientS();
 		void	checkPage();
 		void	makeHeader();
@@ -38,6 +44,9 @@ namespace SAMATHE
 		void	responder();
 		void	receiving();
 		void	clearReception();
+
+	//***********MS
+		int	getStatus();
 
 	};
 

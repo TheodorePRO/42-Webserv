@@ -14,7 +14,7 @@ namespace SAMATHE
 
 	// ------ Tells the number of simultaneous connections
 	void	ListeningSocket::start_listening(int bkl)
-	{	_listening = listen(get_sock(), bkl);	}
+	{	_listening = listen(get_sock(), bkl);	}  // N listening socket
 
 	// ------ Getters
 	int ListeningSocket::get_listening()
