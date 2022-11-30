@@ -3,12 +3,10 @@
 
 
 
-# define B_SIZE 30000
+# define B_SIZE 300000
 
 namespace SAMATHE{
-//********MS
 	ClientS::ClientS(){}
-//********MS	
 	ClientS::ClientS(int fd, ServerInParser *conf, TestServer *serv)
 	{
 		_fd = fd;
@@ -18,7 +16,6 @@ namespace SAMATHE{
 		_binary = 0;
 		_output = "";
 		_sent = 0;
-//******MS
 		receiving();
 	}
 	ClientS::~ClientS(){}
@@ -62,13 +59,14 @@ std::cout << "_fd =" << _fd<< std::endl;
 				return;
 			}
 			size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
+		//	if len > conf -max body size FINI  -> 413 
 			if (_received >= len + i + 4)
 			{
 				// ------ Cas où on a lu toute la requete
 				std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
-				_status = WRITE;
-				FD_SET(_fd, _serv->get_writeMaster_set());
+				_status = WRITE;			//// TJ has finished receiving => WRITE
+				FD_SET(_fd, _serv->get_writeMaster_set());  //////// TJ : has finished receiving
 				return;
 			}
 			std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
@@ -79,12 +77,14 @@ std::cout << "_fd =" << _fd<< std::endl;
 	void ClientS::handler()
 	{
 		// ------ Read request and slash it into vector
+std::cout  << _justRecv << std::endl;
 		std::stringstream ssxx(_justRecv);
 		std::istream_iterator<std::string> begin(ssxx);
 		std::istream_iterator<std::string> end;
 		std::vector<std::string> cut(begin, end);
 		_reception.setReception(cut);
 std::cout << "------ Exit Handler ----------"<< std::endl;
+		responder();
 	}
 
 	
@@ -108,19 +108,22 @@ std::cout << "------ Exit Handler ----------"<< std::endl;
 		std::ostringstream oss;
 		oss << _reception.getVersion() << " " << _response.getCode() << _serv->getError(_response.getCode()) << "\r\n";
 		oss << "Cache-Control: no-cache, private\r\n";
+std::cout << "------ content type ="<< _response.getType() << std::endl;
 		oss << "Content-Type: "<< _serv->getContents(_response.getType()) << "\r\n";
 		oss << "Content-Length: " << _response.getContent().size() << "\r\n";
 		oss << "\r\n";
 
 		oss << _response.getContent();
 		_output = oss.str();
-		sending();
 	}
 
 
 	void ClientS::responder()
 	{
 		// ------ GET response content
+
+std::cout << "§§§§§§§§§§§§§§§"<< _reception.getMethod() << std::endl;
+
 		if (_reception.getMethod() == "GET")
 		{
 			checkPage();
@@ -128,7 +131,7 @@ std::cout << "------ Exit Handler ----------"<< std::endl;
 		}
 		else if (_reception.getMethod() == "POST")
 		{
-			std::cout << "*** CREATING FILE ***" << std::endl;
+			std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
 			_reception.setBody(_justRecv);
 			std::ofstream file(_reception.getFName().c_str());
 			file << _reception.getBody();
@@ -139,6 +142,7 @@ std::cout << "------ Exit Handler ----------"<< std::endl;
 		{
 			if (_reception.getPage() != "")
 			{
+				std::cout << "*** DELETING FILE ******"<< _reception.getPage() << std::endl;
 				remove(_reception.getPage().c_str());
 				_response.setCode("204");
 				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>");
@@ -175,26 +179,16 @@ std::cout << "----- NOT FINISHED  ---- " << std::endl;
 		{
 std::cout << "----- 1 YES FINISHED  ---- " << std::endl;
 			close(_fd);
-std::cout << "----- 2 YES FINISHED  ---- " << std::endl;
 			_status = FINI;
-std::cout << "----- 3 YES FINISHED  ---- " << std::endl;
 			FD_CLR(_fd, _serv->get_master_set());
-std::cout << "----- 4 YES FINISHED  ---- " << std::endl;
 			if (FD_ISSET(_fd, _serv->get_writeMaster_set()))
 				FD_CLR(_fd, _serv->get_writeMaster_set());
-std::cout << "----- 5 YES FINISHED  ---- " << std::endl;
 			_reception.clearReception();
-std::cout << "----- 6 YES FINISHED  ---- " << std::endl;
 			_received = 0;
-std::cout << "----- 7 YES FINISHED  ---- " << std::endl;
 			_justRecv.clear();
-std::cout << "----- 8 YES FINISHED  ---- " << std::endl;
 			_binary = 0;
-std::cout << "----- 9 YES FINISHED  ---- " << std::endl;
 			_sent = 0;
-std::cout << "----- 10 YES FINISHED  ---- " << std::endl;
 			_output = "";
-std::cout << "----- 11 YES FINISHED  ---- " << std::endl;
 		}
 	}
 	

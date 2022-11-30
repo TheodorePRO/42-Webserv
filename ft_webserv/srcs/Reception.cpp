@@ -60,7 +60,7 @@ void		SAMATHE::Reception::setReception(std::vector<std::string> &cut)
 			iss >> _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 			_fileName = _fileName.substr(10, _fileName.size()-11);
-			_fileName = std::string("01 IN/") + _fileName;
+			_fileName = std::string("01-IN/") + _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 		}
 	}
