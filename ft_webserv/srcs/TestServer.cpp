@@ -117,7 +117,7 @@ std::cout << "========_client_socket read ======="<< std::endl;
 				}
 				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
 std::cout << "========_client_socket write ======="<< std::endl;
-					it->second.responder(); //it->second.responder(it->first);
+					it->second.sending(); //it->second.responder(it->first);  ///////////////TJ : sending(une fois que le content est pret (avant responder qui prépare le content et envoie après.)
 					if (it->second.getStatus()==FINI) {
 						//                    std::cout << "DELETED" << std::endl;
 						//					 _responder.del_from_map(*it);

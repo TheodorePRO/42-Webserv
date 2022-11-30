@@ -5,6 +5,11 @@ SAMATHE::Response::Response(){}
 SAMATHE::Response::~Response(){}
 
 
+void		SAMATHE::Response::setC(std::string c)
+{
+	_content = c;
+}
+
 int		SAMATHE::Response::setContent(std::string page)
 {	
 	std::ifstream		file(page.c_str());

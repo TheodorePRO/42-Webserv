@@ -60,7 +60,7 @@ void		SAMATHE::Reception::setReception(std::vector<std::string> &cut)
 			iss >> _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 			_fileName = _fileName.substr(10, _fileName.size()-11);
-			_fileName = std::string("01 IN/") + _fileName;
+			_fileName = std::string("01-IN/") + _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 		}
 	}
@@ -72,4 +72,8 @@ void		SAMATHE::Reception::setBody(std::string &justRecv)
 	_body = justRecv.substr(i , justRecv.find(_fileLim + "--") - i);
 	_body = _body.substr(_body.find(std::string("\r\n\r\n")) + 4);
 }
+
+
+void	SAMATHE::Reception::setPage(std::string p)
+{	_page = p;	}
 
