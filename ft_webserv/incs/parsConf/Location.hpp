@@ -5,15 +5,6 @@
 
 class Location
 {
-
-	public:
-
-		Location();
-		Location( Location const & src );
-		~Location();
-
-		Location &		operator=( Location const & rhs );
-
 	private:
 		
 		std::string						_prefix; // location /{}  or location /gallery {}
@@ -28,6 +19,11 @@ class Location
 		
 
 	public:
+		Location();
+		Location( Location const & src );
+		~Location();
+
+		Location &		operator = ( Location const & rhs );
 
 		// Setters
 		

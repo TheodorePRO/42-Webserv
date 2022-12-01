@@ -36,6 +36,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		_context = "server";
 		_checkCurrentLocationIntegrity(line_nb);
 		_solveCurrentLocationIntegrity();
+		std::cout <<  "@@ @@@  chek addLocation in ParseLocation avant sortis de block = " << _currentServer->getRoutes().size();
 		return ;
 	}
 
@@ -54,6 +55,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 	if (line_items[0] == "root" && line_items.size() == 2)
 	{
 		_currentLocation->setRoot(line_items[1]);
+		std::cout <<  "@@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
 	}
 
 	// fill allowed methods
@@ -92,6 +94,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		FATAL_ERR("Parsing error in line " << line_nb << '\n');
 		throw parsing_error("invalid line");
 	}
+	std::cout <<  "@@ @@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
 }
 
 /* 3 */
@@ -103,6 +106,7 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 		_context = "main";
 		_checkCurrentServerIntegrity(line_nb);
 		//_currentServer->completeErrorPages();
+		std::cout <<  RED_TXT"@@ @@@  chek addLocation in ParseLocation avant sortis de Server block = "RESET_TXT << _currentServer->getRoutes().size();
 		return ;
 	}
 
@@ -120,6 +124,7 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 			line_items[1].append("/");
 			new_route->setPrefix(line_items[1]);
 		}
+
 		_currentLocation = new_route;
 		return ;
 	}

@@ -11,15 +11,6 @@ class Location;
 
 class ServerInParser
 {
-
-	public:
-
-		ServerInParser();
-		ServerInParser(ServerInParser const & src );
-		~ServerInParser();
-
-		ServerInParser &	operator=(ServerInParser const & rhs );
-
 	private:
 
 		std::vector<std::string>	_names;
@@ -30,6 +21,11 @@ class ServerInParser
 		std::vector<Location>		_routes;
 
 	public:
+		ServerInParser();
+		ServerInParser(ServerInParser const & src );
+		~ServerInParser();
+
+		ServerInParser &	operator=(ServerInParser const & rhs );
 
 		// Setters
 		
@@ -49,6 +45,8 @@ class ServerInParser
 		in_addr_t					getIP_() const;
 		in_port_t					getPort_() const;
 		std::size_t					getClientBufferSize() const;
+		std::string					getErrorPagePath(int error_code) const;
+		std::vector<Location> 	&	getRoutes();
 
 	// ******MS - pour compilation
 		int							getBklg(){return 42;};
@@ -69,9 +67,7 @@ class ServerInParser
 		};
 	//********************************************
 
-		std::string					getErrorPagePath(int error_code) const;
-		//std::size_t					getClientBufferSize() const;
-		std::vector<Location> 	&	getRoutes();
+		
 
 		
 	private:
