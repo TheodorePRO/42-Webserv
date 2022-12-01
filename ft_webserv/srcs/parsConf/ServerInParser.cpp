@@ -79,7 +79,6 @@ void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 Location & ServerInParser::addLocation()
 {
 	_routes.push_back(Location());
-	std::cout << "### chek size() after addLocation << "<< _routes.size() << "\n\n";
 	return _routes.back();
 	
 }
