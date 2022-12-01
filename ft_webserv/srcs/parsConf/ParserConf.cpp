@@ -27,19 +27,107 @@ ParserConf &	ParserConf::operator = ( ParserConf const & rhs )
 }
 
 // -------------------------------------- METHODS -----------------------------------------
+/* 4 */
+void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::size_t line_nb)
+{
+	// end of block
+	if (line_items.size() == 1 && line_items[0] == "}")
+	{
+		_context = "server";
+		_checkCurrentLocationIntegrity(line_nb);
+		_solveCurrentLocationIntegrity();
+		std::cout <<  "@@ @@@  chek addLocation in ParseLocation avant sortis de block = " << _currentServer->getRoutes().size();
+		return ;
+	}
+
+	// check if ';' closes the line
+	else if (line_items.back().at(line_items.back().size() - 1) != ';')
+	{
+		FATAL_ERR("Missing ';' at the end of line " << line_nb << '\n');
+		throw syntax_error("syntax error");
+	}
+
+	// erase ';' at the end of the line
+	while(line_items.back().size() >= 1 && line_items.back().at(line_items.back().size() - 1) == ';')
+		line_items.back().erase(line_items.back().end() - 1);
+
+	// fill root
+	if (line_items[0] == "root" && line_items.size() == 2)
+	{
+		_currentLocation->setRoot(line_items[1]);
+		std::cout <<  "@@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
+	}
+
+	// fill allowed methods
+	else if (line_items[0] == "methods" && line_items.size() >= 2)
+	{
+		for (std::size_t i = 1; i < line_items.size(); ++i)
+			_currentLocation->addAllowedMethod(line_items[i]);
+	}
+
+	// fill autoindex
+	else if (line_items[0] == "autoindex" && line_items.size() == 2)
+	{
+		_currentLocation->setAutoindex(line_items[1]);
+	}
+
+	// fill indexPage
+	else if (line_items[0] == "index" && line_items.size() == 2)
+	{
+		_currentLocation->setIndexPage(line_items[1]);
+	}
+
+	// HTTP redirection
+	else if (line_items[0] == "return" && line_items.size() == 3)
+	{
+		if (!is_digit(line_items[1]))
+		{
+			FATAL_ERR("Return code should be an integer at line " << line_nb << '\n');
+			throw syntax_error("invalid http redirection directive");
+		}
+		_currentLocation->setRedirection(std::atoi(line_items[1].c_str()), line_items[2]);
+	}
+
+	// else: parsing error
+	else
+	{
+		FATAL_ERR("Parsing error in line " << line_nb << '\n');
+		throw parsing_error("invalid line");
+	}
+	std::cout <<  "@@ @@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
+}
+
 /* 3 */
 void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::size_t line_nb)
 {
-	// end of scope
+	// end of Block
 	if (line_items.size() == 1 && line_items[0] == "}")
 	{
 		_context = "main";
 		_checkCurrentServerIntegrity(line_nb);
 		//_currentServer->completeErrorPages();
+		std::cout <<  RED_TXT"@@ @@@  chek addLocation in ParseLocation avant sortis de Server block = "RESET_TXT << _currentServer->getRoutes().size();
 		return ;
 	}
 
-	// start of location scope
+	// start of location Block
+	else if (line_items.size() == 3 && line_items[0] == "location" && line_items[2] == "{")
+	{
+		_context = "location";
+		Location *new_route = &(_currentServer->addLocation());
+		new_route->setPrefix(line_items[1]);
+		
+		// make sure that the prefix ends with '/' if it's a named folder
+		if (line_items[1][line_items[1].size() - 1] != '/' && line_items[1].find('*') == std::string::npos && line_items[1].find('.') == std::string::npos)
+		{
+
+			line_items[1].append("/");
+			new_route->setPrefix(line_items[1]);
+		}
+
+		_currentLocation = new_route;
+		return ;
+	}
 
 	// check if ';' closes the line
 	else if (line_items.back().at(line_items.back().size() - 1) != ';')
@@ -74,6 +162,12 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 	}
 
 	// fill error pages
+	/*else if (line_items[0] == "error_page" && line_items.size() == 3)
+	{
+		_currentServer->addErrorPage(
+			std::atoi(line_items[1].c_str()),
+			line_items[2]);
+	}*/
 
 	// fill maxBody size
 	else if (line_items[0] == "client_max_body_size" && line_items.size() == 2)
@@ -97,8 +191,8 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 	if (_context == "server")
 		_parseServerLine(line_items, line_nb);
 
-	/*else if (_context == "location")
-		_parseLocationLine(line_items, line_nb);*/
+	else if (_context == "location")
+		_parseLocationLine(line_items, line_nb);
 	
 	else // main context
 	{
@@ -214,4 +308,40 @@ void	ParserConf::_checkCurrentServerIntegrity(std::size_t line_nb) const
 		FATAL_ERR("Error: server doesn't have any route: line " << line_nb << '\n');
 		throw std::logic_error("route-less server");
 	}*/
+}
+
+void	ParserConf::_checkCurrentLocationIntegrity(std::size_t line_nb) const
+{
+	struct stat sb;
+	
+	if (_currentLocation->getRoot().empty())
+	{
+		FATAL_ERR("Error: location doesn't have a root: line " << line_nb << '\n');
+		throw std::logic_error("root-less location");
+	}
+	/*else if (!(stat(_currentLocation->getRoot().c_str(), &sb) == 0 && S_ISDIR(sb.st_mode)))
+	{
+		FATAL_ERR("Error: Root not valid: line " << line_nb << '\n');
+		throw std::logic_error("root not valid");
+	}*/
+	
+
+	if (_currentLocation->getIndexPage().empty() && !_currentLocation->isAutoindexed()
+		&& !_currentLocation->isRedirected()
+		&& is_folder_formatted(_currentLocation->getPrefix()))
+	{
+		FATAL_ERR("Error: location doesn't have an index page: line " << line_nb << '\n');
+		throw std::logic_error("index-less location");
+	}
+}
+
+
+void	ParserConf::_solveCurrentLocationIntegrity()
+{
+	if (_currentLocation->getAllowedMethods().empty())
+	{
+		_currentLocation->addAllowedMethod("GET");
+		_currentLocation->addAllowedMethod("POST");
+		_currentLocation->addAllowedMethod("DELETE");
+	}
 }

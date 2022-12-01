@@ -11,35 +11,31 @@ class Location;
 
 class ServerInParser
 {
+	private:
+
+		std::vector<std::string>	_names;
+		std::string					_IP;
+		int							_port;
+		std::map<int, std::string>	_errorPages;
+		std::size_t					_clientBufferSize; // ClientS.cpp , line22 ---char				buffer[30000] = {0}
+		std::vector<Location>		_routes;
 
 	public:
-
 		ServerInParser();
 		ServerInParser(ServerInParser const & src );
 		~ServerInParser();
 
 		ServerInParser &	operator=(ServerInParser const & rhs );
 
-	private:
-
-		std::vector<std::string>	_names;
-		std::string					_IP;
-		int							_port;
-		//std::map<int, std::string>	_errorPages;
-		std::size_t					_clientBufferSize; // ClientS.cpp , line22 ---char				buffer[30000] = {0}
-		//std::vector<Location>		_routes;
-
-	public:
-
 		// Setters
 		
 		void			addName(std::string name);
 		void			setIP(std::string IP); // can be equal to 'localhost'
 		void			setPort(std::string port);
-		//void			addErrorPage(int error_code, std::string filePath);
+		void			addErrorPage(int error_code, std::string filePath);
 		void			setClientBufferSize(std::size_t buffer_max);
-		//Location &		addLocation();
-		//void			completeErrorPages();
+		Location &		addLocation();
+		void			completeErrorPages();
 
 		// Accessors
 		
@@ -49,10 +45,10 @@ class ServerInParser
 		in_port_t					getPort_() const;
     
 		std::size_t					getClientBufferSize() const;
-    
-		std::vector<std::string> & 	getNames();
-//		std::string					getName() /////////////////
-//		{ return _names[0];		}
+
+		std::string					getErrorPagePath(int error_code) const;
+		std::vector<Location> 	&	getRoutes();
+
 
 	// ******MS - pour compilation
 		int							getBklg(){return 42;};
@@ -73,9 +69,7 @@ class ServerInParser
 		};
 	//********************************************
 
-		/*std::string					getErrorPagePath(int error_code) const;
-		std::size_t					getClientBufferSize() const;
-		std::vector<Location> 	&	getRoutes();*/
+		
 
 		
 	private:

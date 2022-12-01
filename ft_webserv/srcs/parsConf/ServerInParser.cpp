@@ -1,8 +1,6 @@
 #include "../../incs/parsConf/ServerInParser.hpp"
 
-/*
-** --------------------------- EXTERNAL HELPER FUNCTIONS ----------------------
-*/
+// --------------------------- EXTERNAL HELPER FUNCTIONS ----------------------
 
 // check if a given string is a numeric string or not
 static bool isNumber(const std::string &str)
@@ -11,28 +9,20 @@ static bool isNumber(const std::string &str)
 		   (str.find_first_not_of("0123456789") == std::string::npos);
 }
 
-/*
-** ------------------------------- CONSTRUCTOR --------------------------------
-*/
+// ------------------------------ CONSTRUCTOR  & DESTRUCTOR --------------------------------
 
 ServerInParser::ServerInParser()
-	:_port(-1), _clientBufferSize(1000) {}   // ?? -! ?? 
+	:_port(-1), _clientBufferSize(-1) {}   // ?? -! ?? 
 
 ServerInParser::ServerInParser(const ServerInParser &src)
 {
 	*this = src;
 }
 
-/*
-** -------------------------------- DESTRUCTOR --------------------------------
-*/
 
 ServerInParser::~ServerInParser() {}
 
-/*
-** --------------------------------- OVERLOAD ---------------------------------
-*/
-
+// --------------------------------- OVERLOAD -------------------------------------------
 ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 {
 	if (this != &rhs)
@@ -76,21 +66,23 @@ void ServerInParser::setPort(std::string port)
 		_port = std::atoi(port.c_str());
 }
 
-/*void ServerInParser::addErrorPage(int error_code, std::string filePath)
+void ServerInParser::addErrorPage(int error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
-}*/
+}
 
 void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
 	_clientBufferSize = buffer_max;
 }
-/*
+
 Location & ServerInParser::addLocation()
 {
 	_routes.push_back(Location());
+	std::cout << "### chek size() after addLocation << "<< _routes.size() << "\n\n";
 	return _routes.back();
-}*/
+	
+}
 
 // Private Helpers
 
@@ -150,9 +142,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	}
 }*/
 
-/*
-** --------------------------------- ACCESSOR ---------------------------------
-*/
+// -------------------------------- ACCESSOR ---------------------------------
 
 std::vector<std::string> & ServerInParser::getNames()
 {
@@ -204,9 +194,9 @@ std::size_t ServerInParser::getClientBufferSize() const
 	return _clientBufferSize;
 }
 
-/*std::vector<Location> & 	ServerInParser::getRoutes()
+std::vector<Location> & 	ServerInParser::getRoutes()
 {
 	return _routes;
-}*/
+}
 
 /* ************************************************************************** */
