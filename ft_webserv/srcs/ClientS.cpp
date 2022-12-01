@@ -1,9 +1,12 @@
 #include "../incs/ClientS.hpp"
+#include "cstdio"
+
+
+
+# define B_SIZE 300000
 
 namespace SAMATHE{
-//********MS
 	ClientS::ClientS(){}
-//********MS	
 	ClientS::ClientS(int fd, ServerInParser *conf, TestServer *serv)
 	{
 		_fd = fd;
@@ -11,7 +14,8 @@ namespace SAMATHE{
 		_conf = conf;
 		_justRecv = "";
 		_binary = 0;
-//******MS
+		_output = "";
+		_sent = 0;
 		receiving();
 	}
 	ClientS::~ClientS(){}
@@ -19,10 +23,15 @@ namespace SAMATHE{
 
 	void	ClientS::receiving() 
 	{
-		char				buffer[30000] = {0}; // saray:  conf->getClientBufferSize()
-		int					ret;
+std::cout << " -------  Enter Receiving --------- " << std::endl;
+//		int i = _conf->getClientBufferSize();
+//		if (i < 100)
+//			i = 100;
+		char		buffer[B_SIZE] = {0};
+		int			ret;
+
 		// ------ appel système pour recevoir depuis le client
-std::cout << "_fd=" << _fd<< std::endl;
+std::cout << "_fd =" << _fd<< std::endl;
 		ret = ::recv(_fd, buffer, sizeof(buffer), 0);
 		if (ret == 0 || ret == -1)
 		{
@@ -34,7 +43,6 @@ std::cout << "_fd=" << _fd<< std::endl;
 				std::cout << "\rRead error, closing connection.\n" << std::endl;
 			return;
 		}
-std::cout << "buffer=" << buffer << std::endl;
 
 		_justRecv.append(buffer, ret);
 		_received += ret;
@@ -43,23 +51,25 @@ std::cout << "buffer=" << buffer << std::endl;
 		{
 			if (_justRecv.find("Content-Length: ") == std::string::npos)
 			{
+				// ------ Cas où pas content-length dans le header -> pas header de POST donc GET
 				handler();
-				_status = WRITE; //****MS - c'est read ? verifie stp
+				_status = WRITE;
 				FD_SET(_fd, _serv->get_writeMaster_set());
 				std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				return;
 			}
 			size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
+		//	if len > conf -max body size FINI  -> 413 
 			if (_received >= len + i + 4)
 			{
+				// ------ Cas où on a lu toute la requete
 				std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
-				_status = READ;
-				FD_SET(_fd, _serv->get_master_set());
+				_status = WRITE;			//// TJ has finished receiving => WRITE
+				FD_SET(_fd, _serv->get_writeMaster_set());  //////// TJ : has finished receiving
 				return;
 			}
 			std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
-//			receiving(); // SELECT DOES THAT ///////////////////////////////
 		}
 
 	}
@@ -67,23 +77,30 @@ std::cout << "buffer=" << buffer << std::endl;
 	void ClientS::handler()
 	{
 		// ------ Read request and slash it into vector
+std::cout  << _justRecv << std::endl;
 		std::stringstream ssxx(_justRecv);
 		std::istream_iterator<std::string> begin(ssxx);
 		std::istream_iterator<std::string> end;
 		std::vector<std::string> cut(begin, end);
 		_reception.setReception(cut);
+std::cout << "------ Exit Handler ----------"<< std::endl;
+		responder();
 	}
 
 	
 	void ClientS::checkPage()
 	{
-		if (_response.setContent(std::string("pages/").c_str() + _reception.getPage()) == 0)
+		std::string prefix;
+		if (_conf->getPort() != 8080)
+			prefix = "pages/";
+		else
+			prefix = "pages2/";
+		if (_response.setContent(prefix.c_str() + _reception.getPage()) == 0)
 		{
-			_response.setContent(std::string("pages/404.html").c_str());
+			_response.setContent(std::string("error/404.html").c_str());
 			_response.setCode("404");
 		}
 	}
-
 
 	void ClientS::makeHeader()
 	{
@@ -91,20 +108,22 @@ std::cout << "buffer=" << buffer << std::endl;
 		std::ostringstream oss;
 		oss << _reception.getVersion() << " " << _response.getCode() << _serv->getError(_response.getCode()) << "\r\n";
 		oss << "Cache-Control: no-cache, private\r\n";
+std::cout << "------ content type ="<< _response.getType() << std::endl;
 		oss << "Content-Type: "<< _serv->getContents(_response.getType()) << "\r\n";
 		oss << "Content-Length: " << _response.getContent().size() << "\r\n";
 		oss << "\r\n";
 
 		oss << _response.getContent();
-		std::string output = oss.str();
-		int size = output.size() + 1;
-		::send(_fd, output.c_str(), size, 0 );
+		_output = oss.str();
 	}
-	
+
 
 	void ClientS::responder()
 	{
 		// ------ GET response content
+
+std::cout << "§§§§§§§§§§§§§§§"<< _reception.getMethod() << std::endl;
+
 		if (_reception.getMethod() == "GET")
 		{
 			checkPage();
@@ -112,24 +131,68 @@ std::cout << "buffer=" << buffer << std::endl;
 		}
 		else if (_reception.getMethod() == "POST")
 		{
-			std::cout << "*** CREATING FILE ***" << std::endl;
+			std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
 			_reception.setBody(_justRecv);
 			std::ofstream file(_reception.getFName().c_str());
 			file << _reception.getBody();
 			checkPage();
 			makeHeader();
 		}
-		close(_fd);
-		_status = FINI;		// to change to 2 ???? depends on select
-		FD_CLR(_fd, _serv->get_master_set());
-		if (FD_ISSET(_fd, _serv->get_writeMaster_set()))
-			FD_CLR(_fd, _serv->get_writeMaster_set());
-		_reception.clearReception();
-		_received = 0;
-		_justRecv.clear();
-		_binary = 0;
+		else if (_reception.getMethod() == "DELETE")
+		{
+			if (_reception.getPage() != "")
+			{
+				std::cout << "*** DELETING FILE ******"<< _reception.getPage() << std::endl;
+				remove(_reception.getPage().c_str());
+				_response.setCode("204");
+				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>");
+				_response.setType("html");
+			}
+		}
+		else
+		{
+			_response.setCode("404");
+			_reception.setPage("pages/error/404.html");
+			checkPage();
+			makeHeader();
+		}
 	}
-//*******MS
+
+	void	ClientS::sending()
+	{
+std::cout << "------ Enter sending ----------"<< std::endl;
+std::cout << "output size = "<< _output.size() << std::endl;
+std::cout << "sent = "<< _sent << std::endl;
+
+		std::string	str = _output.substr(_sent, B_SIZE);
+std::cout << "str size = "<< str.size() << std::endl;
+		int	ret = ::send(_fd, str.c_str(), str.size(), 0);
+std::cout << "----- sent ----- " << std::endl;
+
+		_sent += ret;
+		if (ret != -1 && ret !=0 && _sent < _output.size())
+		{
+std::cout << "----- NOT FINISHED  ---- " << std::endl;
+			return;
+		}
+		else
+		{
+std::cout << "----- 1 YES FINISHED  ---- " << std::endl;
+			close(_fd);
+			_status = FINI;
+			FD_CLR(_fd, _serv->get_master_set());
+			if (FD_ISSET(_fd, _serv->get_writeMaster_set()))
+				FD_CLR(_fd, _serv->get_writeMaster_set());
+			_reception.clearReception();
+			_received = 0;
+			_justRecv.clear();
+			_binary = 0;
+			_sent = 0;
+			_output = "";
+		}
+	}
+	
+	// 
 	int	ClientS::getStatus()
 	{return _status;}
 

@@ -31,6 +31,8 @@ namespace SAMATHE
 		TestServer			*_serv;
 		int					_binary;
 		ServerInParser		*_conf;
+		std::string			_output;
+		size_t				_sent;
 
 	public:
 	//*********MS
@@ -44,6 +46,7 @@ namespace SAMATHE
 		void	responder();
 		void	receiving();
 		void	clearReception();
+		void	sending();
 
 	//***********MS
 		int	getStatus();
@@ -51,4 +54,5 @@ namespace SAMATHE
 	};
 
 }
+
 #endif

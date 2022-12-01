@@ -39,14 +39,16 @@ class ServerInParser
 
 		// Accessors
 		
-		std::vector<std::string> & 	getNames();
 		std::string 				getIP() const;
 		int							getPort() const;
 		in_addr_t					getIP_() const;
 		in_port_t					getPort_() const;
+    
 		std::size_t					getClientBufferSize() const;
+
 		std::string					getErrorPagePath(int error_code) const;
 		std::vector<Location> 	&	getRoutes();
+
 
 	// ******MS - pour compilation
 		int							getBklg(){return 42;};

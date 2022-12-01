@@ -60,7 +60,7 @@ void		SAMATHE::Reception::setReception(std::vector<std::string> &cut)
 			iss >> _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 			_fileName = _fileName.substr(10, _fileName.size()-11);
-			_fileName = std::string("01 IN/") + _fileName;
+			_fileName = std::string("01-IN/") + _fileName;
 			std::cout << "fffffffffff "<<_fileName << std::endl;
 		}
 	}
@@ -74,24 +74,6 @@ void		SAMATHE::Reception::setBody(std::string &justRecv)
 }
 
 
-/*
-std::string&	SAMATHE::Reception::pop(std::string& str)
-{
-	if (str.size())
-		str.resize(str.size() - 1);
-	return str;
-}
+void	SAMATHE::Reception::setPage(std::string p)
+{	_page = p;	}
 
-
-void	SAMATHE::Reception::setBody2(const std::string& str)
-{
-	char	strip[] = {'\n', '\r'};
-
-	this->_body.assign(str);
-	for (int i = 0; i < 4; i++)
-		if (this->_body.size() > 0 && this->_body[this->_body.size() - 1] == strip[i % 2])
-			pop(this->_body);
-		else
-			break ;
-}
-*/
