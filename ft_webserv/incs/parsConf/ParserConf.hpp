@@ -51,11 +51,11 @@ class ParserConf
 		void	_parseFile();
 		void	_parseLine(std::vector<std::string> & line_items, std::size_t line_nb);
 		void	_parseServerLine(std::vector<std::string> & line_items, std::size_t line_nb);
-		//void	_parseLocationLine(std::vector<std::string> & line_items, std::size_t line_nb);
+		void	_parseLocationLine(std::vector<std::string> & line_items, std::size_t line_nb);
 		void	_checkServerDuplicate();
 		void	_checkCurrentServerIntegrity(std::size_t line_nb) const;
-		//void	_checkCurrentLocationIntegrity(std::size_t line_nb) const;
-		//void	_solveCurrentLocationIntegrity();
+		void	_checkCurrentLocationIntegrity(std::size_t line_nb) const;
+		void	_solveCurrentLocationIntegrity();
 
 	private:
 		std::string				_inputFilePath;
@@ -66,7 +66,7 @@ class ParserConf
 		// used for the parsing
 		std::string				_context;
 		ServerInParser*			_currentServer;
-		//Location*				_currentLocation;
+		Location*				_currentLocation;
 
 };
 

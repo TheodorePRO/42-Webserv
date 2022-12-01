@@ -27,7 +27,7 @@ class ServerInParser
 		int							_port;
 		std::map<int, std::string>	_errorPages;
 		std::size_t					_clientBufferSize; // ClientS.cpp , line22 ---char				buffer[30000] = {0}
-		//std::vector<Location>		_routes;
+		std::vector<Location>		_routes;
 
 	public:
 
@@ -38,7 +38,7 @@ class ServerInParser
 		void			setPort(std::string port);
 		void			addErrorPage(int error_code, std::string filePath);
 		void			setClientBufferSize(std::size_t buffer_max);
-		//Location &		addLocation();
+		Location &		addLocation();
 		void			completeErrorPages();
 
 		// Accessors
@@ -70,8 +70,8 @@ class ServerInParser
 	//********************************************
 
 		std::string					getErrorPagePath(int error_code) const;
-		std::size_t					getClientBufferSize() const;
-		//std::vector<Location> 	&	getRoutes();
+		//std::size_t					getClientBufferSize() const;
+		std::vector<Location> 	&	getRoutes();
 
 		
 	private:

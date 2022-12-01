@@ -31,7 +31,26 @@ int main(int ac, char **av)
 		for (std::size_t j = 0; j < globalConf.getServersList().at(i).getNames().size(); ++j)
 			std::cout << "\tServer_name = " << globalConf.getServersList().at(i).getNames().at(j) << std::endl;
 			//_currentServer->addName(line_items[i]);
-		std::cout<< std::endl<<std::endl;	
+		std::cout<< std::endl<<std::endl;
+
+		std::cout << "Elements in Locations blocks" << std::endl;
+		for (std::size_t k = 0; k < globalConf.getServersList().at(i).getRoutes().size(); ++k)
+		{
+			std::cout << YELLOW_TXT"Root = " << globalConf.getServersList().at(i).getRoutes().at(k).getRoot() << std::endl;
+			std::cout << "Prefix = " << globalConf.getServersList().at(i).getRoutes().at(k).getPrefix() << std::endl;
+			
+			for (std::set<std::string>::iterator it = globalConf.getServersList().at(i).getRoutes().at(k).getAllowedMethods().begin();
+				 it !=globalConf.getServersList().at(i).getRoutes().at(k).getAllowedMethods().end(); ++it)
+				 std::cout << "AllowedMethods = " << *it << " ";
+			std::cout << std::endl;	 
+			//std::cout << "AllowedMethods = " << globalConf.getServersList().at(i).getRoutes().at(k).getAllowedMethods() << std::endl;
+			
+			std::cout << "IndexPage = " << globalConf.getServersList().at(i).getRoutes().at(k).getIndexPage() << std::endl;
+			std::cout << "Autoindex = " << globalConf.getServersList().at(i).getRoutes().at(k).isAutoindexed() << std::endl;
+			std::cout << "isRedirected = " << globalConf.getServersList().at(i).getRoutes().at(k).isRedirected() << std::endl;
+			std::cout << "Number of redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().first
+			           <<"\t" <<"ULR of Redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().second<<std::endl;
+		}
 	}
 	std::cout << RESET_TXT"IN TEST SERVER CPP"<<std::endl;
 	//SAMATHE::ServConf	sc(av[1]); // obtenir parametres a partir d'un fichier do cinfig

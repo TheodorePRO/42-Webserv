@@ -57,3 +57,21 @@ bool						is_digit(std::string str)
 	return true;
 }
 
+/**
+ *  path----> String containing the path
+ *  IsFolder----> Default value = true. 
+ * ==> Return 'true' if the path is likely to be a folder
+ */
+bool	is_folder_formatted(std::string path, bool IsFolder)
+{
+	for (std::string::reverse_iterator rit = path.rbegin(); rit != path.rend(); ++rit)
+	{
+		if (*rit == '.')
+			return false;
+		else if (*rit == '*' && IsFolder)
+			return true;
+		else if (*rit == '/')
+			return true;
+	}
+	return true;
+}

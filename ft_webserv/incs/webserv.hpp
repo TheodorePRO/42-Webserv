@@ -22,6 +22,13 @@
 # include <string>
 # include <iostream>
 # include <sstream>
+/*
+# define BAD_REQUEST_DEFAULT		"pages/400.html"
+# define FORBIDDEN_DEFAULT			"pages/403.html"
+# define NOT_FOUND_DEFAULT			"pages/404.html"
+# define NOT_FOUND_DEFAULT			"pages/405.html"
+# define SERVER_ERROR_DEFAULT		"pages/500.html"
+*/
 
 # include "./parsConf/GlobalConfiguration.hpp"
 # include "./parsConf/Location.hpp"
@@ -47,10 +54,6 @@
 # define INFO(x)		std::cerr << ITALIC_TXT << x << RESET_TXT;
 # define RUNTIME_MSG(x)	std::cerr << GREEN_TXT << x << RESET_TXT;
 
-# define BAD_REQUEST_DEFAULT		"pages/400.html"
-# define FORBIDDEN_DEFAULT			"pages/403.html"
-# define NOT_FOUND_DEFAULT			"pages/405.html"
-# define SERVER_ERROR_DEFAULT		"pages/500.html"
 
 
 
@@ -61,7 +64,7 @@ std::string					autoindexPageHtml(std::string directoryName, std::string headerU
 std::string					int_to_string(int n);
 std::string					itohex(std::size_t size);
 bool						is_digit(std::string str);
-bool						is_folder_formatted(std::string path, bool regexOn = true);
+bool						is_folder_formatted(std::string path, bool IsFolder = true);
 void						sanitizePath(std::string & path);
 void						uniformizeFolderPath(std::string & folderPath);
 std::string					getParentDirectory(std::string path);

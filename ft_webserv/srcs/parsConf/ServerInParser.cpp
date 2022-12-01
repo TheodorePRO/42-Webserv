@@ -85,12 +85,12 @@ void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
 	_clientBufferSize = buffer_max;
 }
-/*
+
 Location & ServerInParser::addLocation()
 {
 	_routes.push_back(Location());
 	return _routes.back();
-}*/
+}
 
 // Private Helpers
 
@@ -126,7 +126,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	return true;
 }
 
-void			ServerInParser::completeErrorPages()
+/*void			ServerInParser::completeErrorPages()
 {
 	if (_errorPages.find(BAD_REQUEST) == _errorPages.end())
 	{
@@ -204,9 +204,9 @@ std::size_t ServerInParser::getClientBufferSize() const
 	return _clientBufferSize;
 }
 
-/*std::vector<Location> & 	ServerInParser::getRoutes()
+std::vector<Location> & 	ServerInParser::getRoutes()
 {
 	return _routes;
-}*/
+}
 
 /* ************************************************************************** */
