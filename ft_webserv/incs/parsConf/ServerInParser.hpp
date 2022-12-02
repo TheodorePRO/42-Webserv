@@ -17,8 +17,11 @@ class ServerInParser
 		std::string					_IP;
 		int							_port;
 		std::map<int, std::string>	_errorPages;
-		std::size_t					_clientBufferSize; // ClientS.cpp , line22 ---char				buffer[30000] = {0}
+
+		std::size_t					_clientBufferSize;  // TJ Not here, but in locations
 		std::vector<Location>		_routes;
+
+
 
 	public:
 		ServerInParser();
@@ -26,6 +29,10 @@ class ServerInParser
 		~ServerInParser();
 
 		ServerInParser &	operator=(ServerInParser const & rhs );
+
+		ServerInParser();
+		ServerInParser(ServerInParser const & src );
+		~ServerInParser();
 
 		// Setters
 		
@@ -48,7 +55,7 @@ class ServerInParser
 		std::vector<Location> 	&	getRoutes();
 
 
-	// ******MS - pour compilation
+		// Socket
 		int							getBklg(){return 42;};
 		int							getDomain(){return PF_INET;};
 		int							getService(){return SOCK_STREAM;};
@@ -67,14 +74,12 @@ class ServerInParser
 		};
 	//********************************************
 
-		
 
-		
 	private:
 
 		// helper functions
 		bool _isIPValid(std::string IP) const;
-		
+
 };
 
-#endif 
+#endif

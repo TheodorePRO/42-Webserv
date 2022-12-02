@@ -22,7 +22,11 @@ ServerInParser::ServerInParser(const ServerInParser &src)
 
 ServerInParser::~ServerInParser() {}
 
-// --------------------------------- OVERLOAD -------------------------------------------
+
+/*
+// --------------------------------- OVERLOAD ---------------------------------
+
+
 ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 {
 	if (this != &rhs)
@@ -37,8 +41,7 @@ ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 	return *this;
 }
 
-/*
-** --------------------------------- METHODS ----------------------------------
+// --------------------------------- METHODS ----------------------------------
 */
 
 // Setters

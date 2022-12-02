@@ -21,6 +21,7 @@ namespace SAMATHE
 		std::string									_body;
 		std::string									_fileLim;
 		std::string									_fileName;
+		std::string									_host;
 		size_t										_size;
 	
 	int 										_fd; //MS - new: pour gerer pusieurs fd
@@ -76,6 +77,8 @@ namespace SAMATHE
 
 		std::string		getFName()
 		{	return _fileName;	}
+		std::string		getHost()
+		{	return _host;	}
 
 
 	//*******get_status()
