@@ -106,7 +106,7 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 		_context = "main";
 		_checkCurrentServerIntegrity(line_nb);
 		//_currentServer->completeErrorPages();
-		std::cout <<  RED_TXT"\n@@ @@@  chek addLocation in ParseLocation avant sortis de Server block = "RESET_TXT << _currentServer->getRoutes().size();
+		std::cout <<  RED_TXT "\n @@ @@@  chek addLocation in ParseLocation avant sortis de Server block = " RESET_TXT << _currentServer->getRoutes().size();
 		return ;
 	}
 
@@ -312,7 +312,7 @@ void	ParserConf::_checkCurrentServerIntegrity(std::size_t line_nb) const
 
 void	ParserConf::_checkCurrentLocationIntegrity(std::size_t line_nb) const
 {
-	struct stat sb;
+//	 struct stat sb;  // TJ to close warning as sb not used
 	
 	if (_currentLocation->getRoot().empty())
 	{
