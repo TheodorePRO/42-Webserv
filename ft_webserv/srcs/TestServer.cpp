@@ -133,7 +133,6 @@ std::cout << "========_client_socket write ======="<< std::endl;
 	}
 	void	TestServer::initErrorMap()
 	{
-		_errors["100"] = " Continue";
 		_errors["200"] = " OK";
 		_errors["201"] = " Created";
 		_errors["204"] = " No Content";
@@ -143,6 +142,7 @@ std::cout << "========_client_socket write ======="<< std::endl;
 		_errors["405"] = " Method Not Allowed";
 		_errors["413"] = " Payload Too Large";
 		_errors["500"] = " Internal Server Error";
+		_errors["505"] = " Unsuported version";
 	}
 
 	void TestServer::initContentMap()

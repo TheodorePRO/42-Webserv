@@ -31,7 +31,6 @@ ServerInParser::~ServerInParser() {}
 
 /*
 ** --------------------------------- OVERLOAD ---------------------------------
-*/
 
 ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 {
@@ -47,7 +46,6 @@ ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 	return *this;
 }
 
-/*
 ** --------------------------------- METHODS ----------------------------------
 */
 
@@ -204,9 +202,9 @@ std::size_t ServerInParser::getClientBufferSize() const
 	return _clientBufferSize;
 }
 
-/*std::vector<Location> & 	ServerInParser::getRoutes()
+std::vector<Location> & 	ServerInParser::getRoutes()
 {
 	return _routes;
-}*/
+}
 
 /* ************************************************************************** */

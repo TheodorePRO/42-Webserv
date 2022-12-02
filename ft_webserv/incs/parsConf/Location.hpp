@@ -23,6 +23,7 @@ class Location
 		bool							_autoindex;
 		std::pair<int, std::string>		_redirection;
 		bool							_isRedirected;
+		size_t							_maxSize;
 
 	public:
 
@@ -44,6 +45,7 @@ class Location
 		std::string						getRoot() const;
 		bool							isRedirected() const;
 		std::pair<int, std::string>		getRedirection() const;
+		size_t							getMaxSize() const;
 		
 		// Methods
 		

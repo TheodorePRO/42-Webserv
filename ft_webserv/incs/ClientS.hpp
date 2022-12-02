@@ -7,6 +7,7 @@
 #include "Reception.hpp"
 #include "TestServer.hpp"
 #include "webserv.hpp"
+#include "cstdio"		// for remove
 
 #include <string>
 #include <unistd.h>
@@ -17,6 +18,8 @@ namespace SAMATHE
 	enum{READ, WRITE, FINI};
 	
 	class TestServer;
+	class Reception;
+	class Response;
 
 	class ClientS
 	{
@@ -30,14 +33,13 @@ namespace SAMATHE
 		Response			_response;
 		TestServer			*_serv;
 		int					_binary;
-		ServerInParser		*_conf;
 		std::string			_output;
 		size_t				_sent;
+		Location			_location;
+		ServerInParser		*_conf;
 
 	public:
-	//*********MS
 		ClientS();
-	//*********MS
 		ClientS(int fd, ServerInParser *conf, TestServer *serv);
 		~ClientS();
 		void	checkPage();
@@ -47,9 +49,8 @@ namespace SAMATHE
 		void	receiving();
 		void	clearReception();
 		void	sending();
-
-	//***********MS
-		int	getStatus();
+		int		getStatus();
+		Location	getLocation(std::string host = "");
 
 	};
 

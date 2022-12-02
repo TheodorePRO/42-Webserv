@@ -1,0 +1,3 @@
+Bonjour, je suis le fichier pour la requete test
+GET nc
+je suis tout petit et lisible sur NC...
