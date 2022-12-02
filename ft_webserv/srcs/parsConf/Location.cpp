@@ -126,7 +126,12 @@ bool Location::isAutoindexed() const
 	return _autoindex;
 }
 
+
 size_t	Location::getMaxSize() const
 {
 	return _maxSize;
 }
+
+
+/* ************************************************************************** */
+

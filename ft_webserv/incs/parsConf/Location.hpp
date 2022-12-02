@@ -5,27 +5,28 @@
 
 class Location
 {
-
-	public:
-
-		Location();
-		Location( Location const & src );
-		~Location();
-
-		Location &		operator=( Location const & rhs );
-
 	private:
 		
-		std::string						_prefix;
+		std::string						_prefix; // location /{}  or location /gallery {}
 		std::string						_root;
 		std::set<std::string>			_allowedMethods;
 		std::string						_indexPage;
 		bool							_autoindex;
-		std::pair<int, std::string>		_redirection;
 		bool							_isRedirected;
+
 		size_t							_maxSize;
 
+		std::pair<int, std::string>		_redirection; /* is a way to forward visitors and search engines from one URL to another.
+														Redirects are used when moving content to a new URL,
+														when deleting pages or when changing domain names or merging websites*/
+		
+
 	public:
+		Location();
+		Location( Location const & src );
+		~Location();
+
+		Location &		operator = ( Location const & rhs );
 
 		// Setters
 		

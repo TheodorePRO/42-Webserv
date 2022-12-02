@@ -17,11 +17,18 @@ class ServerInParser
 		std::string					_IP;
 		int							_port;
 		std::map<int, std::string>	_errorPages;
+
 		std::size_t					_clientBufferSize;  // TJ Not here, but in locations
 		std::vector<Location>		_routes;
 
 
+
 	public:
+		ServerInParser();
+		ServerInParser(ServerInParser const & src );
+		~ServerInParser();
+
+		ServerInParser &	operator=(ServerInParser const & rhs );
 
 		ServerInParser();
 		ServerInParser(ServerInParser const & src );
@@ -47,6 +54,7 @@ class ServerInParser
 		std::string					getErrorPagePath(int error_code) const;
 		std::vector<Location> 	&	getRoutes();
 
+
 		// Socket
 		int							getBklg(){return 42;};
 		int							getDomain(){return PF_INET;};
@@ -65,6 +73,7 @@ class ServerInParser
 				return proto->p_proto;
 		};
 	//********************************************
+
 
 	private:
 
