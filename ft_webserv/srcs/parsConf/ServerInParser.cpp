@@ -23,7 +23,7 @@ ServerInParser::ServerInParser(const ServerInParser &src)
 ServerInParser::~ServerInParser() {}
 
 
-/*
+
 // --------------------------------- OVERLOAD ---------------------------------
 
 
@@ -42,7 +42,7 @@ ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 }
 
 // --------------------------------- METHODS ----------------------------------
-*/
+
 
 // Setters
 

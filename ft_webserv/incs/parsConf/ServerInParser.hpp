@@ -30,9 +30,7 @@ class ServerInParser
 
 		ServerInParser &	operator=(ServerInParser const & rhs );
 
-		ServerInParser();
-		ServerInParser(ServerInParser const & src );
-		~ServerInParser();
+
 
 		// Setters
 		
