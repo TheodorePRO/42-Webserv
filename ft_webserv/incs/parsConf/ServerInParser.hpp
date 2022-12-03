@@ -44,6 +44,7 @@ class ServerInParser
 		void			setClientBufferSize(std::size_t buffer_max);
 		Location &		addLocation();
 		void			completeErrorPages();
+		size_t			_maxSize;
 
 		// Accessors
 		std::vector<std::string> & 	getNames();
@@ -56,6 +57,8 @@ class ServerInParser
 		bool						isAutoindexed() const;
 		std::string					getErrorPagePath(int error_code) const;
 		std::vector<Location> 	&	getRoutes();
+		size_t						getMaxSize() const
+		{	return _maxSize;	}
 
 
 		// Socket

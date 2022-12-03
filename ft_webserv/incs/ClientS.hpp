@@ -35,7 +35,7 @@ namespace SAMATHE
 		int					_binary;
 		std::string			_output;
 		size_t				_sent;
-		Location			_location;
+		ServerInParser		_server;
 		ServerInParser		*_conf;
 
 	public:
@@ -49,8 +49,11 @@ namespace SAMATHE
 		void	receiving();
 		void	clearReception();
 		void	sending();
-		int		getStatus();
-		Location	getLocation(std::string host = "");
+		int		getStatus()
+		{	return _status;	}
+		int		getFd()
+		{	return _fd;		}
+		void	getServer();
 
 	};
 

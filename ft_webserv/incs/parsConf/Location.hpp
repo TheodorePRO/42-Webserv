@@ -14,7 +14,6 @@ class Location
 		//bool							_autoindex;
 		bool							_isRedirected;
 
-		size_t							_maxSize;
 
 		std::pair<int, std::string>		_redirection; /* is a way to forward visitors and search engines from one URL to another.
 														Redirects are used when moving content to a new URL,
@@ -47,7 +46,6 @@ class Location
 		std::string						getRoot() const {return "www";}; /* temporait pour compille*/
 		bool							isRedirected() const;
 		std::pair<int, std::string>		getRedirection() const;
-		size_t							getMaxSize() const;
 		
 		// Methods
 		

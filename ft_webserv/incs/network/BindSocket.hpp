@@ -17,6 +17,7 @@ namespace SAMATHE
 	public:
 		// ------ Constructor
 				BindSocket(ServerInParser &sc);
+				~BindSocket(){};
 
 		// ------ Getters
 		int		get_binding();

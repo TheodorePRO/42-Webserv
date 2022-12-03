@@ -15,6 +15,7 @@ namespace SAMATHE
 	public:
 		// ------ Constructor
 		ListeningSocket(ServerInParser &sc);
+		~ListeningSocket(){};
 
 		// ------ Operations
 		void start_listening(int bkl);

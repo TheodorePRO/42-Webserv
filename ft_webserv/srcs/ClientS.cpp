@@ -1,7 +1,4 @@
 #include "../incs/ClientS.hpp"
-
-
-
 # define B_SIZE 300000
 
 namespace SAMATHE{
@@ -81,10 +78,7 @@ namespace SAMATHE{
 		std::vector<std::string> cut(begin, end);
 		_reception.setReception(cut);
 		std::cout << "rrrrrrrrrrrrrrrrr "<< _reception.getHost() << std::endl;
-		//	_location = getLocation(_reception.getHost());
-
-
-
+		getServer();
 		std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
 	}
@@ -154,7 +148,7 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 		}
 		else if (_reception.getMethod() == "POST")
 		{
-			if (_location.getMaxSize() && _reception.getSize() > _location.getMaxSize())
+			if (_server.getMaxSize() && _reception.getSize() > _server.getMaxSize())
 			{
 				_response.setCode("413");
 				_reception.setPage("error/413.html");
@@ -231,17 +225,42 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 		}
 	}
 
-	int	ClientS::getStatus()
-	{return _status;}
 
-	Location			ClientS::getLocation(std::string host)
+	void	ClientS::getServer()
 	{
-		std::vector<Location>	locs = _conf->getRoutes();
-		for (std::vector<Location>::iterator it = locs.begin() ; it != locs.end(); ++it)
+		int i = 0;
+		std::vector<ServerInParser> f;
+		std::vector<ServerInParser> sers = _serv->getGConf().getServersList();
+		for (std::vector<ServerInParser>::iterator it = sers.begin() ; it != sers.end(); ++it)
 		{
-			if (it->getRoot() == host)
-				return *it;
+			if ((it->getPort() == _conf->getPort()) && (it->getIP() == _conf->getIP()))
+			{
+				i++;
+				f.push_back(*it);
+			}
 		}
-		return locs[0];
+		std::cout << "ttttttttttttttttttt" << std::endl;
+		std::cout << "ttttttttttttttttttt"<< i << " -- f.size =" <<  f.size() << "   "  << "ggggg" << std::endl;
+		if (i == 1)
+		{
+			_server = f[0];
+			return;
+		}
+		else if (i > 1)
+		{
+			for (std::vector<ServerInParser>::iterator it = f.begin() ; it != f.end(); ++it)
+			{
+				std::vector<std::string> names = it->getNames();
+				for (std::vector<std::string>::iterator it2 = names.begin() ; it2 != names.end(); ++it)
+				{
+					if ( *it2 == _reception.getHost())
+					{
+						_server = *it;
+						return;
+					}
+				}
+			}
+			_server = f[0];
+		}
 	}
 }

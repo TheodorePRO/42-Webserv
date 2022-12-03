@@ -5,7 +5,7 @@ namespace SAMATHE
 	ListeningSocket::ListeningSocket(ServerInParser &sc) : BindSocket(sc)
 	{
 	//	_sc = &sc;
-		std::cout << "IN LISTENONG SOCKET"<< std::endl;
+		std::cout << "IN LISTENING SOCKET"<< std::endl;
 		// ------ Start listening
 		start_listening(sc.getBklg());
 		// ------ Confirm success

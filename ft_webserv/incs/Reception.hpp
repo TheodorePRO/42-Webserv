@@ -22,10 +22,10 @@ namespace SAMATHE
 		std::string									_fileLim;
 		std::string									_fileName;
 		std::string									_host;
+		std::string									_portC;
 		size_t										_size;
-	
-	int 										_fd; //MS - new: pour gerer pusieurs fd
-	//int					_status; // 0 = READ - 1 = Write - 2 = fini 
+		int 										_fd;
+
 
 /*
 		std::map<std::string, std::string>			_headers;
@@ -43,7 +43,7 @@ namespace SAMATHE
 */
 		public :
 		Reception(void);
-	Reception(int sd, ServerInParser &);
+		Reception(int sd, ServerInParser &);
 		~Reception(void);
 
 		void	setReception(std::vector<std::string> &cut);
@@ -58,6 +58,8 @@ namespace SAMATHE
 			_fileLim = "";
 			_fileName = "";
 			_size = 0;
+			_host = "";
+			_portC = "";
 		}
 
 
@@ -74,14 +76,12 @@ namespace SAMATHE
 		{	return _version;	}
 		size_t		getSize()
 		{	return _size;	}
-
 		std::string		getFName()
 		{	return _fileName;	}
 		std::string		getHost()
 		{	return _host;	}
-
-
-	//*******get_status()
+		std::string		getPortC()
+		{	return _portC;	}
 
 	};
 

@@ -167,14 +167,5 @@ std::cout << "========_client_socket write ======="<< std::endl;
 	}
 
 
-		std::string		TestServer::getError(std::string code)
-		{
-			 return (_errors.find(code)->second);
-		}
-
-		std::string		TestServer::getContents(std::string type)
-		{
-			 return (_contents.find(type)->second);
-		}
 
 }
