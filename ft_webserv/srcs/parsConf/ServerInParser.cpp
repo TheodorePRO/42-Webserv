@@ -12,21 +12,16 @@ static bool isNumber(const std::string &str)
 // ------------------------------ CONSTRUCTOR  & DESTRUCTOR --------------------------------
 
 ServerInParser::ServerInParser()
-	:_port(-1), _clientBufferSize(-1) {}   // ?? -! ?? 
+	:_port(-1), _clientBufferSize(-1), _autoindex(false) {} ; 
 
 ServerInParser::ServerInParser(const ServerInParser &src)
 {
 	*this = src;
 }
 
-
 ServerInParser::~ServerInParser() {}
 
-
-
 // --------------------------------- OVERLOAD ---------------------------------
-
-
 ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 {
 	if (this != &rhs)
@@ -36,16 +31,13 @@ ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 		_port = rhs._port;
 		//_errorPages = rhs._errorPages;
 		_clientBufferSize = rhs._clientBufferSize;
-		//_routes = rhs._routes;
+		_routes = rhs._routes;
 	}
 	return *this;
 }
 
 // --------------------------------- METHODS ----------------------------------
-
-
 // Setters
-
 void ServerInParser ::addName(std::string name)
 {
 	_names.push_back(name);
@@ -69,6 +61,17 @@ void ServerInParser::setPort(std::string port)
 		_port = std::atoi(port.c_str());
 }
 
+void	ServerInParser::setAutoindex(std::string on_off)
+{
+	if (on_off == "on")
+		_autoindex = true;
+	else if (on_off == "off")
+		_autoindex = false;
+	else
+		throw std::invalid_argument("autoindex directive can only be set to \"on\" or \"off\"");
+}
+
+
 void ServerInParser::addErrorPage(int error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
@@ -77,6 +80,11 @@ void ServerInParser::addErrorPage(int error_code, std::string filePath)
 void ServerInParser::setClientBufferSize(std::size_t buffer_max)
 {
 	_clientBufferSize = buffer_max;
+}
+
+void	ServerInParser::setRoot(std::string path)
+{
+	_root = path;
 }
 
 Location & ServerInParser::addLocation()
@@ -179,6 +187,16 @@ in_port_t ServerInParser::getPort_() const
 		return htons(INADDR_ANY);
 	else
 		return htons(_port);
+}
+
+bool ServerInParser::isAutoindexed() const
+{
+	return _autoindex;
+}
+
+std::string ServerInParser::getRoot() const
+{
+	return _root;
 }
 
 /*std::string ServerInParser::getErrorPagePath(int error_code) const

@@ -23,7 +23,8 @@ int main(int ac, char **av)
 		std::cout << "for server number " << i << " : \n";
 		std::cout << "Ip = " << globalConf.getServersList().at(i).getIP() << std::endl;
 		std::cout << "Port = " << globalConf.getServersList().at(i).getPort() << std::endl;
-
+		std::cout << "Autoindex = " << globalConf.getServersList().at(i).isAutoindexed() << std::endl;
+		std::cout << "Root = " << globalConf.getServersList().at(i).getRoot() << std::endl;
 		if(globalConf.getServersList().at(i).getClientBufferSize() != 0)
 			std::cout << "client_max_body_size = " << globalConf.getServersList().at(i).getClientBufferSize() << std::endl;
 
@@ -36,7 +37,7 @@ int main(int ac, char **av)
 		std::cout << YELLOW_TXT"Elements in Locations blocks ********************************************************************************* " << std::endl;																			
 		for (std::size_t k = 0; k < globalConf.getServersList().at(i).getRoutes().size(); ++k)																//-----
 		{																																					//  L  |
-			std::cout << YELLOW_TXT"\nRoot = " << globalConf.getServersList().at(i).getRoutes().at(k).getRoot() << std::endl;								//  O  |			
+			//std::cout << YELLOW_TXT"\nRoot = " << globalConf.getServersList().at(i).getRoutes().at(k).getRoot() << std::endl;								//  O  |			
 			std::cout << "Prefix = " << globalConf.getServersList().at(i).getRoutes().at(k).getPrefix() << std::endl;										//  C  |	
 																																							//  A  |
 			for (std::set<std::string>::iterator it = globalConf.getServersList().at(i).getRoutes().at(k).getAllowedMethods().begin();						//  C  |
@@ -44,11 +45,12 @@ int main(int ac, char **av)
 				 std::cout << "AllowedMethods = " << *it << " ";																							//  I  |
 			std::cout << std::endl;	 																														//  O  |
 																																							//  N  |
+			//std::cout << "Prefix = " << globalConf.getServersList().at(i).getRoutes().at(k).getPrefix() << std::endl;
 			std::cout << "IndexPage = " << globalConf.getServersList().at(i).getRoutes().at(k).getIndexPage() << std::endl;									//     |
-			std::cout << "Autoindex = " << globalConf.getServersList().at(i).getRoutes().at(k).isAutoindexed() << std::endl;								//  B  |
+			//std::cout << "Autoindex = " << globalConf.getServersList().at(i).getRoutes().at(k).isAutoindexed() << std::endl;								//  B  |
 			std::cout << "isRedirected = " << globalConf.getServersList().at(i).getRoutes().at(k).isRedirected() << std::endl;								//  L  |
 			std::cout << "Number of redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().first							// ock |	
-			            <<"\t" <<"ULR of Redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().second<<std::endl;		    //----
+			            <<"\t" <<"ULR of Redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().second<<std::endl<<std::endl;		    //----
 		}
 	//	std::cout <<"\n*******************************************************************************************************************************\n"RESET_TXT;
 	}
