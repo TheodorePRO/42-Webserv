@@ -8,10 +8,10 @@ class Location
 	private:
 		
 		std::string						_prefix; // location /{}  or location /gallery {}
-		std::string						_root;
+		//std::string						_root;
 		std::set<std::string>			_allowedMethods;
 		std::string						_indexPage;
-		bool							_autoindex;
+		//bool							_autoindex;
 		bool							_isRedirected;
 
 		size_t							_maxSize;
@@ -31,19 +31,20 @@ class Location
 		// Setters
 		
 		void			setPrefix(std::string prefix);
-		void			setRoot(std::string path);
+		//void			setRoot(std::string path);
 		void			addAllowedMethod(std::string method);
 		void			setIndexPage(std::string indexPagePath);
-		void			setAutoindex(std::string on_off);
+		//void			setAutoindex(std::string on_off);
 		void			setRedirection(int code, std::string url);
 
 		// Accessors
 
 		std::string						getPrefix() const;
 		std::string						getIndexPage() const;
-		bool							isAutoindexed() const;
+		//bool							isAutoindexed() const;
 		std::set<std::string> & 		getAllowedMethods();
-		std::string						getRoot() const;
+		//std::string						getRoot() const;
+		std::string						getRoot() const {return "www";}; /* temporait pour compille*/
 		bool							isRedirected() const;
 		std::pair<int, std::string>		getRedirection() const;
 		size_t							getMaxSize() const;

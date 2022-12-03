@@ -52,24 +52,24 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		line_items.back().erase(line_items.back().end() - 1);
 
 	// fill root
-	if (line_items[0] == "root" && line_items.size() == 2)
+	/*if (line_items[0] == "root" && line_items.size() == 2)
 	{
 		_currentLocation->setRoot(line_items[1]);
 		std::cout <<  "@@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
-	}
+	}*/
 
 	// fill allowed methods
-	else if (line_items[0] == "methods" && line_items.size() >= 2)
+	if (line_items[0] == "methods" && line_items.size() >= 2)
 	{
 		for (std::size_t i = 1; i < line_items.size(); ++i)
 			_currentLocation->addAllowedMethod(line_items[i]);
 	}
 
 	// fill autoindex
-	else if (line_items[0] == "autoindex" && line_items.size() == 2)
+	/*else if (line_items[0] == "autoindex" && line_items.size() == 2)
 	{
 		_currentLocation->setAutoindex(line_items[1]);
-	}
+	}*/
 
 	// fill indexPage
 	else if (line_items[0] == "index" && line_items.size() == 2)
@@ -100,6 +100,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 /* 3 */
 void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::size_t line_nb)
 {
+	std::cout <<" I am in parsing line 2 in parserServerLine \n\n ";
 	// end of Block
 	if (line_items.size() == 1 && line_items[0] == "}")
 	{
@@ -161,6 +162,20 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 			_currentServer->addName(line_items[i]);
 	}
 
+	// fill autoindex
+	else if (line_items[0] == "autoindex" && line_items.size() == 2)
+	{
+		std::cout << "Fill autoindex \n \n";
+		_currentServer->setAutoindex(line_items[1]);
+	}
+
+	// fill root
+	else if (line_items[0] == "root" && line_items.size() == 2)
+	{
+		_currentServer->setRoot(line_items[1]);
+		std::cout <<  "@@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
+	}
+
 	// fill error pages
 	/*else if (line_items[0] == "error_page" && line_items.size() == 3)
 	{
@@ -199,8 +214,11 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 		if (line_items.size() == 2 && line_items[0] == "server" && line_items[1] == "{")
 		{
 			_context = "server";
+			std::cout << "ssssssssssssssssssßßß\n";
 			_globalConf.addServer();
+			std::cout << "2ssssssssssssssssssßßß\n";
 			_currentServer = &(_globalConf.getServersList().back());
+			std::cout << "3ssssssssssssssssssßßß\n";
 		}
 		else if (line_items.size() == 1 && line_items[0] == "}")
 		{
@@ -326,7 +344,7 @@ void	ParserConf::_checkCurrentLocationIntegrity(std::size_t line_nb) const
 	}*/
 	
 
-	if (_currentLocation->getIndexPage().empty() && !_currentLocation->isAutoindexed()
+	if (_currentLocation->getIndexPage().empty() /*&& !_currentLocation->isAutoindexed()*/
 		&& !_currentLocation->isRedirected()
 		&& is_folder_formatted(_currentLocation->getPrefix()))
 	{
