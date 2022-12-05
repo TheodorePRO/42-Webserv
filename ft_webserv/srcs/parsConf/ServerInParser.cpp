@@ -11,8 +11,8 @@ static bool isNumber(const std::string &str)
 
 // ------------------------------ CONSTRUCTOR  & DESTRUCTOR --------------------------------
 
-ServerInParser::ServerInParser()
-	:_port(-1), _clientBufferSize(-1), _autoindex(false) {} ;
+ServerInParser::ServerInParser()	:_port(-1), _clientBufferSize(-1), _autoindex(false) { std::cout << "%%%\n";} ; 
+
 
 ServerInParser::ServerInParser(const ServerInParser &src)
 {
@@ -29,7 +29,7 @@ ServerInParser &ServerInParser::operator = (ServerInParser const &rhs)
 		_names = rhs._names;
 		_IP = rhs._IP;
 		_port = rhs._port;
-		//_errorPages = rhs._errorPages;
+		_errorPages = rhs._errorPages;
 		_clientBufferSize = rhs._clientBufferSize;
 		_routes = rhs._routes;
 	}
@@ -128,7 +128,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	return true;
 }
 
-/*void			ServerInParser::completeErrorPages()
+void			ServerInParser::completeErrorPages()
 {
 	if (_errorPages.find(BAD_REQUEST) == _errorPages.end())
 	{
@@ -150,7 +150,7 @@ bool ServerInParser::_isIPValid(std::string IP) const
 	{
 		_errorPages[SERVER_ERROR] = SERVER_ERROR_DEFAULT;
 	}
-}*/
+}
 
 // -------------------------------- ACCESSOR ---------------------------------
 
@@ -196,8 +196,10 @@ bool ServerInParser::isAutoindexed() const
 
 std::string ServerInParser::getRoot() const
 {
+	//std::cout << "saray in getRoot() = " << _root << "\n\n";
 	return _root;
 }
+
 
 std::string ServerInParser::getErrorPagePath(std::string error_code) const
 {
@@ -207,6 +209,12 @@ std::string ServerInParser::getErrorPagePath(std::string error_code) const
 	else
 		return it->second;
 }
+
+std::map<int, std::string>	ServerInParser::getMapErrorPage() const
+{
+	return (_errorPages);
+}
+
 
 std::size_t ServerInParser::getClientBufferSize() const
 {
