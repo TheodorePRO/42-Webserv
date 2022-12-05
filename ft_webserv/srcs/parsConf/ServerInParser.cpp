@@ -210,6 +210,13 @@ std::string ServerInParser::getErrorPagePath(int error_code) const
 		return it->second;
 }
 
+std::map<int, std::string>	ServerInParser::getMapErrorPage() const
+{
+	return (_errorPages);
+
+}
+
+
 std::size_t ServerInParser::getClientBufferSize() const
 {
 	return _clientBufferSize;

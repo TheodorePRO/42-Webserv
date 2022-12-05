@@ -25,7 +25,15 @@ int main(int ac, char **av)
 		std::cout << "Port = " << globalConf.getServersList().at(i).getPort() << std::endl;
 		std::cout << "Autoindex = " << globalConf.getServersList().at(i).isAutoindexed() << std::endl;
 		std::cout << "Root = " << globalConf.getServersList().at(i).getRoot() << std::endl;
-		std::cout << "Root = " << globalConf.getServersList().at(i).getRoot() << std::endl;
+		
+		std::cout << "Error_pages = " << globalConf.getServersList().at(i).getErrorPagePath(404) << std::endl;
+		/*std::map<int, std::string>::iterator itr;
+		std::cout << "ok\n";
+		for(itr=globalConf.getServersList().at(i).getMapErrorPage().begin()
+			;itr!=globalConf.getServersList().at(i).getMapErrorPage().end();itr++)
+		{
+			std::cout<<itr->first<<" "<<itr->second<<std::endl;
+		}*/
 		if(globalConf.getServersList().at(i).getClientBufferSize() != 0)
 			std::cout << "client_max_body_size = " << globalConf.getServersList().at(i).getClientBufferSize() << std::endl;
 

@@ -52,6 +52,7 @@ class ServerInParser
 		std::string					getRoot() const;
 		bool						isAutoindexed() const;
 		std::string					getErrorPagePath(int error_code) const;
+		std::map<int, std::string>	getMapErrorPage() const;
 		std::vector<Location> 	&	getRoutes();
 
 
