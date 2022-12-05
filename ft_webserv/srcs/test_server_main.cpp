@@ -20,10 +20,11 @@ int main(int ac, char **av)
 	std::cout << GREEN_TXT"\nTemporary printe for result of parsing : \n\n";
 	for ( unsigned int i = 0; i < globalConf.getServersList().size(); i++)
 	{
-		std::cout << "for server number " << i << " : \n";
+		std::cout << GREEN_TXT"for server number " << i << " : \n";
 		std::cout << "Ip = " << globalConf.getServersList().at(i).getIP() << std::endl;
 		std::cout << "Port = " << globalConf.getServersList().at(i).getPort() << std::endl;
 		std::cout << "Autoindex = " << globalConf.getServersList().at(i).isAutoindexed() << std::endl;
+		std::cout << "Root = " << globalConf.getServersList().at(i).getRoot() << std::endl;
 		std::cout << "Root = " << globalConf.getServersList().at(i).getRoot() << std::endl;
 		if(globalConf.getServersList().at(i).getClientBufferSize() != 0)
 			std::cout << "client_max_body_size = " << globalConf.getServersList().at(i).getClientBufferSize() << std::endl;
@@ -52,7 +53,7 @@ int main(int ac, char **av)
 			std::cout << "Number of redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().first							// ock |	
 			            <<"\t" <<"ULR of Redirection = " << globalConf.getServersList().at(i).getRoutes().at(k).getRedirection().second<<std::endl<<std::endl;		    //----
 		}
-	//	std::cout <<"\n*******************************************************************************************************************************\n"RESET_TXT;
+		std::cout <<"\n*******************************************************************************************************************************\n" << RESET_TXT;
 	}
 	std::cout << RESET_TXT"IN TEST SERVER CPP"<<std::endl;
 	//SAMATHE::ServConf	sc(av[1]); // obtenir parametres a partir d'un fichier do cinfig
