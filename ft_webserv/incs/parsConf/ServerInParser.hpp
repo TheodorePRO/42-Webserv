@@ -18,7 +18,7 @@ class ServerInParser
 		int							_port;
 		std::string					_root;
 		std::map<int, std::string>	_errorPages;
-		std::size_t					_clientBufferSize;  // TJ Not here, but in locations
+		std::size_t					_clientBufferSize;
 		std::vector<Location>		_routes;
 		bool						_autoindex;
 
@@ -31,10 +31,7 @@ class ServerInParser
 
 		ServerInParser &	operator=(ServerInParser const & rhs );
 
-
-
 		// Setters
-		
 		void			addName(std::string name);
 		void			setIP(std::string IP); // can be equal to 'localhost'
 		void			setPort(std::string port);
@@ -55,6 +52,7 @@ class ServerInParser
 		std::string					getRoot() const;
 		bool						isAutoindexed() const;
 		std::string					getErrorPagePath(int error_code) const;
+		std::map<int, std::string>	getMapErrorPage() const;
 		std::vector<Location> 	&	getRoutes();
 
 

@@ -51,7 +51,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 	while(line_items.back().size() >= 1 && line_items.back().at(line_items.back().size() - 1) == ';')
 		line_items.back().erase(line_items.back().end() - 1);
 
-	// fill root
+	// fill root  MOVED TO SERVER BLOCK
 	/*if (line_items[0] == "root" && line_items.size() == 2)
 	{
 		_currentLocation->setRoot(line_items[1]);
@@ -65,7 +65,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 			_currentLocation->addAllowedMethod(line_items[i]);
 	}
 
-	// fill autoindex
+	// fill autoindex  MOVED TO SERVER BLOCK
 	/*else if (line_items[0] == "autoindex" && line_items.size() == 2)
 	{
 		_currentLocation->setAutoindex(line_items[1]);
@@ -94,20 +94,23 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		FATAL_ERR("Parsing error in line " << line_nb << '\n');
 		throw parsing_error("invalid line");
 	}
-	std::cout <<  "\n@@ @@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
 }
 
 /* 3 */
 void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::size_t line_nb)
 {
-	std::cout <<" I am in parsing line 2 in parserServerLine \n\n ";
 	// end of Block
 	if (line_items.size() == 1 && line_items[0] == "}")
 	{
 		_context = "main";
 		_checkCurrentServerIntegrity(line_nb);
-		//_currentServer->completeErrorPages();
-		std::cout <<  RED_TXT "\n @@ @@@  chek addLocation in ParseLocation avant sortis de Server block = " RESET_TXT << _currentServer->getRoutes().size();
+		_currentServer->completeErrorPages();
+		//std::cout<< "Saray chek ROOT in end of parsing , root = " << _currentServer->getRoot() << "\n";
+		/*if (!_globalConf.getServersList().empty())
+			{
+				for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
+					std::cout << "SORTIR *** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
+			}*/
 		return ;
 	}
 
@@ -165,24 +168,29 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 	// fill autoindex
 	else if (line_items[0] == "autoindex" && line_items.size() == 2)
 	{
-		std::cout << "Fill autoindex \n \n";
+		//std::cout << "Fill autoindex \n \n";
 		_currentServer->setAutoindex(line_items[1]);
 	}
 
 	// fill root
 	else if (line_items[0] == "root" && line_items.size() == 2)
 	{
+		/*std::cout << "***********_currentServer = " << _currentServer->getRoot()  << "\n\n";
+		for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
+					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";*/
 		_currentServer->setRoot(line_items[1]);
-		std::cout <<  "@@@  chek addLocation in ParseLocation after fill root = " << _currentServer->getRoutes().size();
+		//std::cout <<" adding root ,Check root in parser = " << _currentServer->getRoot()  << "\n\n";
 	}
 
 	// fill error pages
-	/*else if (line_items[0] == "error_page" && line_items.size() == 3)
+	else if (line_items[0] == "error_page" && line_items.size() == 3)
 	{
 		_currentServer->addErrorPage(
 			std::atoi(line_items[1].c_str()),
 			line_items[2]);
-	}*/
+			std::cout << "Saray in Fill error pages \n";
+			std::cout << "_currentServer->getErrorPathe = " << _currentServer->getErrorPagePath(std::atoi(line_items[1].c_str())) <<"\n"; 
+	}
 
 	// fill maxBody size
 	else if (line_items[0] == "client_max_body_size" && line_items.size() == 2)
@@ -214,11 +222,19 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 		if (line_items.size() == 2 && line_items[0] == "server" && line_items[1] == "{")
 		{
 			_context = "server";
-			std::cout << "ssssssssssssssssssßßß\n";
+			std::cout << "STOP ?!\n";
+			/*if (!_globalConf.getServersList().empty())
+			{
+				for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
+					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
+			}*/
 			_globalConf.addServer();
-			std::cout << "2ssssssssssssssssssßßß\n";
+			std::cout << "ading new block server\n";
+			/*for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
+					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
+			std::cout << " saray chek after finfi block server , root = " << _globalConf.getServersList().at(0).getRoot()<< "\n";*/
 			_currentServer = &(_globalConf.getServersList().back());
-			std::cout << "3ssssssssssssssssssßßß\n";
+			
 		}
 		else if (line_items.size() == 1 && line_items[0] == "}")
 		{

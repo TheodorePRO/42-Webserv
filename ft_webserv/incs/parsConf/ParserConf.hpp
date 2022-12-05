@@ -5,7 +5,7 @@
 
 class GlobalConfiguration;
 class ServerInParser;
-//class Location;
+class Location;
 
 class ParserConf
 {
@@ -62,10 +62,6 @@ class ParserConf
 					return _msg;
 				}
 		};
-
-				
-	
-
 };
 
 #endif /* ********************************************* ParserConf_H */
