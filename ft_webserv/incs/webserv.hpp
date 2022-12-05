@@ -22,19 +22,28 @@
 # include <string>
 # include <iostream>
 # include <sstream>
-/*
-# define BAD_REQUEST_DEFAULT		"pages/400.html"
-# define FORBIDDEN_DEFAULT			"pages/403.html"
-# define NOT_FOUND_DEFAULT			"pages/404.html"
-# define NOT_FOUND_DEFAULT			"pages/405.html"
-# define SERVER_ERROR_DEFAULT		"pages/500.html"
-*/
+
+enum ERRER
+{
+	BAD_REQUEST = 400,
+	FORBIDDEN = 403,
+	NOT_FOUND = 404,
+	METHOD_NOT_ALLOWED = 405,
+	SERVER_ERROR = 500
+};
+
+# define BAD_REQUEST_DEFAULT		"error/400.html"
+# define FORBIDDEN_DEFAULT			"error/403.html"
+# define NOT_FOUND_DEFAULT			"error/404.html"
+# define METHOD_NOT_ALLOWED_DEFAULT	"error/405.html"
+# define SERVER_ERROR_DEFAULT		"error/500.html"
+
 
 # include "./parsConf/GlobalConfiguration.hpp"
 # include "./parsConf/Location.hpp"
 # include "./parsConf/ServerInParser.hpp"
 # include "./parsConf/ParserConf.hpp"
-//# include "./parsConf/ServerEngine.hpp"
+
 
 
 # define RED_TXT "\e[31m"
