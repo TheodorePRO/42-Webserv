@@ -19,6 +19,8 @@ namespace SAMATHE
 		_fileName = "";
 		_fileLim = "";
 		_host = "";
+		_portC = "";
+    _index = "";
 	}
 
 	Reception::Reception(int fd, ServerInParser& conf)
@@ -33,6 +35,8 @@ namespace SAMATHE
 		_fileName = "";
 		_fileLim = "";
 		_host = "";
+		_portC = "";
+    _index = "";
 	}
 
 	Reception::~Reception(){}
@@ -72,6 +76,7 @@ namespace SAMATHE
 
 				std::istringstream iss(*(++(std::find(cut.begin(), cut.end(), "Host:"))));
 				iss >> _host;
+				_portC = _host.substr(_host.find(":") + 1, _host.size());
 				_host = _host.substr( 0, _host.find(":"));
 			}
 		}
@@ -87,10 +92,6 @@ namespace SAMATHE
 
 	void	Reception::setPage(std::string p)
 	{	_page = p;	}
-
-	
-
-
 
 
 }

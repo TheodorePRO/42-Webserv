@@ -12,6 +12,7 @@ namespace SAMATHE
 	int			Response::setContent(std::string page)
 	{
 		std::ifstream		file(page.c_str());
+        std::cout << "----- file ----  " << file.is_open() << std::endl;
 		if (file.is_open())
 		{
 			std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -63,4 +64,5 @@ namespace SAMATHE
 		closedir(dir);
 		return page;
 	}
+
 }

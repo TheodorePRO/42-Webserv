@@ -11,8 +11,8 @@ static bool isNumber(const std::string &str)
 
 // ------------------------------ CONSTRUCTOR  & DESTRUCTOR --------------------------------
 
-ServerInParser::ServerInParser()
-	:_port(-1), _clientBufferSize(-1), _autoindex(false) { std::cout << "%%%\n";} ; 
+ServerInParser::ServerInParser()	:_port(-1), _clientBufferSize(-1), _autoindex(false) { std::cout << "%%%\n";} ; 
+
 
 ServerInParser::ServerInParser(const ServerInParser &src)
 {
@@ -72,7 +72,7 @@ void	ServerInParser::setAutoindex(std::string on_off)
 }
 
 
-void ServerInParser::addErrorPage(int error_code, std::string filePath)
+void ServerInParser::addErrorPage(std::string error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
 }
@@ -200,10 +200,10 @@ std::string ServerInParser::getRoot() const
 	return _root;
 }
 
-std::string ServerInParser::getErrorPagePath(int error_code) const
+
+std::string ServerInParser::getErrorPagePath(std::string error_code) const
 {
-	std::map<int, std::string>::const_iterator it = _errorPages.find(error_code);
-	
+	std::map<std::string, std::string>::const_iterator it = _errorPages.find(error_code);
 	if (it == _errorPages.end())
 		return "";
 	else
@@ -213,7 +213,6 @@ std::string ServerInParser::getErrorPagePath(int error_code) const
 std::map<int, std::string>	ServerInParser::getMapErrorPage() const
 {
 	return (_errorPages);
-
 }
 
 
@@ -222,7 +221,7 @@ std::size_t ServerInParser::getClientBufferSize() const
 	return _clientBufferSize;
 }
 
-std::vector<Location> & 	ServerInParser::getRoutes()
+std::vector<Location> 	&ServerInParser::getRoutes()
 {
 	return _routes;
 }

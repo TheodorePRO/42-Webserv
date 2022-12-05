@@ -17,8 +17,10 @@ class ServerInParser
 		std::string					_IP;
 		int							_port;
 		std::string					_root;
-		std::map<int, std::string>	_errorPages;
+
+		std::map<std::string, std::string>	_errorPages;
 		std::size_t					_clientBufferSize;
+
 		std::vector<Location>		_routes;
 		bool						_autoindex;
 
@@ -37,10 +39,11 @@ class ServerInParser
 		void			setPort(std::string port);
 		void			setAutoindex(std::string on_off);
 		void			setRoot(std::string path);
-		void			addErrorPage(int error_code, std::string filePath);
+		void			addErrorPage(std::string error_code, std::string filePath);
 		void			setClientBufferSize(std::size_t buffer_max);
 		Location &		addLocation();
 		void			completeErrorPages();
+		size_t			_maxSize;
 
 		// Accessors
 		std::vector<std::string> & 	getNames();
@@ -51,9 +54,14 @@ class ServerInParser
 		std::size_t					getClientBufferSize() const;
 		std::string					getRoot() const;
 		bool						isAutoindexed() const;
-		std::string					getErrorPagePath(int error_code) const;
+
+std::string					getErrorPagePath(std::string error_code) const;
+		std::vector<Location> 	&getRoutes();
+
+size_t						getMaxSize() const
+		{	return _maxSize;	}
+
 		std::map<int, std::string>	getMapErrorPage() const;
-		std::vector<Location> 	&	getRoutes();
 
 
 		// Socket

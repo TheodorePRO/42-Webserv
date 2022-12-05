@@ -136,6 +136,8 @@ std::cout << "========_client_socket write ======="<< std::endl;
 		_errors["200"] = " OK";
 		_errors["201"] = " Created";
 		_errors["204"] = " No Content";
+    _errors["301"] = " Moved permanently";
+    _errors["307"] = " Internal redirect";
 		_errors["400"] = " Bad Request";
 		_errors["403"] = " Forbidden";
 		_errors["404"] = " Not Found";
@@ -167,14 +169,5 @@ std::cout << "========_client_socket write ======="<< std::endl;
 	}
 
 
-		std::string		TestServer::getError(std::string code)
-		{
-			 return (_errors.find(code)->second);
-		}
-
-		std::string		TestServer::getContents(std::string type)
-		{
-			 return (_contents.find(type)->second);
-		}
 
 }

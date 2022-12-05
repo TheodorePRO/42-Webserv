@@ -124,10 +124,6 @@ std::pair<int, std::string>		Location::getRedirection() const
 }*/
 
 
-size_t	Location::getMaxSize() const
-{
-	return _maxSize;
-}
 
 
 /* ************************************************************************** */

@@ -24,10 +24,11 @@ namespace SAMATHE
 	public:
 		// ------ Constructor
 		Socket(ServerInParser &sc);
+		virtual		~Socket(){};
 		// ------ Virtual function to connect
-		virtual int connect_to_network(int sock, struct sockaddr_in address) = 0;
+		virtual int	connect_to_network(int sock, struct sockaddr_in address) = 0;
 		// ------ Test connexion
-		void test_connection(int, const char *);
+		void		test_connection(int, const char *);
 		// ------ Getters
 		struct sockaddr_in	get_address();
 		int					get_sock();

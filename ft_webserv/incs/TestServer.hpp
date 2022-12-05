@@ -33,8 +33,14 @@ namespace SAMATHE
 		void	initContentMap();
 		void	launch();
 
-		std::string		getError(std::string code);
-		std::string		getContents(std::string type);
+		GlobalConfiguration		getGConf()
+		{	return _glob_conf;	}
+
+		std::string		getError(std::string code)
+		{	return (_errors.find(code)->second);	}
+
+		std::string		getContents(std::string type)
+		{	return (_contents.find(type)->second);	}
 
 		
 	};

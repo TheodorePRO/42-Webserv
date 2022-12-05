@@ -19,9 +19,6 @@ namespace SAMATHE
         fd_set                              _writeMaster_set; //for write
 
 		virtual void	accepter(int) = 0;
-		//virtual void	handler(int) = 0;
-		//virtual void	responder(int) = 0;
-		//virtual void	receiving(int) = 0;
 
 	public:
 		Server(GlobalConfiguration &sc);
