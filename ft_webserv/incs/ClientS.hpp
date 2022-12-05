@@ -8,6 +8,7 @@
 #include "TestServer.hpp"
 #include "webserv.hpp"
 #include "cstdio"		// for remove
+#include <cstdlib>
 
 #include <string>
 #include <unistd.h>
@@ -54,8 +55,11 @@ namespace SAMATHE
 		int		getFd()
 		{	return _fd;		}
 		void	getServer();
-
+    int   checkMethod();
 	};
+
+
+
 
 }
 

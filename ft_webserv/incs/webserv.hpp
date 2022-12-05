@@ -55,8 +55,6 @@
 # define RUNTIME_MSG(x)	std::cerr << GREEN_TXT << x << RESET_TXT;
 
 
-
-
 // CPP functions
 std::vector<std::string>	split(const std::string &str, char delim);
 std::vector<std::string>	split(const std::string &str, const char *set_delim);

@@ -20,6 +20,7 @@ namespace SAMATHE
 		_fileLim = "";
 		_host = "";
 		_portC = "";
+    _index = "";
 	}
 
 	Reception::Reception(int fd, ServerInParser& conf)
@@ -35,6 +36,7 @@ namespace SAMATHE
 		_fileLim = "";
 		_host = "";
 		_portC = "";
+    _index = "";
 	}
 
 	Reception::~Reception(){}
@@ -90,10 +92,6 @@ namespace SAMATHE
 
 	void	Reception::setPage(std::string p)
 	{	_page = p;	}
-
-	
-
-
 
 
 }

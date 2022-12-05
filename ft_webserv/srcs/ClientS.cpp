@@ -2,7 +2,10 @@
 # define B_SIZE 300000
 
 namespace SAMATHE{
-	ClientS::ClientS(){}
+
+  ClientS::ClientS(){}
+
+//********************************************
 	ClientS::ClientS(int fd, ServerInParser *conf, TestServer *serv)
 	{
 		_fd = fd;
@@ -16,7 +19,7 @@ namespace SAMATHE{
 	}
 	ClientS::~ClientS(){}
 
-
+//********************************************
 	void	ClientS::receiving() 
 	{
 		std::cout << " -------  Enter Receiving --------- " << std::endl;
@@ -37,7 +40,6 @@ namespace SAMATHE{
 				std::cout << "\rRead error, closing connection.\n" << std::endl;
 			return;
 		}
-
 		_justRecv.append(buffer, ret);
 		_received += ret;
 		size_t	i = _justRecv.find("\r\n\r\n");
@@ -67,7 +69,7 @@ namespace SAMATHE{
 		}
 
 	}
-
+//********************************************
 	void ClientS::handler()
 	{
 		// ------ Read request and slash it into vector
@@ -83,67 +85,107 @@ namespace SAMATHE{
 		responder();
 	}
 
-
+//********************************************
 	void ClientS::checkPage()
 	{
-		std::string prefix;
-		if (_conf->getPort() != 8080)
-			prefix = "pages/";
-		else
-			prefix = "pages2/";
+    std::cout << "---------check page -----" << (_response.getCode()) << std::endl;
 		if (_response.getCode() == "")
 		{
-	//AUTO INDEX == on ????????
-std::cout << "--------Index ? - -------"<< (*(_reception.getPage()).rbegin() == '/') << std::endl;
-			if (*(_reception.getPage()).rbegin() == '/')
+       std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
+			if (_server.isAutoindexed() && *(_reception.getPage()).rbegin() == '/')
 			{
-	// ROOT
+std::cout << "---------GEN INDEX PAGE -----" << std::endl;
 				_response.setC(_response.genIndex(_reception.getPage()));
 				if (_response.getCode() == "")
 					_response.setCode("200");
 				_response.setType(std::string("html"));
 			}
-			else if (_response.setContent(prefix.c_str() + _reception.getPage()) == 0)
+      else if (*(_reception.getPage()).rbegin() == '/')
+      {
+        if (_reception.getIndexP() != "")
+        {
+          std::cout << "---------Take INDEX loc -----" << _reception.getPage() << std::endl;
+          std::string g = _server.getRoot().c_str();
+          g += _reception.getPage().c_str() ;
+          g += _reception.getIndexP().c_str();
+           std::cout << "---------Take INDEX loc -----" << g << std::endl;
+          _reception.setPage(g);
+        }
+        else
+          _response.setCode("404");
+        checkPage();
+      }
+			else if (_response.setContent(_server.getRoot().c_str() + _reception.getPage()) == 0)
 			{
-				_response.setContent(std::string("error/404.html").c_str());
-				_response.setCode("404");
+std::cout << "---------Page 3-----" << _server.getRoot().c_str() + _reception.getPage() << std::endl;
+        _response.setCode("404");
+        checkPage();
 			}
 		}
-		else
-			_response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
+		else if ( _response.getRedC() == "" )
+    {
+      std::cout << "---------Page 4-----" << std::endl;
+
+       if (_server.getErrorPagePath(_response.getCode()) != "")
+          _response.setContent(_server.getErrorPagePath(_response.getCode()));
+        else
+          _response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
+	    _response.setType(std::string("html"));
+    }
+     std::cout << "---------OUT -----"  <<_response.getCode() << std::endl;
 	}
 
+//********************************************
 	void ClientS::makeHeader()
 	{
 		// ------ Build response : header + content
 		std::ostringstream oss;
 		oss << _reception.getVersion() << " " << _response.getCode() << _serv->getError(_response.getCode()) << "\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-std::cout << "------ content type ="<< _response.getType() << std::endl;
-		oss << "Content-Type: "<< _serv->getContents(_response.getType()) << "\r\n";
-		oss << "Content-Length: " << _response.getContent().size() << "\r\n";
-		oss << "\r\n";
 
+    if (_response.getRedC() == "")
+    {
+      oss << "Cache-Control: no-cache, private\r\n";
+		  oss << "Content-Type: "<< _serv->getContents(_response.getType()) << "\r\n";
+		  oss << "Content-Length: " << _response.getContent().size() << "\r\n";
+		  oss << "\r\n";
+		  oss << _response.getContent();
+    }
+    else
+      oss << "Location: " << _response.getRedC();
+    oss << "\r\n";
+  	_output = oss.str();
 
-		oss << _response.getContent();
-		_output = oss.str();
+    std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxx-----make header end  ----------"<< _response.getRedC() << std::endl;
+    std::cout << oss.str() << std::endl;
 	}
 
-
+//********************************************
 	void ClientS::responder()
 	{
 		// ------ GET response content
-
+  std::cout << "------ Version ----------"<<_reception.getVersion() << std::endl;
+  std::cout << "------ Method ----------"<< checkMethod() << std::endl;
+std::string tmp[] = {"GET", "POST", "DELETE"};
+std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 		if (_reception.getVersion() != "HTTP/1.1" && _reception.getVersion() != "HTTP/1.0")
 		{
 			_response.setCode("505");
-			//		_reception.setPage("error/505.html");
 			checkPage();
 			makeHeader();
+      return;
 		}
+    else if (METHODS.find(_reception.getMethod()) != METHODS.end()  && checkMethod() == 0)
+    {
+      std::cout << "------ Not allowed method 413----------"<< std::endl;
+      _response.setCode("413");
+      return;
+    }
 		else if (_reception.getMethod() == "GET")
 		{
-			checkPage();
+      if (_reception.getPage() == "CGI.py")
+        ;
+      else
+			 checkPage();
 			makeHeader();
 		}
 		else if (_reception.getMethod() == "POST")
@@ -151,14 +193,13 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 			if (_server.getMaxSize() && _reception.getSize() > _server.getMaxSize())
 			{
 				_response.setCode("413");
-				_reception.setPage("error/413.html");
 				checkPage();
 				makeHeader();
 				return;
 			}
 			std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
 			_reception.setBody(_justRecv);
-			std::string n = std::string("pages/") + _reception.getFName();
+			std::string n = std::string(_server.getRoot()) + _reception.getFName();
 			std::cout << "------ ----------"<< n << std::endl;
 			std::ofstream file(n.c_str());
 			//	std::ofstream file(std::string("pages/") + _reception.getFName().c_str());
@@ -174,7 +215,7 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 		{
 			if (_reception.getPage() != "")
 			{
-				std::string n = std::string("pages/") + _reception.getPage();
+				std::string n = std::string(_server.getRoot()) + _reception.getPage();
 				std::cout << "*** DELETING FILE ******"<< n << std::endl;
 				remove(n.c_str());
 				_response.setCode("204");
@@ -184,8 +225,8 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 		}
 		else
 		{
+      std::cout <<" ------ Method : 400"  << std::endl;
 			_response.setCode("400");
-			//		_reception.setPage("error/405.html");
 			checkPage();
 			makeHeader();
 		}
@@ -263,4 +304,54 @@ std::cout << "------ content type ="<< _response.getType() << std::endl;
 			_server = f[0];
 		}
 	}
+
+  int ClientS::checkMethod()
+  {
+    unsigned int i = 10000;
+    int res = 1;
+    if (!_server.getRoutes().empty())
+    {
+      std::cout << "------ Met 1 ----------"<< std::endl;
+      std::vector<Location> locs = _server.getRoutes();
+            std::cout << "------ Met 2 ----------"<< std::endl;
+      for (std::vector<Location>::iterator it = locs.begin() ; it != locs.end(); ++it)
+      {
+              std::cout << "------ Met 3 ----------"<< std::endl;
+        if (_reception.getPage().rfind(it->getPrefix(), 0) == 0)
+        {
+          if (it->getPrefix() == _reception.getPage())
+          {      std::cout << "------ Met 4 ----------"<< std::endl;
+            _reception.setIndexP(it->getIndexPage());
+            if (it->getRedirection().first != 0)
+              {
+                std::ostringstream ss;
+                ss << it->getRedirection().first;
+                _response.setCode(ss.str());
+                _response.setRedir(it->getRedirection().second);
+
+                 std::cout << "------ Met 41 ----------"<< _response.getCode() <<std::endl;
+              }
+
+                             std::cout << "------ Met 5 ----------"<< std::endl;
+
+          }
+          if (i >= it->getPrefix().size())
+          {
+            res = 0;
+            i = it->getPrefix().size();
+            std::set<std::string> me = it->getAllowedMethods();
+            for (std::set<std::string>:: iterator it2 = me.begin() ; it2 != me.end(); it2++)
+            {
+                    std::cout << "------ Met 6 ----------"<< std::endl;
+              if (*it2 == _reception.getMethod())
+                res = 1;
+            }
+          }
+        }
+      }
+    }
+    return res;
+  }
+
+
 }

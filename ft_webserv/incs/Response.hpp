@@ -13,11 +13,10 @@ namespace SAMATHE
 {
 	class Response
 	{
-
 		std::string					_content;
-
 		std::string					_type;
 		std::string					_code;
+    std::string         _redir;
 
 		public :
 		Response(void);
@@ -31,6 +30,8 @@ namespace SAMATHE
 		{	_code = c;	}
 		void	setType(std::string const &t)
 		{	_type = t;	}
+    void  setRedir(std::string const &t)
+    { _redir = t; }
 
 		std::string		getContent()
 		{	return _content;	}
@@ -38,6 +39,8 @@ namespace SAMATHE
 		{	return _type;	}
 		std::string		getCode()
 		{	return _code;	}
+    std::string   getRedC()
+    {return _redir  ;}
 	};
 }
 
