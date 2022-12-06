@@ -11,7 +11,7 @@ static bool isNumber(const std::string &str)
 
 // ------------------------------ CONSTRUCTOR  & DESTRUCTOR --------------------------------
 
-ServerInParser::ServerInParser()	:_port(-1), _clientBufferSize(-1), _autoindex(false) { std::cout << "%%%\n";} ; 
+ServerInParser::ServerInParser()	:_port(-1), _clientBufferSize(-1), _autoindex(false) {  } ; 
 
 
 ServerInParser::ServerInParser(const ServerInParser &src)

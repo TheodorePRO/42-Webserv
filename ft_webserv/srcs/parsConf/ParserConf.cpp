@@ -36,6 +36,7 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		_context = "server";
 		_checkCurrentLocationIntegrity(line_nb);
 		_solveCurrentLocationIntegrity();
+		
 		return ;
 	}
 
@@ -104,12 +105,6 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 		_context = "main";
 		_checkCurrentServerIntegrity(line_nb);
 		_currentServer->completeErrorPages();
-		//std::cout<< "Saray chek ROOT in end of parsing , root = " << _currentServer->getRoot() << "\n";
-		/*if (!_globalConf.getServersList().empty())
-			{
-				for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
-					std::cout << "SORTIR *** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
-			}*/
 		return ;
 	}
 
@@ -173,12 +168,8 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 
 	// fill root
 	else if (line_items[0] == "root" && line_items.size() == 2)
-	{
-		/*std::cout << "***********_currentServer = " << _currentServer->getRoot()  << "\n\n";
-		for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
-					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";*/
+	{		
 		_currentServer->setRoot(line_items[1]);
-		//std::cout <<" adding root ,Check root in parser = " << _currentServer->getRoot()  << "\n\n";
 	}
 
 	// fill error pages
@@ -187,8 +178,7 @@ void	ParserConf::_parseServerLine(std::vector<std::string> & line_items, std::si
 		_currentServer->addErrorPage(
 			std::atoi(line_items[1].c_str()),
 			line_items[2]);
-			std::cout << "Saray in Fill error pages \n";
-			std::cout << "_currentServer->getErrorPathe = " << _currentServer->getErrorPagePath(std::atoi(line_items[1].c_str())) <<"\n"; 
+			
 	}
 
 	// fill maxBody size
@@ -221,17 +211,10 @@ void	ParserConf::_parseLine(std::vector<std::string> & line_items, std::size_t l
 		if (line_items.size() == 2 && line_items[0] == "server" && line_items[1] == "{")
 		{
 			_context = "server";
-			std::cout << "STOP ?!\n";
-			/*if (!_globalConf.getServersList().empty())
-			{
-				for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
-					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
-			}*/
+			
+
 			_globalConf.addServer();
-			std::cout << "ading new block server\n";
-			/*for(unsigned int i =0; i <_globalConf.getServersList().size(); i++)
-					std::cout << "*** saray chek after finfi block server , root = " << _globalConf.getServersList().at(i).getRoot()<< "\n";
-			std::cout << " saray chek after finfi block server , root = " << _globalConf.getServersList().at(0).getRoot()<< "\n";*/
+			
 			_currentServer = &(_globalConf.getServersList().back());
 			
 		}
