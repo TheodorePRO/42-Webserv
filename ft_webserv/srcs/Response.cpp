@@ -1,5 +1,5 @@
 #include "../incs/Response.hpp"
-
+#include <sys/stat.h>
 
 namespace SAMATHE
 {
@@ -13,21 +13,24 @@ namespace SAMATHE
 	{
                           std::string p2 = std::string(get_current_dir_name());
                           std::cout << "----- file0 ----  " << page.c_str() << std::endl;
-
-		std::ifstream		file(page.c_str());
-   //   std::ifstream   file(std::string("error/404.html").c_str());
-                          std::cout << "----- file ----  " << file.is_open() << std::endl;
-		if (file.is_open())
-		{
+    std::ifstream   file(page.c_str());
+    struct stat s;
+    if ( lstat(page.c_str(), &s) == 0 )
+    {
+      if ( S_ISREG(s.st_mode) && (file.is_open()))
+      {
                           std::cout << "----- file 2 ----  " << file.is_open() << std::endl;
-			std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-			_content = str;
-    	if (getCode() == "")
-				setCode("200");
+        std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        _content = str;
+        if (getCode() == "")
+				  setCode("200");
                           std::cout << "----- file 3 ----  " << getCode() << std::endl;
-			setType(page.substr(page.find(".") + 1));
-			file.close();
-			return 1;
+        setType(page.substr(page.find(".") + 1));
+        file.close();
+        return 1;
+      }
+      file.close();
+      return 0;
 		}
 		else
 		{
@@ -35,6 +38,7 @@ namespace SAMATHE
 			return 0;
 		}
 	}
+
 
 	std::string		Response::genIndex(std::string path) 
 	{
