@@ -83,6 +83,7 @@ namespace SAMATHE{
 		getServer();
 
       std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
+      std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
       std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
 		std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
@@ -91,17 +92,20 @@ namespace SAMATHE{
 //********************************************
 	void ClientS::checkPage()
 	{
-    std::cout << "---------check page -----" << (_response.getCode()) << std::endl;
+    std::cout << "--------- page 0-----" << _reception.getPage() << std::endl;
+    _reception.setPage( _server.getRoot() + _reception.getPage());
+    std::cout << "--------- page 1-----" << _reception.getPage() << std::endl;
 		if (_response.getCode() == "")
 		{
-       std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
+                          std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
 			if (_server.isAutoindexed() != 0 && *(_reception.getPage()).rbegin() == '/')
 			{
-std::cout << "---------GEN INDEX PAGE -----" << std::endl;
+                          std::cout << "---------GEN INDEX PAGE -----" << std::endl;
 				_response.setC(_response.genIndex(_reception.getPage()));
 				if (_response.getCode() == "")
 					_response.setCode("200");
 				_response.setType(std::string("html"));
+        return;
 			}
       else if (*(_reception.getPage()).rbegin() == '/')
       {
@@ -111,35 +115,37 @@ std::cout << "---------GEN INDEX PAGE -----" << std::endl;
           std::string g = _server.getRoot().c_str();
           g += _reception.getPage().c_str() ;
           g += _reception.getIndexP().c_str();
-           std::cout << "---------Take INDEX loc -----" << g << std::endl;
+                             std::cout << "---------Take INDEX loc -----" << g << std::endl;
           _reception.setPage(g);
+          _response.setCode("200");
         }
         else
+        {
           _response.setCode("404");
-        checkPage();
+          checkPage();
+        }
+        return;
       }
-//      else if (_response.setContent(_server.getRoot().c_str() + _reception.getPage()) == 0)
-  else if (_response.setContent(_reception.getPage()) == 0)
+      else if (_response.setContent(_reception.getPage()) == 0)
 			{
-std::cout << "---------Page 3-----" << _server.getRoot().c_str() + _reception.getPage() << std::endl;
+                          std::cout << "---------Page 3-----" << _reception.getPage() << std::endl;
         _response.setCode("404");
         checkPage();
+        return;
 			}
 		}
-		else if ( _response.getRedC() == "" )
+		else if ( _response.getRedC() == "" && _response.getCode() != "200")
     {
-      std::cout << "---------Page 4-----" << std::endl;
-
-	  //saray :
-	  int respond = std::atoi((_response.getCode()).c_str());
-
-       if (_server.getErrorPagePath(respond) != "")
-          _response.setContent(_server.getErrorPagePath(respond));
-        else
-          _response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
+                          std::cout << "---------Page 4-----" << _response.getCode() << std::endl;
+      int respond = std::atoi((_response.getCode()).c_str());
+                          std::cout << "---------Page 4 respond : -----"<< _server.getErrorPagePath(respond) << std::endl;
+      if (_server.getErrorPagePath(respond) != "")
+        _response.setContent(_server.getErrorPagePath(respond));
+      else
+        _response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
 	    _response.setType(std::string("html"));
     }
-     std::cout << "---------OUT -----"  <<_response.getCode() << std::endl;
+                            std::cout << "---------OUT -----"  <<_response.getCode() << std::endl;
 	}
 
 //********************************************
@@ -192,8 +198,11 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
       if (_reception.getPage() == "CGI.py")
         ;
       else
+      {
 			 checkPage();
-			makeHeader();
+			 makeHeader();
+       return;
+      }
 		}
 		else if (_reception.getMethod() == "POST")
 		{
@@ -217,6 +226,7 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 				_response.setCode("201");
 			checkPage();
 			makeHeader();
+      return;
 		}
 		else if (_reception.getMethod() == "DELETE")
 		{
@@ -229,6 +239,7 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>");
 				_response.setType("html");
 			}
+      return;
 		}
 		else
 		{

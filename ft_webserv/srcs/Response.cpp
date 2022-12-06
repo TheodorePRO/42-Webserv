@@ -11,19 +11,20 @@ namespace SAMATHE
 
 	int			Response::setContent(std::string page)
 	{
-      std::string p2 = std::string(get_current_dir_name());
-    std::cout << "----- DIR ----  " << p2 << std::endl;
-
-
+                          std::string p2 = std::string(get_current_dir_name());
+                          std::cout << "----- file0 ----  " << page.c_str() << std::endl;
 
 		std::ifstream		file(page.c_str());
-        std::cout << "----- file ----  " << file.is_open() << std::endl;
+   //   std::ifstream   file(std::string("error/404.html").c_str());
+                          std::cout << "----- file ----  " << file.is_open() << std::endl;
 		if (file.is_open())
 		{
+                          std::cout << "----- file 2 ----  " << file.is_open() << std::endl;
 			std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 			_content = str;
-			if (getCode() == "")
+    	if (getCode() == "")
 				setCode("200");
+                          std::cout << "----- file 3 ----  " << getCode() << std::endl;
 			setType(page.substr(page.find(".") + 1));
 			file.close();
 			return 1;
