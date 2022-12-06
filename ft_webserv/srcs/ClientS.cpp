@@ -81,6 +81,9 @@ namespace SAMATHE{
 		_reception.setReception(cut);
 		std::cout << "rrrrrrrrrrrrrrrrr "<< _reception.getHost() << std::endl;
 		getServer();
+
+      std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
+      std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
 		std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
 	}
@@ -92,7 +95,7 @@ namespace SAMATHE{
 		if (_response.getCode() == "")
 		{
        std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
-			if (_server.isAutoindexed() && *(_reception.getPage()).rbegin() == '/')
+			if (_server.isAutoindexed() != 0 && *(_reception.getPage()).rbegin() == '/')
 			{
 std::cout << "---------GEN INDEX PAGE -----" << std::endl;
 				_response.setC(_response.genIndex(_reception.getPage()));
@@ -115,7 +118,8 @@ std::cout << "---------GEN INDEX PAGE -----" << std::endl;
           _response.setCode("404");
         checkPage();
       }
-			else if (_response.setContent(_server.getRoot().c_str() + _reception.getPage()) == 0)
+//      else if (_response.setContent(_server.getRoot().c_str() + _reception.getPage()) == 0)
+  else if (_response.setContent(_reception.getPage()) == 0)
 			{
 std::cout << "---------Page 3-----" << _server.getRoot().c_str() + _reception.getPage() << std::endl;
         _response.setCode("404");
@@ -319,36 +323,28 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
             std::cout << "------ Met 2 ----------"<< std::endl;
       for (std::vector<Location>::iterator it = locs.begin() ; it != locs.end(); ++it)
       {
-              std::cout << "------ Met 3 ----------"<< std::endl;
-        if (_reception.getPage().rfind(it->getPrefix(), 0) == 0)
+              std::cout << "------ Met 3 ----------" <<_reception.getPage() <<" nnnn "<< it->getPrefix() << std::endl;
+        if ((_reception.getPage().rfind(it->getPrefix(), 0) == 0) && (i >= it->getPrefix().size()))
         {
-          if (it->getPrefix() == _reception.getPage())
-          {      std::cout << "------ Met 4 ----------"<< std::endl;
+
             _reception.setIndexP(it->getIndexPage());
             if (it->getRedirection().first != 0)
-              {
+            {
                 std::ostringstream ss;
                 ss << it->getRedirection().first;
                 _response.setCode(ss.str());
                 _response.setRedir(it->getRedirection().second);
 
                  std::cout << "------ Met 41 ----------"<< _response.getCode() <<std::endl;
-              }
-
-                             std::cout << "------ Met 5 ----------"<< std::endl;
-
-          }
-          if (i >= it->getPrefix().size())
-          {
+            }
             res = 0;
             i = it->getPrefix().size();
-            std::set<std::string> me = it->getAllowedMethods();
-            for (std::set<std::string>:: iterator it2 = me.begin() ; it2 != me.end(); it2++)
-            {
+          std::set<std::string> me = it->getAllowedMethods();
+          for (std::set<std::string>:: iterator it2 = me.begin() ; it2 != me.end(); it2++)
+          {
                     std::cout << "------ Met 6 ----------"<< std::endl;
               if (*it2 == _reception.getMethod())
                 res = 1;
-            }
           }
         }
       }

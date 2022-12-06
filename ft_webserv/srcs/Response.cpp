@@ -11,6 +11,11 @@ namespace SAMATHE
 
 	int			Response::setContent(std::string page)
 	{
+      std::string p2 = std::string(get_current_dir_name());
+    std::cout << "----- DIR ----  " << p2 << std::endl;
+
+
+
 		std::ifstream		file(page.c_str());
         std::cout << "----- file ----  " << file.is_open() << std::endl;
 		if (file.is_open())
