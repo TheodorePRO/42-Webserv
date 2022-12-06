@@ -83,6 +83,7 @@ namespace SAMATHE{
 		getServer();
 
       std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
+      std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
       std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
 		std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
@@ -91,7 +92,9 @@ namespace SAMATHE{
 //********************************************
 	void ClientS::checkPage()
 	{
-                          std::cout << "---------check page -----" << (_response.getCode()) << std::endl;
+    std::cout << "--------- page 0-----" << _reception.getPage() << std::endl;
+    _reception.setPage( _server.getRoot() + _reception.getPage());
+    std::cout << "--------- page 1-----" << _reception.getPage() << std::endl;
 		if (_response.getCode() == "")
 		{
                           std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
@@ -123,10 +126,9 @@ namespace SAMATHE{
         }
         return;
       }
-//else if (_response.setContent(_server.getRoot().c_str() + _reception.getPage()) == 0)
       else if (_response.setContent(_reception.getPage()) == 0)
 			{
-                          std::cout << "---------Page 3-----" << _server.getRoot().c_str() + _reception.getPage() << std::endl;
+                          std::cout << "---------Page 3-----" << _reception.getPage() << std::endl;
         _response.setCode("404");
         checkPage();
         return;
