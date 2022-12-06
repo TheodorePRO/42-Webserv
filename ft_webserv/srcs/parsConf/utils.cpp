@@ -75,3 +75,8 @@ bool	is_folder_formatted(std::string path, bool IsFolder)
 	}
 	return true;
 }
+
+std::string					int_to_string(int n)
+{
+	return SSTR("" << n);
+}

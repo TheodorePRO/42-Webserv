@@ -72,7 +72,7 @@ void	ServerInParser::setAutoindex(std::string on_off)
 }
 
 
-void ServerInParser::addErrorPage(std::string error_code, std::string filePath)
+void ServerInParser::addErrorPage(int error_code, std::string filePath)
 {
 	_errorPages.insert(std::make_pair(error_code, filePath));
 }
@@ -201,9 +201,9 @@ std::string ServerInParser::getRoot() const
 }
 
 
-std::string ServerInParser::getErrorPagePath(std::string error_code) const
+std::string ServerInParser::getErrorPagePath(int error_code) const
 {
-	std::map<std::string, std::string>::const_iterator it = _errorPages.find(error_code);
+	std::map<int, std::string>::const_iterator it = _errorPages.find(error_code);
 	if (it == _errorPages.end())
 		return "";
 	else

@@ -126,8 +126,11 @@ std::cout << "---------Page 3-----" << _server.getRoot().c_str() + _reception.ge
     {
       std::cout << "---------Page 4-----" << std::endl;
 
-       if (_server.getErrorPagePath(_response.getCode()) != "")
-          _response.setContent(_server.getErrorPagePath(_response.getCode()));
+	  //saray :
+	  int respond = std::atoi((_response.getCode()).c_str());
+
+       if (_server.getErrorPagePath(respond) != "")
+          _response.setContent(_server.getErrorPagePath(respond));
         else
           _response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
 	    _response.setType(std::string("html"));

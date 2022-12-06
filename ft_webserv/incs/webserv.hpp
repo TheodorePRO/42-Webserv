@@ -38,6 +38,9 @@ enum ERRER
 # define METHOD_NOT_ALLOWED_DEFAULT	"error/405.html"
 # define SERVER_ERROR_DEFAULT		"error/500.html"
 
+# define SSTR(x) static_cast<std::ostringstream &>(           \
+					(std::ostringstream() << std::dec << x)) \
+					.str()
 
 # include "./parsConf/GlobalConfiguration.hpp"
 # include "./parsConf/Location.hpp"
@@ -69,12 +72,7 @@ std::vector<std::string>	split(const std::string &str, char delim);
 std::vector<std::string>	split(const std::string &str, const char *set_delim);
 std::string					autoindexPageHtml(std::string directoryName, std::string headerURL);
 std::string					int_to_string(int n);
-std::string					itohex(std::size_t size);
 bool						is_digit(std::string str);
 bool						is_folder_formatted(std::string path, bool IsFolder = true);
-void						sanitizePath(std::string & path);
-void						uniformizeFolderPath(std::string & folderPath);
-std::string					getParentDirectory(std::string path);
-std::string					getBaseFile(std::string path);
 
 #endif
