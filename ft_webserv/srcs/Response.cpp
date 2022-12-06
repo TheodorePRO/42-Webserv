@@ -14,7 +14,7 @@ namespace SAMATHE
                           std::string p2 = std::string(get_current_dir_name());
                           std::cout << "----- file0 ----  " << page.c_str() << std::endl;
 
-		std::ifstream		file(page.c_str);
+		std::ifstream		file(page.c_str());
    //   std::ifstream   file(std::string("error/404.html").c_str());
                           std::cout << "----- file ----  " << file.is_open() << std::endl;
 		if (file.is_open())
