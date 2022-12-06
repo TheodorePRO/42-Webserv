@@ -36,7 +36,6 @@ void	ParserConf::_parseLocationLine(std::vector<std::string> & line_items, std::
 		_context = "server";
 		_checkCurrentLocationIntegrity(line_nb);
 		_solveCurrentLocationIntegrity();
-		std::cout <<  "\n@@ @@@  chek addLocation in ParseLocation avant sortis de block = " << _currentServer->getRoutes().size();
 		return ;
 	}
 
