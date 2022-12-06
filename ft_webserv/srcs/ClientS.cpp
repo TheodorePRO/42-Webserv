@@ -22,14 +22,14 @@ namespace SAMATHE{
 //********************************************
 	void	ClientS::receiving() 
 	{
-		std::cout << " -------  Enter Receiving --------- " << std::endl;
+		                        std::cout << " -------  Enter Receiving --------- " << std::endl;
 		char		buffer[B_SIZE] = {0};
 		int			ret;
 
 		// ------ appel système pour recevoir depuis le client
 		std::cout << "_fd =" << _fd<< std::endl;
 		ret = ::recv(_fd, buffer, sizeof(buffer), 0);
-		std::cout << " -------buffer --------- " << buffer << std::endl;
+		                        //std::cout << " -------buffer --------- " << buffer << std::endl;
 		if (ret == 0 || ret == -1)
 		{
 			close(_fd);
@@ -43,13 +43,13 @@ namespace SAMATHE{
 		_justRecv.append(buffer, ret);
 		_received += ret;
 		size_t	i = _justRecv.find("\r\n\r\n");
-		std::cout << ret << " ------- rnrn  --------- " << i << std::endl;
+	                           	std::cout << ret << " ------- rnrn  --------- " << i << std::endl;
 		if (i != std::string::npos)
 		{
 			if (_justRecv.find("Content-Length: ") == std::string::npos)
 			{
 				// ------ Cas où pas content-length dans le header -> pas header de POST donc GET
-				std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
+		                      		std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
 				_status = WRITE;
 				FD_SET(_fd, _serv->get_writeMaster_set());
@@ -58,14 +58,14 @@ namespace SAMATHE{
 			size_t	len = std::atoi(_justRecv.substr(_justRecv.find("Content-Length: ") + 16, 10).c_str());
 			if (_received >= len + i + 4)
 			{
-				// ------ Cas où on a lu toute la requete
-				std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
+			 	// ------ Cas où on a lu toute la requete
+		                        		std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
 				_status = WRITE;			//// TJ has finished receiving => WRITE
 				FD_SET(_fd, _serv->get_writeMaster_set());  //////// TJ : has finished receiving
 				return;
 			}
-			std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
+			                           std::cout << "C   *vvvvvvvvvvvvvvvvv***"<< std::endl;
 		}
 
 	}
@@ -79,12 +79,12 @@ namespace SAMATHE{
 		std::istream_iterator<std::string> end;
 		std::vector<std::string> cut(begin, end);
 		_reception.setReception(cut);
-		std::cout << "rrrrrrrrrrrrrrrrr "<< _reception.getHost() << std::endl;
+	                               	std::cout << "rrrrrrrrrrrrrrrrr "<< _reception.getHost() << std::endl;
 		getServer();
-
-      std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
-      std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
-      std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
+                                  std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
+                                  std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
+                                  std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
+                                  std::cout << "jjjjjjj" <<_server.getErrorPagePath(404)<< std::endl;
 		std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
 	}
@@ -92,15 +92,15 @@ namespace SAMATHE{
 //********************************************
 	void ClientS::checkPage()
 	{
-    std::cout << "--------- page 0-----" << _reception.getPage() << std::endl;
+                                  std::cout << "--------- page 0-----" << _reception.getPage() << std::endl;
     _reception.setPage( _server.getRoot() + _reception.getPage());
-    std::cout << "--------- page 1-----" << _reception.getPage() << std::endl;
+                                  std::cout << "--------- page 1-----" << _reception.getPage() << std::endl;
 		if (_response.getCode() == "")
 		{
-                          std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
+                                  std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
 			if (_server.isAutoindexed() != 0 && *(_reception.getPage()).rbegin() == '/')
 			{
-                          std::cout << "---------GEN INDEX PAGE -----" << std::endl;
+                                  std::cout << "---------GEN INDEX PAGE -----" << std::endl;
 				_response.setC(_response.genIndex(_reception.getPage()));
 				if (_response.getCode() == "")
 					_response.setCode("200");
@@ -111,11 +111,11 @@ namespace SAMATHE{
       {
         if (_reception.getIndexP() != "")
         {
-          std::cout << "---------Take INDEX loc -----" << _reception.getPage() << std::endl;
+                                  std::cout << "---------Take INDEX loc -----" << _reception.getPage() << std::endl;
           std::string g = _server.getRoot().c_str();
           g += _reception.getPage().c_str() ;
           g += _reception.getIndexP().c_str();
-                             std::cout << "---------Take INDEX loc -----" << g << std::endl;
+                                 std::cout << "---------Take INDEX loc -----" << g << std::endl;
           _reception.setPage(g);
           _response.setCode("200");
         }
