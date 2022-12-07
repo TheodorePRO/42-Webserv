@@ -36,7 +36,7 @@ class ParserConf
 		~ParserConf();
 
 		ParserConf &	operator=( ParserConf const & rhs );
-		class parsing_error: public std::exception
+		/*class parsing_error: public std::exception
 		{
 			private:
 				const char * _msg;
@@ -61,7 +61,7 @@ class ParserConf
 				{
 					return _msg;
 				}
-		};
+		};*/
 };
 
 #endif /* ********************************************* ParserConf_H */

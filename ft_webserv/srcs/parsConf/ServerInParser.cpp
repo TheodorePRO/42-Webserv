@@ -48,7 +48,11 @@ void ServerInParser ::addName(std::string name)
 void ServerInParser::setIP(std::string IP)
 {
 	if (!_isIPValid(IP))
-		throw std::invalid_argument("IP address is not valid");
+	{
+		std::cout << RED_TXT"Error: IP address is not valid "<< RESET_TXT"\n";
+		exit(EXIT_FAILURE);
+		//throw std::invalid_argument("IP address is not valid");
+	}	
 	else
 		_IP = IP;
 }
@@ -56,9 +60,19 @@ void ServerInParser::setIP(std::string IP)
 void ServerInParser::setPort(std::string port)
 {
 	if (!isNumber(port))
-		throw std::invalid_argument("Port number is not valid");
+	{
+		std::cout << RED_TXT"Error: Port number is not valid "<< RESET_TXT"\n";
+		exit(EXIT_FAILURE);
+		//throw std::invalid_argument("Port number is not valid");
+	}
+		
 	else if (std::atoi(port.c_str()) > 65535)
-		throw std::invalid_argument("Bad/illegal port format (max value: 65535)");
+	{
+		std::cout << RED_TXT"Error: Bad/illegal port format (max value: 65535) "<< RESET_TXT"\n";
+		exit(EXIT_FAILURE);
+		//throw std::invalid_argument("Bad/illegal port format (max value: 65535)");
+	}
+		
 	else
 		_port = std::atoi(port.c_str());
 }
@@ -70,7 +84,12 @@ void	ServerInParser::setAutoindex(std::string on_off)
 	else if (on_off == "off")
 		_autoindex = false;
 	else
-		throw std::invalid_argument("autoindex directive can only be set to \"on\" or \"off\"");
+	{
+		std::cout << RED_TXT"Error: autoindex directive can only be set to \"on\" or \"off\" "<< RESET_TXT"\n";
+		exit(EXIT_FAILURE);
+		//throw std::invalid_argument("autoindex directive can only be set to \"on\" or \"off\"");
+	}
+		
 }
 
 
