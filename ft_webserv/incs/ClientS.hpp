@@ -56,6 +56,12 @@ namespace SAMATHE
 		{	return _fd;		}
 		void	getServer();
     int   checkMethod();
+
+//*******************CGI*************************************
+		void	free_env (char **env);
+		char**  makeEnviroment(ServerInParser conf);
+		int		cgi(int fd, char* argv[], char *env[]);
+    	int     makeCgiRequest(int fd, ServerInParser conf);
 	};
 
 
