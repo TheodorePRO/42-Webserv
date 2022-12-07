@@ -149,6 +149,7 @@ std::cout << "========_client_socket write ======="<< std::endl;
 
 	void TestServer::initContentMap()
 	{
+		_contents["py"] = "application/py";	
 		_contents["html"] = "text/html";
 		_contents["png"] = "image/png";
 		_contents["bmp"] = "image/bmp";
