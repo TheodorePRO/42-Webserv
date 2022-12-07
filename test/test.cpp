@@ -5,6 +5,7 @@
 #include <cstring>
 #include <sys/wait.h>
 
+
 std::map<std::string, std::string>	create_env(void) {
 
 	std::map<std::string, std::string> envs;
@@ -42,19 +43,45 @@ std::map<std::string, std::string>	create_env(void) {
 
 void	free_env (char **env)
 {
-	for (int i = 0; env[i + 1]; i++) {
+	for (int i = 0; env[i]; i++) {
 		free(env[i]);
 	}
-	free(env);
+	//free(env);
 }
 
+int		cgi(int fd, char* argv[], char *env[])	
+{
+	int	tmp_fd = dup(STDIN_FILENO);
 
+	pid_t pid = fork();
+	if (pid == -1) {
+		perror("fork");
+		return (EXIT_FAILURE);
+	}
+	if (pid == 0) // child
+	{
+		if(dup2(fd, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 IN");
+            return(EXIT_FAILURE);			
+		}
+		close(fd);
+		execve(argv[0], argv, env);
+        perror("execve");
+        return(EXIT_FAILURE);
+	}
+	else
+	{
+		int stat;
+		close(tmp_fd);
+		waitpid(pid, &stat, 0);
+		tmp_fd = dup(STDIN_FILENO);
+	}
+	return EXIT_SUCCESS;
+}
 
 int main()
 {
-	//int	tmp_fd = dup(STDIN_FILENO);
-	int	pipefd[2];
-	pid_t pid;
 	int _code_resp;
 
 	/***    prepare execve data ***/
@@ -87,7 +114,7 @@ int main()
 	char *env[size];
 	for(std::map<std::string, std::string>::iterator it = envs.begin(); it != envs.end(); it++)
 	{
-		std::cout << it->first << " = " << it->second << std::endl;
+		//std::cout << it->first << " = " << it->second << std::endl;
 					//for (size_t i = 0; i < key.size(); ++i) {
 					// if (key[i] == '-') {
 					//     key[i] = '_';
@@ -101,14 +128,14 @@ int main()
 	}
 	env[j] = NULL;
 	std::cout << "======================================================" << std::endl;
-	for (size_t i = 0; i < size; ++i){
-		std::cout << env[i] << std::endl;
-	}
+	// for (size_t i = 0; i < size; ++i){
+	// 	std::cout << env[i] << std::endl;
+	// }
 
 
 //		std::string tmp = getProgName(path);
-		std::string binPath = "hello.py";
-		std::string progPath = "/test/hello.py";
+		std::string binPath = "/usr/bin/python3";
+		std::string progPath = "../ft_webserv/pages/cgi/hello.py";
 //		const char* pythonPath = "/usr/bin/python";
 		char* argv[3] = {(char*)binPath.c_str(), (char*)progPath.c_str(), NULL };
 
@@ -120,50 +147,19 @@ int main()
 			return (EXIT_FAILURE);
         }
 
-	pid = fork();
-	if (pid == -1) {
-		//free_env(env);
-		//send_resp(fd, 500);
-		perror("fork");
+	int outFD = open("out.txt", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	if (outFD < 0) {
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
+	int status = cgi(outFD, argv, env);
+    free_env(env);
+    //free_env(argv);
+	if (EXIT_FAILURE==status)
+	{
+		_code_resp = 500; // cgi error
 		return (EXIT_FAILURE);
 	}
-std::cout << "pid = " << pid << std::endl;
-	if (pid == 0) // child
-	{
-		int outFD = open("out.txt", O_RDWR | O_CREAT | O_TRUNC, 0666); //open for write
-		if (outFD < 0) {
-            perror("open");
-            exit(EXIT_FAILURE);
-        }
-std::cout << "outFD = " << outFD << std::endl;
-		if(dup2(outFD, STDOUT_FILENO) == -1)
-		{
-          	//free_env(env);
-			perror("dup2 IN");
-            exit(EXIT_FAILURE);			
-		}
-		// if(dup2(pipefd[1], STDOUT_FILENO) == -1)
-		// {
-        //     free_env(envp);
-		// 	perror("dup2 OUT");
-        //     exit(EXIT_FAILURE);			
-		// }
-std::cout << "outFD_new =" << outFD << std::endl;
-std::cout << "STDOUT_FILENO = " << STDOUT_FILENO << std::endl;		
-		close(outFD);
-		execve(argv[0], argv, env);
-		//free_env(env);
-        perror("execve");
-        exit(EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 
-	}
-	else
-	{
-		int stat;
-		//free_env(env);
-		waitpid(pid, &stat, 0);
-		//close(outFD);
-		// tmp_fd = dup(STDIN_FILENO);
-	}
-	return EXIT_SUCCESS;
 }
