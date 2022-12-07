@@ -43,13 +43,13 @@ namespace SAMATHE{
 		_justRecv.append(buffer, ret);
 		_received += ret;
 		size_t	i = _justRecv.find("\r\n\r\n");
-	                           	std::cout << ret << " ------- rnrn  --------- " << i << std::endl;
+	                           	   std::cout << ret << " ------- rnrn  --------- " << i << std::endl;
 		if (i != std::string::npos)
 		{
 			if (_justRecv.find("Content-Length: ") == std::string::npos)
 			{
 				// ------ Cas où pas content-length dans le header -> pas header de POST donc GET
-		                      		std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
+		                      		  std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
 				_status = WRITE;
 				FD_SET(_fd, _serv->get_writeMaster_set());
@@ -85,7 +85,8 @@ namespace SAMATHE{
                                   std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
                                   std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
                                   std::cout << "jjjjjjj" <<_server.getErrorPagePath(404)<< std::endl;
-		std::cout << "------ Exit Handler ----------"<< std::endl;
+                                  std::cout << "jjjjjjj" <<_server.getMaxSize()<< std::endl;
+		                              std::cout << "------ Exit Handler ----------"<< std::endl;
 		responder();
 	}
 
@@ -95,9 +96,9 @@ namespace SAMATHE{
                                   std::cout << "--------- page 0-----" << _reception.getPage() << std::endl;
     _reception.setPage( _server.getRoot() + _reception.getPage());
                                   std::cout << "--------- page 1-----" << _reception.getPage() << std::endl;
-		if (_response.getCode() == "")
+		if (_response.getCode() == "" || _response.getCode()[0] == '2')
 		{
-                                  std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << "333333" << *(_reception.getPage()).rbegin() << std::endl;
+                                  std::cout << "---------check page 2 -----"  << _server.isAutoindexed() << " = --- = " << *(_reception.getPage()).rbegin() << std::endl;
 			if (_server.isAutoindexed() != 0 && *(_reception.getPage()).rbegin() == '/')
 			{
                                   std::cout << "---------GEN INDEX PAGE -----" << std::endl;
@@ -128,7 +129,7 @@ namespace SAMATHE{
       }
       else if (_response.setContent(_reception.getPage()) == 0)
 			{
-                          std::cout << "---------Page 3-----" << _reception.getPage() << std::endl;
+                                  std::cout << "---------Page 3-----" << _reception.getPage() << std::endl;
         _response.setCode("404");
         checkPage();
         return;
@@ -136,16 +137,16 @@ namespace SAMATHE{
 		}
 		else if ( _response.getRedC() == "" && _response.getCode() != "200")
     {
-                          std::cout << "---------Page 4-----" << _response.getCode() << std::endl;
+                                 std::cout << "---------Page 4-----" << _response.getCode() << std::endl;
       int respond = std::atoi((_response.getCode()).c_str());
-                          std::cout << "---------Page 4 respond : -----"<< _server.getErrorPagePath(respond) << std::endl;
+                                 std::cout << "---------Page 4 respond : -----"<< _server.getErrorPagePath(respond) << std::endl;
       if (_server.getErrorPagePath(respond) != "")
         _response.setContent(_server.getErrorPagePath(respond));
       else
         _response.setContent(std::string("error/") + _response.getCode() + std::string(".html"));
 	    _response.setType(std::string("html"));
     }
-                            std::cout << "---------OUT -----"  <<_response.getCode() << std::endl;
+                                  std::cout << "---------OUT -----"  <<_response.getCode() << std::endl;
 	}
 
 //********************************************
@@ -167,19 +168,18 @@ namespace SAMATHE{
       oss << "Location: " << _response.getRedC();
     oss << "\r\n";
   	_output = oss.str();
-
-    std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxx-----make header end  ----------"<< _response.getRedC() << std::endl;
-    std::cout << oss.str() << std::endl;
+                                std::cout << "-----make header end  ----------"<< _response.getRedC() << std::endl;
+                            //  std::cout << oss.str() << std::endl;
 	}
 
 //********************************************
 	void ClientS::responder()
 	{
 		// ------ GET response content
-  std::cout << "------ Version ----------"<<_reception.getVersion() << std::endl;
-  std::cout << "------ Method ----------"<< checkMethod() << std::endl;
-std::string tmp[] = {"GET", "POST", "DELETE"};
-std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
+                                std::cout << "------ Version ----------"<<_reception.getVersion() << std::endl;
+                                std::cout << "------ Method ----------"<< checkMethod() << std::endl;
+    std::string tmp[] = {"GET", "POST", "DELETE"};
+    std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 		if (_reception.getVersion() != "HTTP/1.1" && _reception.getVersion() != "HTTP/1.0")
 		{
 			_response.setCode("505");
@@ -189,7 +189,7 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 		}
     else if (METHODS.find(_reception.getMethod()) != METHODS.end()  && checkMethod() == 0)
     {
-      std::cout << "------ Not allowed method 413----------"<< std::endl;
+                                std::cout << "------ Not allowed method 413----------"<< std::endl;
       _response.setCode("413");
       return;
     }
@@ -215,8 +215,8 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 			}
 			std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
 			_reception.setBody(_justRecv);
-			std::string n = std::string(_server.getRoot()) + _reception.getFName();
-			std::cout << "------ ----------"<< n << std::endl;
+			std::string n = _server.getRoot() + _reception.getFName();
+			                   std::cout << "------ ----------"<< n << std::endl;
 			std::ofstream file(n.c_str());
 			//	std::ofstream file(std::string("pages/") + _reception.getFName().c_str());
 			file << _reception.getBody();
@@ -243,7 +243,7 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 		}
 		else
 		{
-      std::cout <<" ------ Method : 400"  << std::endl;
+                        std::cout <<" ------ Method : 400"  << std::endl;
 			_response.setCode("400");
 			checkPage();
 			makeHeader();
@@ -252,24 +252,24 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 
 	void	ClientS::sending()
 	{
-		std::cout << "------ Enter sending ----------"<< std::endl;
-		std::cout << "output size = "<< _output.size() << std::endl;
-		std::cout << "sent = "<< _sent << std::endl;
+		                    std::cout << "------ Enter sending ----------"<< std::endl;
+		                    std::cout << "output size = "<< _output.size() << std::endl;
 
-		std::string	str = _output.substr(_sent, B_SIZE);
-		std::cout << "str size = "<< str.size() << std::endl;
+
+		std::string	str = _output.substr(_sent, B_SIZE - 1);
+	                     	std::cout << "str size = "<< str.size() << std::endl;
 		int	ret = ::send(_fd, str.c_str(), str.size(), 0);
-		std::cout << "----- sent ----- " << std::endl;
-
+                    		std::cout << "----- sent ----- " << ret << std::endl;
+    str = "";
 		_sent += ret;
 		if (ret != -1 && ret !=0 && _sent < _output.size())
 		{
-			std::cout << "----- NOT FINISHED  ---- " << std::endl;
+	                   		std::cout << "----- NOT FINISHED  ---- " << std::endl;
 			return;
 		}
 		else
 		{
-			std::cout << "----- 1 YES FINISHED  ---- " << std::endl;
+		                  	std::cout << "----- 1 YES FINISHED  ---- " << std::endl;
 			close(_fd);
 			_status = FINI;
 			FD_CLR(_fd, _serv->get_master_set());
@@ -281,6 +281,8 @@ std::set<std::string> METHODS(tmp, tmp + sizeof(tmp) / sizeof(tmp[0]));
 			_binary = 0;
 			_sent = 0;
 			_output = "";
+                         std::cout << "output size 2 = "<< _output.size() << std::endl;
+
 		}
 	}
 

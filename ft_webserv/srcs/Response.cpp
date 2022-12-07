@@ -11,8 +11,8 @@ namespace SAMATHE
 
 	int			Response::setContent(std::string page)
 	{
-                          std::string p2 = std::string(get_current_dir_name());
-                          std::cout << "----- file0 ----  " << page.c_str() << std::endl;
+                //          std::string p2 = std::string(get_current_dir_name());
+                //        std::cout << "----- file0 ----  " << page.c_str() << std::endl;
     std::ifstream   file(page.c_str());
     struct stat s;
     if ( lstat(page.c_str(), &s) == 0 )

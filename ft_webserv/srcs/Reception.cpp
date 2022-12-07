@@ -66,10 +66,10 @@ namespace SAMATHE
 			{		
 				std::istringstream iss(*((std::find(cut.begin(), cut.end(), "Content-Disposition:")+3)));
 				iss >> _fileName;
-				std::cout << "fffffffffff "<<_fileName << std::endl;
+				                            std::cout << "fffffffffff "<<_fileName << std::endl;
 				_fileName = _fileName.substr(10, _fileName.size()-11);
-				_fileName = std::string("01-IN/") + _fileName;
-				std::cout << "fffffffffff "<<_fileName << std::endl;
+				_fileName = std::string("/01-IN/") + _fileName;
+				                            std::cout << "fffffffffff "<<_fileName << std::endl;
 			}
 			if (std::find(cut.begin(), cut.end(), "Host:") != cut.end())
 			{
