@@ -309,14 +309,17 @@ namespace SAMATHE{
 		std::vector<ServerInParser> sers = _serv->getGConf().getServersList();
 		for (std::vector<ServerInParser>::iterator it = sers.begin() ; it != sers.end(); ++it)
 		{
+                                  std::cout << "Server 0----- Nb de serveurs " << sers.size()<<std::endl;
+                                  std::cout << "Server 1----- name " << it->getNames()[0]<<std::endl;
+                                  std::cout << "Server 11 -----ip " << it->getIP() <<" port: "<< it->getPort() <<std::endl;
 			if ((it->getPort() == _conf->getPort()) && (it->getIP() == _conf->getIP()))
 			{
 				i++;
 				f.push_back(*it);
 			}
 		}
-		std::cout << "ttttttttttttttttttt" << std::endl;
-		std::cout << "ttttttttttttttttttt"<< i << " -- f.size =" <<  f.size() << "   "  << "ggggg" << std::endl;
+
+		                              std::cout << "Server 2----- i = "<< i << " -- f.size =" <<  f.size() << "   "  << "ggggg" << std::endl;
 		if (i == 1)
 		{
 			_server = f[0];
