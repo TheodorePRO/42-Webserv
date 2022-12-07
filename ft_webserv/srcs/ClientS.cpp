@@ -197,10 +197,15 @@ namespace SAMATHE{
 		{
 			if (_reception.getPage() == "CGI.py"){
 				makeCgiRequest(_fd, _server);
-				_reception.setPage("cgi/hello.py");
+				//_reception.setPage("cgi/hello.py");
+				close(_fd);
+				_status = FINI;
+				return ;
 	  			}
-   			checkPage();
-			makeHeader();
+			else{
+				checkPage();
+				makeHeader();
+			}
 		}
 		else if (_reception.getMethod() == "POST")
 		{
