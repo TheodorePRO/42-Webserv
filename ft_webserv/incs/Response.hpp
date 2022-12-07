@@ -11,6 +11,7 @@
 
 namespace SAMATHE
 {
+
 	class Response
 	{
 		std::string					_content;
@@ -24,7 +25,9 @@ namespace SAMATHE
 
 		int				setContent(std::string page);
 		void			setC(std::string c);
-		std::string		genIndex(std::string path);
+		std::string		genIndex(std::string path, std::string ip, int port);
+//    std::string   genIndex(std::string path, std::string ip, int port);
+
 
 		void	setCode(std::string const &c)
 		{	_code = c;	}

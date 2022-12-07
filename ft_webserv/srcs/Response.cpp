@@ -40,11 +40,14 @@ namespace SAMATHE
 	}
 
 
-	std::string		Response::genIndex(std::string path) 
+  std::string   Response::genIndex(std::string path, std::string ip, int port)
 	{
-		std::string p2 = std::string(get_current_dir_name()) + "/" + path;
-		std::cout << "----- DIR ----  " << p2 << std::endl;
-		DIR *dir = opendir(p2.c_str());
+//		std::string p2 = std::string(get_current_dir_name()) + "/" + path;
+	//	std::cout << "----- DIR ----  " << p2 << std::endl;
+ // std::string p2 = std::string("pages");
+  //  std::string path = Reception::rec.getPage();
+		DIR *dir = opendir(path.c_str());
+    std::string p2 = path.substr(path.find("/") + 1 , path.size());
 		std::string page =\
 						  "<!DOCTYPE html>\n\
 						  <html>\n\
@@ -55,17 +58,23 @@ namespace SAMATHE
 						  <h1>INDEX</h1>\n\
 						  <p>\n";
 
-		if (dir == NULL) {
-			std::cerr << "Error: could not open [" << path << "]" << std::endl;
-			return "";
-		}
+		if (dir == NULL)
+    {
+		  page += std::string("Error: could not open [") + path + std::string( "] as a directory ");
+      return page;
+    }
+
+                                std::cout << "!!!!!!  ----  " << path << std::endl;
+
 		if (path[0] != '/')
 			path = "/" + path;
 		for (struct dirent *dirEntry = readdir(dir); dirEntry; dirEntry = readdir(dir)) 
 		{
 			std::stringstream   ss;
-			ss << "\t\t<p><a href=\"http://" << path + "/" + std::string(dirEntry->d_name) + "\">" + std::string(dirEntry->d_name) + "</a></p>\n";
+			ss << "\t\t<p><a href=\"http://" << ip << ":" << port << "/" <<  p2 +  std::string(dirEntry->d_name) << "/" <<  "\">" + std::string(dirEntry->d_name) + "</a></p>\n";
 			page += ss.str();
+      std::cout << "----- index links  ----  " << ip <<"  dd  " << port <<"  "<< p2 << std::endl;
+
 		}
 		page +="\
 				</p>\n\
