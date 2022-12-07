@@ -1,4 +1,5 @@
 #include "../incs/ClientS.hpp"
+#include "Cgi.cpp"
 # define B_SIZE 300000
 
 namespace SAMATHE{
@@ -195,14 +196,12 @@ namespace SAMATHE{
     }
 		else if (_reception.getMethod() == "GET")
 		{
-      if (_reception.getPage() == "CGI.py")
-        ;
-      else
-      {
-			 checkPage();
-			 makeHeader();
-       return;
-      }
+      if (_reception.getPage() == "CGI.py"){
+		 makeCgiRequest(_fd, _server);
+		 _reception.setPage("cgi/hello.py");
+	  	}
+   			checkPage();
+			makeHeader();
 		}
 		else if (_reception.getMethod() == "POST")
 		{

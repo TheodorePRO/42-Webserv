@@ -1,0 +1,6 @@
+objs
+*.opp
+*.swp
+webserv
+.vscode
+.DS_Store
