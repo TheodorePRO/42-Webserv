@@ -49,7 +49,7 @@ namespace SAMATHE{
 			if (_justRecv.find("Content-Length: ") == std::string::npos)
 			{
 				// ------ Cas où pas content-length dans le header -> pas header de POST donc GET
-		                      		  std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
+		                      		    std::cout << "A   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
 				_status = WRITE;
 				FD_SET(_fd, _serv->get_writeMaster_set());
@@ -59,7 +59,7 @@ namespace SAMATHE{
 			if (_received >= len + i + 4)
 			{
 			 	// ------ Cas où on a lu toute la requete
-		                        		std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
+		                        	   std::cout << "B   *vvvvvvvvvvvvvvvvv***" << std::endl;
 				handler();
 				_status = WRITE;
 				FD_SET(_fd, _serv->get_writeMaster_set());
@@ -201,7 +201,12 @@ namespace SAMATHE{
     }
 		else if (_reception.getMethod() == "GET")
 		{
-			if (_reception.getPage() == "CGI.py"){
+      std::string page = _reception.getPage();
+                                std::cout << "------ GCI page ? ----------"<< page << std::endl;
+                                std::cout << "------ GCI page2 ? ----------"<< page.substr(page.find("/") + 1 , page.size()) << std::endl;
+			if ( page.substr(page.find("/") + 1 , page.size()) == "cgi.py")
+      {
+
 				makeCgiRequest(_fd, _server);
 				//_reception.setPage("cgi/hello.py");
 				close(_fd);
