@@ -16,18 +16,18 @@ namespace SAMATHE
         delete[]env;
     }
 
-    char**     makeEnviroment(ServerInParser *conf) 
+    char**     makeEnviroment(ServerInParser conf) 
     {
         std::map<std::string, std::string> envs; /***    prepare execve data ***/
         
         envs["CONTEXT_DOCUMENT_ROOT"] = "";
         envs["SERVER_SOFTWARE"] = "Webserv"; 
-        envs["SERVER_NAME"] = conf->getIP(); //IP
+        envs["SERVER_NAME"] = conf.getIP(); //IP
         envs["GATEWAY_INTERFACE"] = "CGI/1.1";
         envs["SERVER_PROTOCOL"] =  "HTTP/1.1";
         
         std::ostringstream ss_port;
-        ss_port << conf->getPort();
+        ss_port << conf.getPort();
         envs["SERVER_PORT"] = ss_port.str(); //Port
         
         envs["REQUEST_METHOD"] = "GET";
@@ -89,7 +89,7 @@ namespace SAMATHE
         return EXIT_SUCCESS;
     }   
 
-    int     makeCgiRequest(int fd, ServerInParser *conf)
+    int     makeCgiRequest(int fd, ServerInParser conf)
     {
         char** env = makeEnviroment(conf);
 
