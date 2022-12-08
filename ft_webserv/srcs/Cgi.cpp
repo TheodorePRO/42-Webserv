@@ -34,7 +34,7 @@ namespace SAMATHE
         envs["REQUEST_METHOD"] = "GET";
         envs["PATH_INFO"] = ""; // The path for the CGI script.
         envs["SCRIPT_NAME"] = std::string("hello.py"); //The name of the CGI script.
-        envs["SCRIPT_FILENAME"] = std::string("/page/cgi/"); // The full path to the CGI script
+        envs["SCRIPT_FILENAME"] = std::string("pages/cgi/"); // The full path to the CGI script
        // envs["QUERY_STRING"] = ""; 
         envs["REMOTE_HOST"] = ""; //The fully qualified name of the host making the request. If this information is not available, then REMOTE_ADDR can be used to get IR address
         envs["REMOTE_ADDR"] = ""; //The IP address of the remote host making the request. This is useful logging or for authentication.
@@ -95,7 +95,7 @@ namespace SAMATHE
         char** env = makeEnviroment(conf);
 
         std::string binPath = "/usr/bin/python3"; // from config
-		std::string progPath = "/pages/cgi/hello.py";
+		std::string progPath = "pages/cgi/hello.py";
 		char* argv[3] = {(char*)binPath.c_str(), (char*)progPath.c_str(), NULL };
 
         if (argv[0] == NULL or argv[1] == NULL) {

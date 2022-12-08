@@ -24,5 +24,8 @@ std::vector<ServerInParser> & GlobalConfiguration::getServersList()
 	return _serversList;
 }
 
-
+std::vector<ServerInParser> & GlobalConfiguration::getServersListSocket() //ggg
+{
+	return _serversListSocket;
+}
 /* ************************************************************************** */
