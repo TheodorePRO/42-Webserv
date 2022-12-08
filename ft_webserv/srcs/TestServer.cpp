@@ -63,23 +63,21 @@ namespace SAMATHE{
 std::cout << "Client accepted _max_fd = " << _max_fd << std::endl; 
 		}
 
-		else
+		else {
 			perror("Failed to accept...");
+			return ;
+		}
 	}
  
 	void TestServer::launch()
 	{
-		fd_set* readFd = get_master_set();
+		  // ------Initialize the master fd_set 
+		fd_set* readFd = get_master_set(); 
 		fd_set* writeFd = get_writeMaster_set();
 
-		// ------Initialize the master fd_set 
-		//int listen_sd = get_socket(i).get_sock();
-
-//int j = 5;
-//while (j--)
 		while (true)
-		{ // ------ boucle infinie qui fait Accept . Handle . Respond (Voir avec Mariys pour le select)
-			std::cout << "========WAITING======="<< std::endl;
+		{ // ------ boucle infinie qui fait Accept . Handle . Respond 
+	std::cout << "========WAITING======="<< std::endl;
 
 			// re-add listening socket
 			for (int i = 0; i < get_N_sockets(); ++i) {
@@ -88,47 +86,39 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 				}
 			}
 
-			int res = select(_max_fd + 1, readFd, writeFd, 0, 0); //select(get_max_sd() + 1, &readFd, &writeFd, 0, 0)
-std::cout << "======= res="<<res<<"======="<< std::endl;
+			int res = select(_max_fd + 1, readFd, writeFd, 0, 0);
+	std::cout << "======= res="<<res<<"======="<< std::endl;
 			if (res <= 0) {
 				continue ;
 			}
 
-std::cout << "========listen soc======="<< std::endl;
+	std::cout << "========listen soc======="<< std::endl;
 			for (int i = 0; i < get_N_sockets(); ++i) {
-std::cout << "========"<<i<<"======="<< std::endl;
+	std::cout << "========"<<i<<"======="<< std::endl;
 				if (FD_ISSET(get_socket(i).get_sock(), readFd)) {
-std::cout << "========accept"<<i<<"======="<< std::endl;
+	std::cout << "========accept"<<i<<"======="<< std::endl;
 					accepter(i);
 				}
 			}
 			
 			for (std::map<int, ClientS>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
-std::cout << "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
+	std::cout << "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
 				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==READ) { // ? (cd ..*it).get_status() ? ***** _status il faut retire  de la class Reception: it->second.get_status()
-std::cout << "========_client_socket read ======="<< std::endl;
-					it->second.receiving(); //it->second.receiving(it->first)
-					if (it->second.getStatus()==FINI) { // _status from Reception
-										 //                    std::cout << "DELETED" << std::endl;
-										 //					 _responder.del_from_map(it->first);
+	std::cout << "========_client_socket read ======="<< std::endl;
+					it->second.receiving(); 
+					if (it->second.getStatus()==FINI) { 
 						_client_sockets.erase(it);
 					}
-					//continue ; ????
 				}
 				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) { // ***** _status il faut retire  de la class Reception: it->second.get_status()
-std::cout << "========_client_socket write ======="<< std::endl;
-					it->second.sending(); //it->second.responder(it->first);  ///////////////TJ : sending(une fois que le content est pret (avant responder qui prépare le content et envoie après.)
+	std::cout << "========_client_socket write ======="<< std::endl;
+					it->second.sending(); //TJ : sending(une fois que le content est pret (avant responder qui prépare le content et envoie après.)
 					if (it->second.getStatus()==FINI) {
-						//                    std::cout << "DELETED" << std::endl;
-						//					 _responder.del_from_map(*it);
 						_client_sockets.erase(it);
 					}
 				}
 			}
-
-			// handler();
-			// responder();
-			std::cout << "========DONE========" << std::endl;
+	std::cout << "========DONE========" << std::endl;
 		}
 	}
 	void	TestServer::initErrorMap()
@@ -168,7 +158,4 @@ std::cout << "========_client_socket write ======="<< std::endl;
 		_contents["m3u8"] = "application/vnd.apple.mpegurl";
 		_contents["ts"]	= "video/mp2t";
 	}
-
-
-
 }

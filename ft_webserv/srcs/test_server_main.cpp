@@ -73,8 +73,6 @@ int main(int ac, char **av)
 		}
 		std::cout << RESET_TXT"IN TEST SERVER CPP"<<std::endl;
 		//SAMATHE::ServConf	sc(av[1]); // obtenir parametres a partir d'un fichier do cinfig
-		
-		
 				
 		signal(SIGINT, signalHandler);
 		signal(SIGPIPE, signalHandler);
