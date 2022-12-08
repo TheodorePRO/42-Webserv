@@ -130,6 +130,7 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 	{
 		_errors["200"] = " OK";
 		_errors["201"] = " Created";
+    _errors["202"] = " Accepted";
 		_errors["204"] = " No Content";
     _errors["301"] = " Moved permanently";
     _errors["307"] = " Internal redirect";

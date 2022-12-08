@@ -1,4 +1,4 @@
-DELETE /02-OUT/titi HTTP/1.1
+DELETE /01-IN/titi.txt HTTP/1.1
 Host: localhost:8081
 
 
