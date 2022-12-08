@@ -3,15 +3,18 @@
 #include <stdio.h>
 
 // Test Socket
-int main()
-{
-	std::cout << "Starting..." << std::endl;
-	std::cout << "Binding Socket..." << std::endl;
-	SAMATHE::BindSocket(AF_INET, SOCK_STREAM, 0 ,81, INADDR_ANY);
-	std::cout << "Listening Socket..." << std::endl;
-	SAMATHE::ListeningSocket(AF_INET, SOCK_STREAM, 0 ,80, INADDR_ANY, 10);
-	std::cout << "Success!" << std::endl;
-}
 
+extern char **environ;
+
+int main(int argc, char **argv)
+{
+  int i;
+
+  if( environ != NULL )
+    for( i=0; environ[i]; i++ )
+      printf("%s\n",environ[i]);
+
+  return 0;
+}
 
 

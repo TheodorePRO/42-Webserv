@@ -35,8 +35,9 @@ namespace SAMATHE
         envs["REMOTE_ADDR"] = ""; //The IP address of the remote host making the request. This is useful logging or for authentication.
         envs["REMOTE_PORT"] = "";
         envs["REMOTE_USER"] = "";
-        envs["CONTENT_TYPE"] = ""; //The data type of the content. Used when the client is sending attached content to the server. For example, file upload.
-        envs["CONTENT_LENGTH"] = ""; // It is available only for POST requests.
+        envs["CASHE-CONTROL"] = "no-cache"; //The data type of the content. Used when the client is sending attached content to the server. For example, file upload.
+        envs["CONTENT_TYPE"] = "text/html"; //The data type of the content. Used when the client is sending attached content to the server. For example, file upload.       
+        envs["CONTENT_LENGTH"] = "5000"; // It is available only for POST requests.
         envs["HTTP_USER_AGENT"] = "Google Chrome Version 107.0.5304.110 (Official Build) (64-bit)";
 
         std::string	key;
