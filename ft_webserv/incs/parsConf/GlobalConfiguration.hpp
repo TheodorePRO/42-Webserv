@@ -17,6 +17,7 @@ class GlobalConfiguration
 	private:
 		
 		std::vector<ServerInParser>				_serversList;
+		std::vector<ServerInParser>				_ggg;
 		
 
 	public:
@@ -30,6 +31,7 @@ class GlobalConfiguration
 		// accessors
 		
 		std::vector<ServerInParser> & 			getServersList();
+		std::vector<ServerInParser> & 			getServersList_ggg();
 		
 
 };

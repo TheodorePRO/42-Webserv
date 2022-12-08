@@ -300,12 +300,29 @@ static std::size_t find_comment(const std::vector<std::string> & line_items)
 
 void	ParserConf::_checkServerDuplicate()
 {
+	_globalConf.getServersList_ggg() = (_globalConf.getServersList());
+
+	
+
+	for (std::size_t i = 0; i < _globalConf.getServersList_ggg().size() - 1; ++i)
+	{
+		for (std::size_t j = i + 1; j < _globalConf.getServersList_ggg().size(); ++j)
+		{
+			if (_globalConf.getServersList_ggg()[i].getIP() == _globalConf.getServersList_ggg()[j].getIP() &&
+				_globalConf.getServersList_ggg()[i].getPort() == _globalConf.getServersList_ggg()[j].getPort())
+				
+				_globalConf.getServersList().erase(_globalConf.getServersList().begin() + j--);
+
+		}
+	}
+
 	for (std::size_t i = 0; i < _globalConf.getServersList().size() - 1; ++i)
 	{
 		for (std::size_t j = i + 1; j < _globalConf.getServersList().size(); ++j)
 		{
 			if (_globalConf.getServersList()[i].getIP() == _globalConf.getServersList()[j].getIP() &&
-				_globalConf.getServersList()[i].getPort() == _globalConf.getServersList()[j].getPort())
+				_globalConf.getServersList()[i].getPort() == _globalConf.getServersList()[j].getPort() &&
+				_globalConf.getServersList()[i].getRoot() == _globalConf.getServersList()[j].getRoot())
 
 				_globalConf.getServersList().erase(_globalConf.getServersList().begin() + j--);
 		}
