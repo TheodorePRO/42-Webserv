@@ -239,6 +239,7 @@ namespace SAMATHE{
 				_response.setCode("204");
 			else
 				_response.setCode("201");
+      _reception.setPage( _server.getRoot() + _reception.getPage());
 			checkPage();
 			makeHeader();
       return;
