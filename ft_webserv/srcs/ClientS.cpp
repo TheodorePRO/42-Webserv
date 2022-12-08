@@ -228,7 +228,7 @@ namespace SAMATHE{
                             std::cout << "payload"<< _reception.getFName() << std::endl;
 				return;
 			}
-			std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
+                            std::cout << "*** CREATING FILE ***"<< _reception.getFName() << std::endl;
 			_reception.setBody(_justRecv);
 			std::string n = _server.getRoot() + _reception.getFName();
 			                   std::cout << "------ ----------"<< n << std::endl;
@@ -239,6 +239,7 @@ namespace SAMATHE{
 				_response.setCode("204");
 			else
 				_response.setCode("201");
+      _reception.setPage( _server.getRoot() + _reception.getPage());
 			checkPage();
 			makeHeader();
       return;
@@ -249,10 +250,22 @@ namespace SAMATHE{
 			{
 				std::string n = std::string(_server.getRoot()) + _reception.getPage();
 				std::cout << "*** DELETING FILE ******"<< n << std::endl;
-				remove(n.c_str());
-				_response.setCode("204");
-				_response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>");
-				_response.setType("html");
+        int i = remove(n.c_str());
+                                  std::cout <<"----DELETE " << i << std::endl;
+				if ( i == 0)
+        {
+		      _response.setCode("202");
+				  _response.setC("<html> \n<body> \n<h1>File deleted.</h1> \n</body> \n</html>");
+				  _response.setType("html");
+          makeHeader();
+                                  std::cout <<"----DELETE XXX " << i << std::endl;
+        }
+        else
+        {
+          _response.setCode("403");
+          checkPage();
+          makeHeader();
+        }
 			}
       return;
 		}
