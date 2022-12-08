@@ -311,18 +311,32 @@ static std::size_t find_comment(const std::vector<std::string> & line_items)
 
 void	ParserConf::_checkServerDuplicate()
 {
-	for (std::size_t i = 0; i < _globalConf.getServersList().size() - 1; ++i)
+	_globalConf.getServersListSocket() = (_globalConf.getServersList());
+	
+	for (std::size_t i = 0; i < _globalConf.getServersListSocket().size() - 1; ++i)
 	{
-		for (std::size_t j = i + 1; j < _globalConf.getServersList().size(); ++j)
+		for (std::size_t j = i + 1; j < _globalConf.getServersListSocket().size(); ++j)
 		{
-			if (_globalConf.getServersList()[i].getIP() == _globalConf.getServersList()[j].getIP() &&
-				_globalConf.getServersList()[i].getPort() == _globalConf.getServersList()[j].getPort() &&
-				_globalConf.getServersList()[i].getRoot() == _globalConf.getServersList()[j].getRoot())
+			if (_globalConf.getServersListSocket()[i].getIP() == _globalConf.getServersListSocket()[j].getIP() &&
+				_globalConf.getServersListSocket()[i].getPort() == _globalConf.getServersListSocket()[j].getPort())
 
-				_globalConf.getServersList().erase(_globalConf.getServersList().begin() + j--);
+				_globalConf.getServersListSocket().erase(_globalConf.getServersListSocket().begin() + j--);
 		}
 	}
+
+	for (std::size_t i = 0; i < _globalConf.getServersList().size() - 1; ++i)
+	{
+	for (std::size_t j = i + 1; j < _globalConf.getServersList().size(); ++j)
+	{
+		if (_globalConf.getServersList()[i].getIP() == _globalConf.getServersList()[j].getIP() &&
+			_globalConf.getServersList()[i].getPort() == _globalConf.getServersList()[j].getPort() &&
+			_globalConf.getServersList()[i].getRoot() == _globalConf.getServersList()[j].getRoot())
+
+			_globalConf.getServersList().erase(_globalConf.getServersList().begin() + j--);
+	}
+	}
 }
+
 
 void	ParserConf::_checkCurrentServerIntegrity(std::size_t line_nb) const
 {

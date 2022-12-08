@@ -80,7 +80,7 @@ namespace SAMATHE{
 		_reception.setReception(cut);
 	                               	std::cout << "rrrrrrrrrrrrrrrrr "<< _reception.getHost() << std::endl;
 		getServer();
-                                  std::cout << "jjjjjjj" <<_server.getNames()[0] << std::endl;
+                                  std::cout << "jjjjjjj" <<_server.getNames().size() << std::endl;
                                   std::cout << "jjjjjjj" <<_server.getPort() << std::endl;
                                   std::cout << "jjjjjjj" <<_server.getRoot() << std::endl;
                                   std::cout << "jjjjjjj" <<_server.isAutoindexed() << std::endl;
@@ -204,7 +204,7 @@ namespace SAMATHE{
       std::string page = _reception.getPage();
                                 std::cout << "------ GCI page ? ----------"<< page << std::endl;
                                 std::cout << "------ GCI page2 ? ----------"<< page.substr(page.find("/") + 1 , page.size()) << std::endl;
-			if ( page.substr(page.find("/") + 1 , page.size()) == "cgi.py")
+			if ( page.substr(page.find("/") + 1 , page.size()) == "cgi.html")
       {
 
 				makeCgiRequest(_fd, _server);
@@ -306,11 +306,12 @@ namespace SAMATHE{
 	{
 		int i = 0;
 		std::vector<ServerInParser> f;
+	//	std::vector<ServerInParser> sers = _serv->getGConf().getServersListSocket();
 		std::vector<ServerInParser> sers = _serv->getGConf().getServersList();
 		for (std::vector<ServerInParser>::iterator it = sers.begin() ; it != sers.end(); ++it)
 		{
                                   std::cout << "Server 0----- Nb de serveurs " << sers.size()<<std::endl;
-                                  std::cout << "Server 1----- name " << it->getNames()[0]<<std::endl;
+                                  std::cout << "Server 1----- name " << it->getNames().size()<<std::endl;
                                   std::cout << "Server 11 -----ip " << it->getIP() <<" port: "<< it->getPort() <<std::endl;
 			if ((it->getPort() == _conf->getPort()) && (it->getIP() == _conf->getIP()))
 			{
@@ -330,7 +331,7 @@ namespace SAMATHE{
 			for (std::vector<ServerInParser>::iterator it = f.begin() ; it != f.end(); ++it)
 			{
 				std::vector<std::string> names = it->getNames();
-				for (std::vector<std::string>::iterator it2 = names.begin() ; it2 != names.end(); ++it)
+				for (std::vector<std::string>::iterator it2 = names.begin() ; it2 != names.end(); ++it2)
 				{
 					if ( *it2 == _reception.getHost())
 					{

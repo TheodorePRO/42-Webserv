@@ -9,9 +9,9 @@ namespace SAMATHE{
 		FD_ZERO(&_master_set);
 		FD_ZERO(&_writeMaster_set);
 
-		for ( unsigned int i = 0; i < glob_conf.getServersList().size(); i++)
+		for ( unsigned int i = 0; i < glob_conf.getServersListSocket().size(); i++)
 		{
-			ListeningSocket ls = ListeningSocket(glob_conf.getServersList().at(i));
+			ListeningSocket ls = ListeningSocket(glob_conf.getServersListSocket().at(i));
 
 			_sockets.push_back(ls);	// MS quell valeur ls???
 			

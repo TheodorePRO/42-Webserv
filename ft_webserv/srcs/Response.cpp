@@ -73,7 +73,7 @@ namespace SAMATHE
 			std::stringstream   ss;
 			ss << "\t\t<p><a href=\"http://" << ip << ":" << port << "/" <<  p2 +  std::string(dirEntry->d_name) << "/" <<  "\">" + std::string(dirEntry->d_name) + "</a></p>\n";
 			page += ss.str();
-      std::cout << "----- index links  ----  " << ip <<"  dd  " << port <<"  "<< p2 << std::endl;
+     						// std::cout << "----- index links  ----  " << ip <<"  dd  " << port <<"  "<< p2 << std::endl;
 
 		}
 		page +="\
