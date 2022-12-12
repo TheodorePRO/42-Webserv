@@ -20,7 +20,8 @@ OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:%.cpp=%.opp))
 
 # --   Compilation flags  -- #
 CC		=	c++
-FLAGS	=	-Wshadow -fsanitize=address -g3 -std=c++98 -Wall -Wextra -Werror 
+FLAGS	=	-Wshadow -g3 -std=c++98 -Wall -Wextra -Werror 
+# -fsanitize=address
 LIBS	=	-lm
 
 all:
