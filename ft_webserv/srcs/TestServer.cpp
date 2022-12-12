@@ -98,29 +98,43 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 				if (FD_ISSET(get_socket(i).get_sock(), readFd)) {
 		std::cout << "========accept"<<i<<"======="<< std::endl;
 					accepter(i);
+std::cout << "=== accepted ===="<< std::endl;
 				}
 			}
 			
-			for (std::map<int, ClientS>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
-		std::cout << "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
+std::cout << _client_sockets.size() <<"======="<< std::endl;
+			std::map<int, ClientS>::iterator it = _client_sockets.begin();
+			while ( it != _client_sockets.end()) {
+std::cout << FD_ISSET(it->first, readFd) << " " << FD_ISSET(it->first, writeFd)<< "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
+//				bool is_need_to_delete = false;
 				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==READ) { 
 		std::cout << "========_client_socket read ======="<< std::endl;
 					it->second.receiving(); 
-					if (it->second.getStatus()==FINI) { 	// _status from Reception
-										 					//  std::cout << "DELETED" << std::endl;
-										 					// _responder.del_from_map(it->first);
-						_client_sockets.erase(it);
-					}
+//					is_need_to_delete = it->second.getStatus()==FINI;
 				}
-				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) {
+				else if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) {
 		std::cout << "========_client_socket write ======="<< std::endl;
 					it->second.sending(); 
-					if (it->second.getStatus()==FINI) {
-															// std::cout << "DELETED" << std::endl;
-															// _responder.del_from_map(*it);
-						_client_sockets.erase(it);
-					}
+//					is_need_to_delete = it->second.getStatus()==FINI;
 				}
+				// go to next key
+//				if (is_need_to_delete){
+				if (it->second.getStatus()==FINI){
+						std::map<int, ClientS>::iterator itt = it;
+						++itt;
+						if (itt != _client_sockets.end()){
+							int next_key = itt->first;
+							_client_sockets.erase(it);
+							it = _client_sockets.find(next_key);
+						}
+						else{
+							_client_sockets.erase(it);
+							break;
+						}
+				}
+				else
+					++it;
+std::cout << "=======endfor"<< std::endl;
 			}
 
 		std::cout << "========DONE========" << std::endl;
