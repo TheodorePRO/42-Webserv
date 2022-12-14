@@ -13,6 +13,7 @@ void	signalHandler(int sig) {
 
 int main(int ac, char **av)
 {
+	std::cout.setf(std::ios::unitbuf);
 	if (ac != 2)
 	{
 		std::cout << RED_TXT "Error: " << av[0]<< " needs conf file ." RESET_TXT << std::endl;

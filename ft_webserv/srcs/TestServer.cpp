@@ -100,29 +100,38 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 					accepter(i);
 				}
 			}
-			
-			for (std::map<int, ClientS>::iterator it = _client_sockets.begin(); it != _client_sockets.end(); ++it) {
-		std::cout << "========_client_sockets=" << it->first <<" status=" <<it->second.getStatus() <<"======="<< std::endl;
+//****MS******** new map.eraise*******************************************************			
+			std::map<int, ClientS>::iterator it = _client_sockets.begin();
+			while ( it != _client_sockets.end()) {
+		std::cout << "========_client_sockets========"<< std::endl;
 				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==READ) { 
 		std::cout << "========_client_socket read ======="<< std::endl;
 					it->second.receiving(); 
-					if (it->second.getStatus()==FINI) { 	// _status from Reception
-										 					//  std::cout << "DELETED" << std::endl;
-										 					// _responder.del_from_map(it->first);
-						_client_sockets.erase(it);
-					}
 				}
-				if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) {
+				else if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) {
 		std::cout << "========_client_socket write ======="<< std::endl;
 					it->second.sending(); 
-					if (it->second.getStatus()==FINI) {
-															// std::cout << "DELETED" << std::endl;
-															// _responder.del_from_map(*it);
+				}
+
+				if (it->second.getStatus()==FINI){
+					std::map<int, ClientS>::iterator itt = it;
+					++itt;
+					if (itt != _client_sockets.end()){
+						int next_key = itt->first;
 						_client_sockets.erase(it);
+						it = _client_sockets.find(next_key);
+					}
+					else{
+						_client_sockets.erase(it);
+						break;
 					}
 				}
-			}
+				else
+					++it;
 
+std::cout << "=======endwhile"<< std::endl;
+			}
+//****************************************************************************************
 		std::cout << "========DONE========" << std::endl;
 		}
 	}
