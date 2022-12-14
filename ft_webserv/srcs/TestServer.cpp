@@ -100,23 +100,19 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 					accepter(i);
 				}
 			}
-			
+//****MS******** new map.eraise*******************************************************			
 			std::map<int, ClientS>::iterator it = _client_sockets.begin();
 			while ( it != _client_sockets.end()) {
 		std::cout << "========_client_sockets========"<< std::endl;
-//				bool is_need_to_delete = false;
 				if (FD_ISSET(it->first, readFd) and it->second.getStatus()==READ) { 
 		std::cout << "========_client_socket read ======="<< std::endl;
 					it->second.receiving(); 
-//					is_need_to_delete = it->second.getStatus()==FINI;
 				}
 				else if (FD_ISSET(it->first, writeFd) and it->second.getStatus()==WRITE) {
 		std::cout << "========_client_socket write ======="<< std::endl;
 					it->second.sending(); 
-//					is_need_to_delete = it->second.getStatus()==FINI;
 				}
-				// go to next key
-//				if (is_need_to_delete){
+
 				if (it->second.getStatus()==FINI){
 					std::map<int, ClientS>::iterator itt = it;
 					++itt;
@@ -132,9 +128,10 @@ std::cout << "Client accepted _max_fd = " << _max_fd << std::endl;
 				}
 				else
 					++it;
-std::cout << "=======endfor"<< std::endl;
-			}
 
+std::cout << "=======endwhile"<< std::endl;
+			}
+//****************************************************************************************
 		std::cout << "========DONE========" << std::endl;
 		}
 	}
